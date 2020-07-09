@@ -46,7 +46,7 @@ func TranslationMiddleware() gin.HandlerFunc {
 			//自定义验证方法
 			//https://github.com/go-playground/validator/blob/v9/_examples/custom-validation/main.go
 			val.RegisterValidation("is_valid_username", func(fl validator.FieldLevel) bool {
-				return fl.Field().String() == "admin"
+				return true
 			})
 
 			//自定义翻译器

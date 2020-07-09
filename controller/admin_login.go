@@ -11,7 +11,7 @@ type AdminLoginController struct {
 
 func AdminLoginRegister(group *gin.RouterGroup) {
 	adminLogin := &AdminLoginController{}
-	group.POST("/login",adminLogin.AdminLogin)
+	group.POST("/login", adminLogin.AdminLogin)
 }
 
 // AdminLogin godoc
@@ -25,11 +25,18 @@ func AdminLoginRegister(group *gin.RouterGroup) {
 // @Success 200 {object} middleware.Response{data=dto.AdminLoginOutput} "success"
 // @Router /admin_login/login [post]
 func (p *AdminLoginController) AdminLogin(c *gin.Context) {
-	params := & dto.AdminLoginInput{}
-	if err := params.BindValidParam(c);err!=nil {
-		middleware.ResponseError(c,1001,err)
+	params := &dto.AdminLoginInput{}
+	if err := params.BindValidParam(c); err != nil {
+		middleware.ResponseError(c, 1001, err)
 		return
 	}
-	out := dto.AdminLoginOutput{Token: params.Username}
-	middleware.ResponseSuccess(c,out)
+
+	out, err := params.LoginCheck(c)
+	if err != nil {
+		middleware.ResponseError(c, 1002, err)
+		return
+	}
+
+	middleware.ResponseSuccess(c, out)
+	return
 }

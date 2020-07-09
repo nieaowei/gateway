@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 )
 
-func GenSha256ByScret(str,secret string) string {
+func GenSha256BySecret(str, secret string) string {
 	hash := sha256.New()
 	hash.Write([]byte(str))
 

@@ -1,9 +1,19 @@
 package dto
 
 import (
+	"encoding/gob"
+	"gateway/dao"
 	"gateway/public"
+	"github.com/e421083458/golang_common/lib"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
+	"time"
 )
+
+func init() {
+	gob.Register(&dao.AdminSessionInfo{})
+}
 
 type AdminLoginInput struct {
 	Username string `json:"username" form:"username" comment:"姓名" example:"admin" validate:"required,is_valid_username"`
@@ -16,4 +26,39 @@ type AdminLoginOutput struct {
 
 func (p *AdminLoginInput) BindValidParam(c *gin.Context) error {
 	return public.DefaultGetValidParams(c, p)
+}
+
+func (p *AdminLoginInput) LoginCheck(c *gin.Context) (out *AdminLoginOutput, err error) {
+	adminInfo := &dao.Admin{
+		Username: p.Username,
+	}
+	db, err := lib.GetGormPool("default")
+	if err != nil {
+		return
+	}
+	adminInfo, err = adminInfo.FindOne(c, db)
+	if err != nil {
+		return nil, errors.New("用户不存在")
+	}
+	saltPd := public.GenSha256BySecret("nieaowei", "123")
+
+	if saltPd != adminInfo.Password {
+		return nil, errors.New("密码错误")
+	}
+	//set sessions.
+	adminSession := &dao.AdminSessionInfo{
+		ID:        adminInfo.ID,
+		Username:  adminInfo.Username,
+		LoginTime: time.Now(),
+	}
+	sess := sessions.Default(c)
+	sess.Set(public.AdminSessionsKey, adminSession)
+	err = sess.Save()
+	if err != nil {
+		return nil, err
+	}
+
+	out = &AdminLoginOutput{Token: adminInfo.Password}
+
+	return
 }
