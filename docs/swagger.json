@@ -1,0 +1,104 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {},
+        "license": {}
+    },
+    "paths": {
+        "/admin_login/login": {
+            "post": {
+                "description": "管理员登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "管理员"
+                ],
+                "summary": "管理员登录",
+                "operationId": "/admin_login/login",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "polygon",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AdminLoginInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.AdminLoginOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.AdminLoginInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "12345"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "admin"
+                }
+            }
+        },
+        "dto.AdminLoginOutput": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "token"
+                }
+            }
+        },
+        "middleware.Response": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object"
+                },
+                "errmsg": {
+                    "type": "string"
+                },
+                "errno": {
+                    "type": "integer"
+                },
+                "stack": {
+                    "type": "object"
+                },
+                "trace_id": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}
