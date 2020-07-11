@@ -12,12 +12,15 @@ import (
 type AdminController struct {
 }
 
+//AdminRegister is used for router registration.
 func AdminRegister(group *gin.RouterGroup) {
 	admin := &AdminController{}
 	group.GET("/admin_info", admin.AdminInfo)
 	group.GET("/logout", admin.AdminLogout)
+	group.POST("/change/password", admin.ChangePassword)
 }
 
+//AdminLogout is the administrator login interface.
 func (p *AdminController) AdminLogout(c *gin.Context) {
 	sessions.Default(c).Delete(public.AdminSessionsKey)
 	err := sessions.Default(c).Save()
@@ -29,6 +32,7 @@ func (p *AdminController) AdminLogout(c *gin.Context) {
 	return
 }
 
+//AdminInfo is an interface for obtaining user information.
 func (p *AdminController) AdminInfo(c *gin.Context) {
 	adminSession := sessions.Default(c).Get(public.AdminSessionsKey).(*dao.AdminSessionInfo)
 	adminInfo := dto.AdminInfoOutput{
@@ -38,5 +42,23 @@ func (p *AdminController) AdminInfo(c *gin.Context) {
 		Roles:            nil,
 	}
 	middleware.ResponseSuccess(c, adminInfo)
+	return
+}
+
+//ChangePassword
+func (p *AdminController) ChangePassword(c *gin.Context) {
+	//get parameters and validate it.
+	params := &dto.ChangePwdInput{}
+	if err := params.BindValidParam(c); err != nil {
+		middleware.ResponseError(c, 1001, err)
+		return
+	}
+	//pass
+	err := params.ChangePwd(c)
+	if err != nil {
+		middleware.ResponseError(c, 1002, err)
+		return
+	}
+	middleware.ResponseSuccess(c, "")
 	return
 }

@@ -25,9 +25,9 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/admin_login/login": {
+        "/admin/login": {
             "post": {
-                "description": "管理员登录",
+                "description": "测试数据绑定",
                 "consumes": [
                     "application/json"
                 ],
@@ -35,10 +35,10 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "管理员"
+                    "用户"
                 ],
-                "summary": "管理员登录",
-                "operationId": "/admin_login/login",
+                "summary": "测试数据绑定",
+                "operationId": "/admin/login",
                 "parameters": [
                     {
                         "description": "body",

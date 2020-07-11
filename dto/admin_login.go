@@ -40,7 +40,7 @@ func (p *AdminLoginInput) LoginCheck(c *gin.Context) (out *AdminLoginOutput, err
 	if err != nil {
 		return nil, errors.New("用户不存在")
 	}
-	saltPd := public.GenSha256BySecret("nieaowei", "123")
+	saltPd := public.GenSha256BySecret(p.Password, adminInfo.Salt)
 
 	if saltPd != adminInfo.Password {
 		return nil, errors.New("密码错误")

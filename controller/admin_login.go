@@ -15,15 +15,15 @@ func AdminLoginRegister(group *gin.RouterGroup) {
 }
 
 // AdminLogin godoc
-// @Summary 管理员登录
-// @Description 管理员登录
-// @Tags 管理员
-// @ID /admin_login/login
+// @Summary 测试数据绑定
+// @Description 测试数据绑定
+// @Tags 用户
+// @ID /admin/login
 // @Accept  json
 // @Produce  json
 // @Param polygon body dto.AdminLoginInput true "body"
 // @Success 200 {object} middleware.Response{data=dto.AdminLoginOutput} "success"
-// @Router /admin_login/login [post]
+// @Router /admin/login [post]
 func (p *AdminLoginController) AdminLogin(c *gin.Context) {
 	params := &dto.AdminLoginInput{}
 	if err := params.BindValidParam(c); err != nil {

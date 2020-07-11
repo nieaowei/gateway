@@ -34,12 +34,12 @@ info:
   contact: {}
   license: {}
 paths:
-  /admin_login/login:
+  /admin/login:
     post:
       consumes:
       - application/json
-      description: 管理员登录
-      operationId: /admin_login/login
+      description: 测试数据绑定
+      operationId: /admin/login
       parameters:
       - description: body
         in: body
@@ -59,7 +59,7 @@ paths:
                 data:
                   $ref: '#/definitions/dto.AdminLoginOutput'
               type: object
-      summary: 管理员登录
+      summary: 测试数据绑定
       tags:
-      - 管理员
+      - 用户
 swagger: "2.0"

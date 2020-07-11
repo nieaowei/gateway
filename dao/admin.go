@@ -28,3 +28,11 @@ func (p *Admin) FindOne(c *gin.Context, tx *gorm.DB) (out *Admin, err error) {
 	}
 	return
 }
+
+func (p *Admin) Save(c *gin.Context, tx *gorm.DB) (err error) {
+	err = tx.SetCtx(public.GetTraceContext(c)).Save(p).Error
+	if err != nil {
+		return
+	}
+	return
+}
