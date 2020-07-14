@@ -21,11 +21,11 @@ func (p *ServiceController) ServiceList(c *gin.Context) {
 		return
 	}
 	//pass
-	err := params.GetServiceList(c)
+	out, err := params.GetServiceList(c)
 	if err != nil {
 		middleware.ResponseError(c, 1002, err)
 		return
 	}
-	middleware.ResponseSuccess(c, "")
+	middleware.ResponseSuccess(c, out)
 	return
 }

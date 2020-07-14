@@ -1,7 +1,9 @@
 package dto
 
 import (
+	"gateway/dao"
 	"gateway/public"
+	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,7 +29,22 @@ type ServiceListOutput struct {
 	List  []ServiceListItem `json:"page_no" form:"page_no" validate:""`
 }
 
-func (p *ServiceListInput) GetServiceList(c *gin.Context) (err error) {
+func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutput, err error) {
+	serviceInfo := &dao.ServiceInfo{}
+	db, err := lib.GetGormPool("default")
+	if err != nil {
+		return
+	}
+	scan := serviceInfo.PageList(c, db, &dao.PageSize{
+		Size: p.PageSize,
+		No:   p.PageNo,
+		Info: p.Info,
+	})
+	out = &ServiceListOutput{}
+	err = scan.Scan(&out.List).Count(&out.Total).Error
+	if err != nil {
+		return
+	}
 	return
 }
 
