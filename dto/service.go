@@ -191,3 +191,24 @@ func FindOneServiceDetail(c *gin.Context, info *dao.ServiceInfo) (out *ServiceDe
 
 	return
 }
+
+type ServiceDeleteInput struct {
+	ID uint `json:"id" form:"id" validate:"required"`
+}
+
+func (p *ServiceDeleteInput) Delete(c *gin.Context) (err error) {
+	db, err := lib.GetGormPool("default")
+	if err != nil {
+		return
+	}
+	serviceInfo := &dao.ServiceInfo{
+		Model: gorm.Model{
+			ID: p.ID,
+		},
+	}
+	return serviceInfo.DeleteOne(c, db)
+}
+
+func (p *ServiceDeleteInput) BindValidParam(c *gin.Context) (err error) {
+	return public.DefaultGetValidParams(c, p)
+}

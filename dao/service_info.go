@@ -36,3 +36,7 @@ func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (l
 	query.Count(&count)
 	return
 }
+
+func (p *ServiceInfo) DeleteOne(c *gin.Context, tx *gorm.DB) (err error) {
+	return tx.Delete(p).Error
+}

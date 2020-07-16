@@ -12,6 +12,8 @@ type ServiceController struct {
 func ServiceRigster(group *gin.RouterGroup) {
 	service := &ServiceController{}
 	group.GET("/list", service.ServiceList)
+	group.GET("/delete", service.ServiceDelete)
+
 }
 
 func (p *ServiceController) ServiceList(c *gin.Context) {
@@ -27,5 +29,21 @@ func (p *ServiceController) ServiceList(c *gin.Context) {
 		return
 	}
 	middleware.ResponseSuccess(c, out)
+	return
+}
+
+func (p *ServiceController) ServiceDelete(c *gin.Context) {
+	params := &dto.ServiceDeleteInput{}
+	if err := params.BindValidParam(c); err != nil {
+		middleware.ResponseError(c, 1001, err)
+		return
+	}
+	//pass
+	err := params.Delete(c)
+	if err != nil {
+		middleware.ResponseError(c, 1002, err)
+		return
+	}
+	middleware.ResponseSuccess(c, "")
 	return
 }
