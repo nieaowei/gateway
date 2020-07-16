@@ -17,13 +17,22 @@ func (p *ServiceInfo) TableName() string {
 	return "service_info"
 }
 
-func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (scan *gorm.DB) {
+func (p *ServiceInfo) ServiceDetail() string {
+	return "service_info"
+}
+
+func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (list []ServiceInfo, count uint, err error) {
 	offset := (params.No - 1) * params.Size
 	query := tx.SetCtx(public.GetTraceContext(c)).Model(p)
 	if params.Info != "" {
-		query = query.Where("(service_name like ? or service_desc like ?)", "%"+params.Info+"%", "%"+params.Info+"%")
+		query = query.Where("service_name like ? or service_desc like ?", "%"+params.Info+"%", "%"+params.Info+"%")
 	}
 
-	scan = query.Limit(params.Size).Offset(offset).Order("id desc")
+	err = query.Limit(params.Size).Offset(offset).Order("id desc").Find(&list).Error
+
+	if err != nil {
+		return
+	}
+	query.Count(&count)
 	return
 }

@@ -1,6 +1,7 @@
-package dao
+package test
 
 import (
+	"gateway/dao"
 	"github.com/e421083458/golang_common/lib"
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
@@ -13,9 +14,10 @@ import (
 var db *gorm.DB
 
 func initDB() {
-	lib.InitDBPool("../conf/dev/mysql_map.toml")
+	lib.InitDBPool("../../conf/dev/mysql_map.toml")
 	db, _ = lib.GetGormPool("default")
 	db.SetLogger(gorm.Logger{log.New(os.Stdout, "\n", 0)})
+	db.SingularTable(true)
 }
 
 func TestAdmin_FindOne(t *testing.T) {
@@ -33,7 +35,7 @@ func TestAdmin_FindOne(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		wantOut *Admin
+		wantOut *dao.Admin
 		wantErr bool
 	}{
 		// TODO: Add test cases.
@@ -48,7 +50,7 @@ func TestAdmin_FindOne(t *testing.T) {
 				c:  &gin.Context{},
 				tx: db,
 			},
-			&Admin{},
+			&dao.Admin{},
 			false,
 		},
 		{
@@ -60,7 +62,7 @@ func TestAdmin_FindOne(t *testing.T) {
 				c:  &gin.Context{},
 				tx: db.Debug(),
 			},
-			&Admin{},
+			&dao.Admin{},
 			false,
 		},
 		{
@@ -72,13 +74,13 @@ func TestAdmin_FindOne(t *testing.T) {
 				c:  &gin.Context{},
 				tx: db,
 			},
-			&Admin{},
+			&dao.Admin{},
 			true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Admin{
+			p := &dao.Admin{
 				Model:    tt.fields.Model,
 				Username: tt.fields.Username,
 				Password: tt.fields.Password,
@@ -147,7 +149,7 @@ func TestAdmin_Updates(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Admin{
+			p := &dao.Admin{
 				Model:    tt.fields.Model,
 				Salt:     tt.fields.Salt,
 				Username: tt.fields.Username,
@@ -212,7 +214,7 @@ func TestAdmin_Save(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Admin{
+			p := &dao.Admin{
 				Model:    tt.fields.Model,
 				Salt:     tt.fields.Salt,
 				Username: tt.fields.Username,

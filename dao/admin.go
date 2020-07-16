@@ -30,7 +30,7 @@ func (p *Admin) FindOne(c *gin.Context, tx *gorm.DB) (out *Admin, err error) {
 }
 
 func (p *Admin) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id", "created_at").SetCtx(public.GetTraceContext(c)).Save(p).Error
+	err = tx.Omit("id", "created_at", "deleted_at").SetCtx(public.GetTraceContext(c)).Save(p).Error
 	if err != nil {
 		return
 	}
@@ -38,7 +38,7 @@ func (p *Admin) Save(c *gin.Context, tx *gorm.DB) (err error) {
 }
 
 func (p *Admin) Updates(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Model(p).Omit("id").SetCtx(public.GetTraceContext(c)).Updates(p).Error
+	err = tx.Model(p).Omit("id", "created_at", "deleted_at").SetCtx(public.GetTraceContext(c)).Updates(p).Error
 	if err != nil {
 		return
 	}

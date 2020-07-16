@@ -1,6 +1,7 @@
-package dao
+package test
 
 import (
+	"gateway/dao"
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
 	"reflect"
@@ -18,13 +19,13 @@ func TestServiceInfo_PageList(t *testing.T) {
 	type args struct {
 		c      *gin.Context
 		tx     *gorm.DB
-		params *PageSize
+		params *dao.PageSize
 	}
 	tests := []struct {
 		name      string
 		fields    fields
 		args      args
-		wantList  []ServiceInfo
+		wantList  []dao.ServiceInfo
 		wantCount uint
 		wantErr   bool
 	}{
@@ -35,7 +36,7 @@ func TestServiceInfo_PageList(t *testing.T) {
 			args{
 				c:  &gin.Context{},
 				tx: db,
-				params: &PageSize{
+				params: &dao.PageSize{
 					Size: 2,
 					No:   1,
 					Info: "",
@@ -51,7 +52,7 @@ func TestServiceInfo_PageList(t *testing.T) {
 			args{
 				c:  &gin.Context{},
 				tx: db,
-				params: &PageSize{
+				params: &dao.PageSize{
 					Size: 2,
 					No:   2,
 					Info: "",
@@ -61,10 +62,42 @@ func TestServiceInfo_PageList(t *testing.T) {
 			2,
 			false,
 		},
+		{
+			"查询测试-3",
+			fields{},
+			args{
+				c:  &gin.Context{},
+				tx: db,
+				params: &dao.PageSize{
+					Size: 22,
+					No:   1,
+					Info: "tcp",
+				},
+			},
+			nil,
+			2,
+			false,
+		},
+		{
+			"查询测试-3",
+			fields{},
+			args{
+				c:  &gin.Context{},
+				tx: db,
+				params: &dao.PageSize{
+					Size: 20,
+					No:   1,
+					Info: "udp",
+				},
+			},
+			nil,
+			2,
+			false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &ServiceInfo{
+			p := &dao.ServiceInfo{
 				Model:       tt.fields.Model,
 				LoadType:    tt.fields.LoadType,
 				ServiceName: tt.fields.ServiceName,
@@ -72,13 +105,13 @@ func TestServiceInfo_PageList(t *testing.T) {
 			}
 			gotList, gotCount, err := p.PageList(tt.args.c, tt.args.tx, tt.args.params)
 			if !reflect.DeepEqual(gotList, tt.wantList) {
-				t.Logf("PageList() gotList = %v, want %v", gotList, tt.wantList)
+				t.Logf("PageListScan() gotList = %v, want %v", gotList, tt.wantList)
 			}
 			if gotCount != tt.wantCount {
-				t.Logf("PageList() gotCount = %v, want %v", gotCount, tt.wantCount)
+				t.Logf("PageListScan() gotCount = %v, want %v", gotCount, tt.wantCount)
 			}
 			if (err != nil) != tt.wantErr {
-				t.Errorf("PageList() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("PageListScan() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
