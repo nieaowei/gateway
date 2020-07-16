@@ -38,7 +38,28 @@ func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (l
 }
 
 func (p *ServiceInfo) DeleteOne(c *gin.Context, tx *gorm.DB) (err error) {
-	return tx.Delete(p).Error
+	serviceDeatail, err := p.FindOneServiceDetail(c, tx)
+	if err != nil {
+		return
+	}
+	switch p.LoadType {
+	case public.LoadTypeHttp:
+		{
+			err = serviceDeatail.HTTP.Delete(c, tx)
+			break
+		}
+	case public.LoadTypeGrpc:
+		{
+			err = serviceDeatail.GRPC.Delete(c, tx)
+			break
+		}
+	case public.LoadTypeTcp:
+		{
+			err = serviceDeatail.TCP.Delete(c, tx)
+			break
+		}
+	}
+	return
 }
 
 type ServiceDetail struct {

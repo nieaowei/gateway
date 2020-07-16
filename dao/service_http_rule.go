@@ -34,3 +34,8 @@ func (p *ServiceHttpRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
 	}
 	return
 }
+
+func (p *ServiceHttpRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+
+	return tx.Delete(p).Error
+}

@@ -29,3 +29,7 @@ func (p *ServiceGrpcRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
 	}
 	return
 }
+
+func (p *ServiceGrpcRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+	return tx.Delete(p).Error
+}

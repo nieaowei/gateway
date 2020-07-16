@@ -43,3 +43,8 @@ func (p *ServiceLoadBalance) Save(c *gin.Context, tx *gorm.DB) (err error) {
 func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
 	return Split(p.IpList, ",")
 }
+
+func (p *ServiceLoadBalance) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+
+	return tx.Delete(p).Error
+}

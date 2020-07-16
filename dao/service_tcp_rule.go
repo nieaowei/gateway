@@ -28,3 +28,8 @@ func (p *ServiceTcpRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
 	}
 	return
 }
+
+func (p *ServiceTcpRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+
+	return tx.Delete(p).Error
+}

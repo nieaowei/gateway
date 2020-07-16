@@ -32,3 +32,7 @@ func (p *App) Save(c *gin.Context, tx *gorm.DB) (err error) {
 	}
 	return
 }
+
+func (p *App) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+	return tx.Delete(p).Error
+}

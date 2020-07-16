@@ -33,3 +33,7 @@ func (p *ServiceAccessControl) Save(c *gin.Context, tx *gorm.DB) (err error) {
 	}
 	return
 }
+
+func (p *ServiceAccessControl) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+	return tx.Delete(p).Error
+}
