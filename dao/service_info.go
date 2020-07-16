@@ -40,3 +40,81 @@ func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (l
 func (p *ServiceInfo) DeleteOne(c *gin.Context, tx *gorm.DB) (err error) {
 	return tx.Delete(p).Error
 }
+
+type ServiceDetail struct {
+	Info          *ServiceInfo          `json:"info"`
+	HTTP          *ServiceHttpRule      `json:"http"`
+	GRPC          *ServiceGrpcRule      `json:"grpc"`
+	TCP           *ServiceTcpRule       `json:"tcp"`
+	LoadBalance   *ServiceLoadBalance   `json:"load_balance"`
+	AccessControl *ServiceAccessControl `json:"access_control"`
+}
+
+func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *ServiceDetail, err error) {
+
+	//todo wait next step optimization.
+	switch p.LoadType {
+	case public.LoadTypeHttp:
+		{
+			break
+		}
+	case public.LoadTypeTcp:
+		{
+			break
+		}
+	case public.LoadTypeGrpc:
+		{
+			break
+		}
+	}
+
+	httpRule := &ServiceHttpRule{
+		ServiceId: p.ID,
+	}
+	httpRule, err = httpRule.FindOne(c, db)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return
+	}
+
+	tcpRule := &ServiceTcpRule{
+		ServiceId: p.ID,
+	}
+	tcpRule, err = tcpRule.FindOne(c, db)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return
+	}
+
+	grpcRule := &ServiceGrpcRule{
+		ServiceId: p.ID,
+	}
+	grpcRule, err = grpcRule.FindOne(c, db)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return
+	}
+
+	accessControl := &ServiceAccessControl{
+		ServiceId: p.ID,
+	}
+	accessControl, err = accessControl.FindOne(c, db)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return
+	}
+
+	loadBalance := &ServiceLoadBalance{
+		ServiceId: p.ID,
+	}
+	loadBalance, err = loadBalance.FindOne(c, db)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return
+	}
+
+	out = &ServiceDetail{
+		Info:          p,
+		HTTP:          httpRule,
+		GRPC:          grpcRule,
+		TCP:           tcpRule,
+		LoadBalance:   loadBalance,
+		AccessControl: accessControl,
+	}
+	return
+}

@@ -53,7 +53,7 @@ func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutpu
 	clusterPort := lib.GetStringConf("base.cluster.cluster_port")
 	clusterSSLPort := lib.GetStringConf("base.cluster.cluster_ssl_port")
 	for _, info := range serviceInfos {
-		serviceDetail, err := FindOneServiceDetail(c, &info)
+		serviceDetail, err := info.FindOneServiceDetail(c, db)
 		if err != nil {
 			return nil, err
 		}
@@ -108,88 +108,6 @@ func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutpu
 
 func (p *ServiceListInput) BindValidParam(c *gin.Context) (err error) {
 	return public.DefaultGetValidParams(c, p)
-}
-
-type ServiceDetail struct {
-	Info          *dao.ServiceInfo          `json:"info"`
-	HTTP          *dao.ServiceHttpRule      `json:"http"`
-	GRPC          *dao.ServiceGrpcRule      `json:"grpc"`
-	TCP           *dao.ServiceTcpRule       `json:"tcp"`
-	LoadBalance   *dao.ServiceLoadBalance   `json:"load_balance"`
-	AccessControl *dao.ServiceAccessControl `json:"access_control"`
-}
-
-func FindOneServiceDetail(c *gin.Context, info *dao.ServiceInfo) (out *ServiceDetail, err error) {
-	db, err := lib.GetGormPool("default")
-	if err != nil {
-		return
-	}
-	//todo wait next step optimization.
-	switch info.LoadType {
-	case public.LoadTypeHttp:
-		{
-			break
-		}
-	case public.LoadTypeTcp:
-		{
-			break
-		}
-	case public.LoadTypeGrpc:
-		{
-			break
-		}
-	}
-
-	httpRule := &dao.ServiceHttpRule{
-		ServiceId: info.ID,
-	}
-	httpRule, err = httpRule.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return
-	}
-
-	tcpRule := &dao.ServiceTcpRule{
-		ServiceId: info.ID,
-	}
-	tcpRule, err = tcpRule.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return
-	}
-
-	grpcRule := &dao.ServiceGrpcRule{
-		ServiceId: info.ID,
-	}
-	grpcRule, err = grpcRule.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return
-	}
-
-	accessControl := &dao.ServiceAccessControl{
-		ServiceId: info.ID,
-	}
-	accessControl, err = accessControl.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return
-	}
-
-	loadBalance := &dao.ServiceLoadBalance{
-		ServiceId: info.ID,
-	}
-	loadBalance, err = loadBalance.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return
-	}
-
-	out = &ServiceDetail{
-		Info:          info,
-		HTTP:          httpRule,
-		GRPC:          grpcRule,
-		TCP:           tcpRule,
-		LoadBalance:   loadBalance,
-		AccessControl: accessControl,
-	}
-
-	return
 }
 
 type ServiceDeleteInput struct {
