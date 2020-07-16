@@ -7,7 +7,7 @@ import (
 )
 
 type ServiceAccessControl struct {
-	ID                uint   `json:"id"`
+	gorm.Model
 	ServiceId         uint   `json:"service_id"`
 	OpenAuth          uint8  `json:"open_auth"`
 	BlackList         string `json:"black_list"`

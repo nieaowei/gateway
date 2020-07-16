@@ -7,7 +7,7 @@ import (
 )
 
 type ServiceTcpRule struct {
-	ID        uint   `json:"id"`
+	gorm.Model
 	ServiceId uint   `json:"service_id"`
 	Port      uint16 `json:"port"`
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type ServiceHttpRule struct {
-	ID             uint   `json:"id"`
+	gorm.Model
 	ServiceId      uint   `json:"service_id"`
 	RuleType       uint8  `json:"rule_type"`
 	Rule           string `json:"rule"`

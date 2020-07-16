@@ -8,7 +8,7 @@ import (
 )
 
 type ServiceLoadBalance struct {
-	ID                     uint   `json:"id"`
+	gorm.Model
 	ServiceId              uint   `json:"service_id"`
 	CheckMethod            uint   `json:"check_method"`
 	CheckTimeout           uint   `json:"check_timeout"`

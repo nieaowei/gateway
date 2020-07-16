@@ -7,7 +7,7 @@ import (
 )
 
 type ServiceGrpcRule struct {
-	ID             uint   `json:"id"`
+	gorm.Model
 	ServiceId      uint   `json:"service_id"`
 	Port           uint16 `json:"port"`
 	HeaderTransfor string `json:"header_transfor"`
