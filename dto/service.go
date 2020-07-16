@@ -88,6 +88,8 @@ func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutpu
 				break
 			}
 		}
+		ipList := serviceDetail.LoadBalance.GetIPListByModel()
+
 		item := ServiceListItem{
 			ID:          info.ID,
 			ServiceName: info.ServiceName,
@@ -96,7 +98,7 @@ func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutpu
 			Address:     serviceAddr,
 			Qps:         0,
 			Qpd:         0,
-			TotalNode:   0,
+			TotalNode:   uint(len(ipList)),
 		}
 		out.List = append(out.List, item)
 	}
