@@ -44,3 +44,7 @@ func (p *Admin) Updates(c *gin.Context, tx *gorm.DB) (err error) {
 	}
 	return
 }
+
+func (p *Admin) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+	return tx.Delete(p).Error
+}

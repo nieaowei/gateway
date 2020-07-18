@@ -7,7 +7,7 @@ import (
 )
 
 type ServiceGrpcRule struct {
-	ID             uint   `json:"id"`
+	gorm.Model
 	ServiceId      uint   `json:"service_id"`
 	Port           uint16 `json:"port"`
 	HeaderTransfor string `json:"header_transfor"`
@@ -28,4 +28,8 @@ func (p *ServiceGrpcRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
 		return
 	}
 	return
+}
+
+func (p *ServiceGrpcRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+	return tx.Delete(p).Error
 }

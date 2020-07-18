@@ -4,10 +4,11 @@ import (
 	"gateway/public"
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	. "strings"
 )
 
 type ServiceLoadBalance struct {
-	ID                     uint   `json:"id"`
+	gorm.Model
 	ServiceId              uint   `json:"service_id"`
 	CheckMethod            uint   `json:"check_method"`
 	CheckTimeout           uint   `json:"check_timeout"`
@@ -37,4 +38,13 @@ func (p *ServiceLoadBalance) Save(c *gin.Context, tx *gorm.DB) (err error) {
 		return
 	}
 	return
+}
+
+func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
+	return Split(p.IpList, ",")
+}
+
+func (p *ServiceLoadBalance) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+
+	return tx.Delete(p).Error
 }

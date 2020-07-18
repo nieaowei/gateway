@@ -7,7 +7,7 @@ import (
 )
 
 type ServiceHttpRule struct {
-	ID             uint   `json:"id"`
+	gorm.Model
 	ServiceId      uint   `json:"service_id"`
 	RuleType       uint8  `json:"rule_type"`
 	Rule           string `json:"rule"`
@@ -33,4 +33,9 @@ func (p *ServiceHttpRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
 		return
 	}
 	return
+}
+
+func (p *ServiceHttpRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+
+	return tx.Delete(p).Error
 }

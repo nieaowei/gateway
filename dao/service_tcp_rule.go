@@ -7,7 +7,7 @@ import (
 )
 
 type ServiceTcpRule struct {
-	ID        uint   `json:"id"`
+	gorm.Model
 	ServiceId uint   `json:"service_id"`
 	Port      uint16 `json:"port"`
 }
@@ -27,4 +27,9 @@ func (p *ServiceTcpRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
 		return
 	}
 	return
+}
+
+func (p *ServiceTcpRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+
+	return tx.Delete(p).Error
 }

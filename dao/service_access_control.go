@@ -7,7 +7,7 @@ import (
 )
 
 type ServiceAccessControl struct {
-	ID                uint   `json:"id"`
+	gorm.Model
 	ServiceId         uint   `json:"service_id"`
 	OpenAuth          uint8  `json:"open_auth"`
 	BlackList         string `json:"black_list"`
@@ -32,4 +32,8 @@ func (p *ServiceAccessControl) Save(c *gin.Context, tx *gorm.DB) (err error) {
 		return
 	}
 	return
+}
+
+func (p *ServiceAccessControl) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+	return tx.Delete(p).Error
 }
