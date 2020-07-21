@@ -60,28 +60,28 @@ func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutpu
 		serviceAddr := ""
 		loadType := ""
 		switch serviceDetail.Info.LoadType {
-		case public.LoadTypeHttp:
+		case dao.LoadTypeHttp:
 			{
 				loadType = "HTTP"
-				if serviceDetail.HTTP.RuleType == public.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHttps == 0 {
+				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHttps == 0 {
 					serviceAddr = clusterIP + ":" + clusterPort + serviceDetail.HTTP.Rule
 
 				}
-				if serviceDetail.HTTP.RuleType == public.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHttps == 1 {
+				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHttps == 1 {
 					serviceAddr = clusterIP + ":" + clusterSSLPort + serviceDetail.HTTP.Rule
 				}
-				if serviceDetail.HTTP.RuleType == public.HttpRuleTypeDomain {
+				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypeDomain {
 					serviceAddr = serviceDetail.HTTP.Rule
 				}
 				break
 			}
-		case public.LoadTypeTcp:
+		case dao.LoadTypeTcp:
 			{
 				loadType = "TCP"
 				serviceAddr = clusterIP + ":" + strconv.Itoa(int(serviceDetail.TCP.Port))
 				break
 			}
-		case public.LoadTypeGrpc:
+		case dao.LoadTypeGrpc:
 			{
 				loadType = "GRPC"
 				serviceAddr = clusterIP + ":" + strconv.Itoa(int(serviceDetail.GRPC.Port))

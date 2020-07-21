@@ -43,17 +43,17 @@ func (p *ServiceInfo) DeleteOne(c *gin.Context, tx *gorm.DB) (err error) {
 		return
 	}
 	switch p.LoadType {
-	case public.LoadTypeHttp:
+	case LoadTypeHttp:
 		{
 			err = serviceDeatail.HTTP.Delete(c, tx)
 			break
 		}
-	case public.LoadTypeGrpc:
+	case LoadTypeGrpc:
 		{
 			err = serviceDeatail.GRPC.Delete(c, tx)
 			break
 		}
-	case public.LoadTypeTcp:
+	case LoadTypeTcp:
 		{
 			err = serviceDeatail.TCP.Delete(c, tx)
 			break
@@ -75,15 +75,15 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 
 	//todo wait next step optimization.
 	switch p.LoadType {
-	case public.LoadTypeHttp:
+	case LoadTypeHttp:
 		{
 			break
 		}
-	case public.LoadTypeTcp:
+	case LoadTypeTcp:
 		{
 			break
 		}
-	case public.LoadTypeGrpc:
+	case LoadTypeGrpc:
 		{
 			break
 		}
