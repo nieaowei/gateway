@@ -118,3 +118,52 @@ func TestServiceInfo_PageList(t *testing.T) {
 		})
 	}
 }
+
+func TestServiceInfo_AddAfterCheck(t *testing.T) {
+	initDB()
+	type fields struct {
+		Model       gorm.Model
+		LoadType    uint
+		ServiceName string
+		ServiceDesc string
+	}
+	type args struct {
+		c  *gin.Context
+		db *gorm.DB
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "1",
+			fields: fields{
+				Model:       gorm.Model{},
+				LoadType:    0,
+				ServiceName: "11433323",
+				ServiceDesc: "123",
+			},
+			args: args{
+				c:  &gin.Context{},
+				db: db,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &dao.ServiceInfo{
+				Model:       tt.fields.Model,
+				LoadType:    tt.fields.LoadType,
+				ServiceName: tt.fields.ServiceName,
+				ServiceDesc: tt.fields.ServiceDesc,
+			}
+			if err := p.AddAfterCheck(tt.args.c, tt.args.db); (err != nil) != tt.wantErr {
+				t.Errorf("AddAfterCheck() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}

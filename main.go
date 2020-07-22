@@ -15,7 +15,7 @@ func main() {
 	defer lib.Destroy()
 	for _, val := range lib.GORMMapPool {
 		val.SetLogger(gorm.Logger{log.New(os.Stdout, "\r\n", 0)})
-		val.LogMode(false)
+		val.LogMode(true)
 		val.SingularTable(true)
 	}
 	router.HttpServerRun()

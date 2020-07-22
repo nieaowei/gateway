@@ -13,10 +13,10 @@ type ServiceLoadBalance struct {
 	CheckMethod            uint   `json:"check_method"`
 	CheckTimeout           uint   `json:"check_timeout"`
 	CheckInterval          uint   `json:"check_interval"`
-	RoundType              uint8  `json:"round_type"`
-	IpList                 string `json:"ip_list"`
-	WeightList             string `json:"weight_list"`
-	ForbidLIst             string `json:"forbid_l_ist"`
+	RoundType              uint8  `json:"round_type" validate:"oneof=0 1 2"`
+	IpList                 string `json:"ip_list" validate:"valid_ip_list"`
+	WeightList             string `json:"weight_list" validate:"valid_weight_list"`
+	ForbidList             string `json:"forbid_list"`
 	UpstreamConnectTimeout uint16 `json:"upstream_connect_timeout"`
 	UpstreamHeaderTimeout  uint16 `json:"upstream_header_timeout"`
 	UpstreamIdleTimeout    uint16 `json:"upstream_idle_timeout"`
@@ -46,5 +46,20 @@ func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
 
 func (p *ServiceLoadBalance) Delete(c *gin.Context, tx *gorm.DB) (err error) {
 
-	return tx.Delete(p).Error
+	return tx.Where(p).Delete(p).Error
+}
+
+func (p *ServiceLoadBalance) InsertAfterCheck(c *gin.Context, tx *gorm.DB, check bool) (err error) {
+	if check {
+		// check unique ServiceId
+		slb := &ServiceLoadBalance{
+			ServiceId: p.ServiceId,
+		}
+		_, err = slb.FindOne(c, tx)
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return
+		}
+		err = nil
+	}
+	return tx.Create(p).Error
 }

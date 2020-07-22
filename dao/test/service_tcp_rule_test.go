@@ -55,7 +55,6 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &dao.ServiceTcpRule{
-				ID:        tt.fields.ID,
 				ServiceId: tt.fields.ServiceId,
 				Port:      tt.fields.Port,
 			}
@@ -92,7 +91,9 @@ func TestServiceTcpRule_Save(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &dao.ServiceTcpRule{
-				ID:        tt.fields.ID,
+				Model: gorm.Model{
+					ID: tt.fields.ID,
+				},
 				ServiceId: tt.fields.ServiceId,
 				Port:      tt.fields.Port,
 			}
