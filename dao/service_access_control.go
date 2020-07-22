@@ -9,7 +9,7 @@ import (
 type ServiceAccessControl struct {
 	gorm.Model
 	ServiceId         uint   `json:"service_id"`
-	OpenAuth          uint8  `json:"open_auth"`
+	OpenAuth          uint8  `json:"open_auth" validate:"oneof=0 1"`
 	BlackList         string `json:"black_list"`
 	WhiteList         string `json:"white_list"`
 	WhiteHostName     string `json:"white_host_name"`

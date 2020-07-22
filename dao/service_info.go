@@ -4,13 +4,14 @@ import (
 	"gateway/public"
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 )
 
 type ServiceInfo struct {
 	gorm.Model
-	LoadType    uint   `json:"load_type"`
-	ServiceName string `json:"service_name"`
-	ServiceDesc string `json:"service_desc"`
+	LoadType    uint   `json:"load_type" validate:"oneof=0 1 2"`
+	ServiceName string `json:"service_name" validate:"required,alphanum,max=255,min=6"`
+	ServiceDesc string `json:"service_desc" validate:"required,max=255,min=1"`
 }
 
 func (p *ServiceInfo) TableName() string {
@@ -37,7 +38,8 @@ func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (l
 	return
 }
 
-func (p *ServiceInfo) DeleteOne(c *gin.Context, tx *gorm.DB) (err error) {
+func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, tx *gorm.DB) (err error) {
+	tx = tx.Begin()
 	serviceDeatail, err := p.FindOneServiceDetail(c, tx)
 	if err != nil {
 		return
@@ -59,6 +61,16 @@ func (p *ServiceInfo) DeleteOne(c *gin.Context, tx *gorm.DB) (err error) {
 			break
 		}
 	}
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	err = tx.Delete(p).Error
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	tx.Commit()
 	return
 }
 
@@ -74,20 +86,20 @@ type ServiceDetail struct {
 func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *ServiceDetail, err error) {
 
 	//todo wait next step optimization.
-	switch p.LoadType {
-	case LoadTypeHttp:
-		{
-			break
-		}
-	case LoadTypeTcp:
-		{
-			break
-		}
-	case LoadTypeGrpc:
-		{
-			break
-		}
-	}
+	//switch p.LoadType {
+	//case LoadTypeHttp:
+	//	{
+	//		break
+	//	}
+	//case LoadTypeTcp:
+	//	{
+	//		break
+	//	}
+	//case LoadTypeGrpc:
+	//	{
+	//		break
+	//	}
+	//}
 
 	httpRule := &ServiceHttpRule{
 		ServiceId: p.ID,
@@ -137,5 +149,20 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 		LoadBalance:   loadBalance,
 		AccessControl: accessControl,
 	}
-	return
+	return out, nil
+}
+
+func (p *ServiceInfo) AddAfterCheck(c *gin.Context, db *gorm.DB) error {
+	serviceInfo := &ServiceInfo{
+		ServiceName: p.ServiceName,
+	}
+	// check unique ServiceName
+	err := db.First(serviceInfo, serviceInfo).Error
+	if err != gorm.ErrRecordNotFound {
+		return errors.New("Violation of the uniqueness constraint #ServiceInfo.ServiceName")
+	}
+	// make sure insert
+	p.ID = 0
+	err = db.Create(p).Error
+	return err
 }

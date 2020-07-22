@@ -13,9 +13,9 @@ type ServiceLoadBalance struct {
 	CheckMethod            uint   `json:"check_method"`
 	CheckTimeout           uint   `json:"check_timeout"`
 	CheckInterval          uint   `json:"check_interval"`
-	RoundType              uint8  `json:"round_type"`
-	IpList                 string `json:"ip_list"`
-	WeightList             string `json:"weight_list"`
+	RoundType              uint8  `json:"round_type" validate:"oneof=0 1 2"`
+	IpList                 string `json:"ip_list" validate:"valid_ip_list"`
+	WeightList             string `json:"weight_list" validate:"valid_weight_list"`
 	ForbidLIst             string `json:"forbid_l_ist"`
 	UpstreamConnectTimeout uint16 `json:"upstream_connect_timeout"`
 	UpstreamHeaderTimeout  uint16 `json:"upstream_header_timeout"`
