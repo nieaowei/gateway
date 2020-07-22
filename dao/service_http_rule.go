@@ -38,10 +38,10 @@ func (p *ServiceHttpRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
 
 func (p *ServiceHttpRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
 
-	return tx.Delete(p).Error
+	return tx.Where(p).Delete(p).Error
 }
 
-func (p *ServiceHttpRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
+func (p *ServiceHttpRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
 	if check {
 		//check integrity
 		serviceGrpcRule := &ServiceGrpcRule{

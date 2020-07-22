@@ -28,7 +28,7 @@ func (p *ServiceController) ServiceAddHttp(c *gin.Context) {
 		middleware.ResponseError(c, 1002, err)
 		return
 	}
-	middleware.ResponseSuccess(c, "")
+	middleware.ResponseSuccess(c, params)
 	return
 }
 

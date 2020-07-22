@@ -32,7 +32,7 @@ func (p *ServiceGrpcRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
 }
 
 func (p *ServiceGrpcRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-	return tx.Delete(p).Error
+	return tx.Where(p).Delete(p).Error
 }
 
 func (p *ServiceGrpcRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {

@@ -35,5 +35,20 @@ func (p *ServiceAccessControl) Save(c *gin.Context, tx *gorm.DB) (err error) {
 }
 
 func (p *ServiceAccessControl) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-	return tx.Delete(p).Error
+	return tx.Where(p).Delete(p).Error
+}
+
+func (p *ServiceAccessControl) InsertAfterCheck(c *gin.Context, tx *gorm.DB, check bool) (err error) {
+	if check {
+		// check unique ServiceId
+		asc := &ServiceAccessControl{
+			ServiceId: p.ServiceId,
+		}
+		_, err = asc.FindOne(c, tx)
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return
+		}
+		err = nil
+	}
+	return tx.Create(p).Error
 }

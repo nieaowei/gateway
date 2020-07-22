@@ -185,7 +185,19 @@ func (p *ServiceAddHttpInput) AddHttpService(c *gin.Context) (err error) {
 	}
 
 	p.ServiceHttpRule.ServiceId = p.ServiceInfo.ID
-	err = p.ServiceHttpRule.AddAfterCheck(c, db, true)
+	err = p.ServiceHttpRule.InsertAfterCheck(c, db, true)
+	if err != nil {
+		db.Rollback()
+		return
+	}
+	p.ServiceLoadBalance.ServiceId = p.ServiceInfo.ID
+	err = p.ServiceLoadBalance.InsertAfterCheck(c, db, true)
+	if err != nil {
+		db.Rollback()
+		return
+	}
+	p.ServiceAccessControl.ServiceId = p.ServiceInfo.ID
+	err = p.ServiceAccessControl.InsertAfterCheck(c, db, true)
 	if err != nil {
 		db.Rollback()
 		return

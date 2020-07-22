@@ -22,6 +22,19 @@ func (p *ServiceInfo) ServiceDetail() string {
 	return "service_info"
 }
 
+func (p *ServiceInfo) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceInfo, err error) {
+	out = &ServiceInfo{}
+	err = tx.SetCtx(public.GetTraceContext(c)).Where(p).First(out).Error
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+func (p *ServiceInfo) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+	return tx.Where(p).Delete(p).Error
+}
+
 func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (list []ServiceInfo, count uint, err error) {
 	offset := (params.No - 1) * params.Size
 	query := tx.SetCtx(public.GetTraceContext(c)).Model(p)
@@ -40,24 +53,36 @@ func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (l
 
 func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, tx *gorm.DB) (err error) {
 	tx = tx.Begin()
-	serviceDeatail, err := p.FindOneServiceDetail(c, tx)
+
+	p, err = p.FindOne(c, tx)
 	if err != nil {
+		tx.Rollback()
 		return
 	}
+
 	switch p.LoadType {
 	case LoadTypeHttp:
 		{
-			err = serviceDeatail.HTTP.Delete(c, tx)
+			http := ServiceHttpRule{
+				ServiceId: p.ID,
+			}
+			err = http.Delete(c, tx)
 			break
 		}
 	case LoadTypeGrpc:
 		{
-			err = serviceDeatail.GRPC.Delete(c, tx)
+			grpc := ServiceGrpcRule{
+				ServiceId: p.ID,
+			}
+			err = grpc.Delete(c, tx)
 			break
 		}
 	case LoadTypeTcp:
 		{
-			err = serviceDeatail.TCP.Delete(c, tx)
+			tcp := ServiceTcpRule{
+				ServiceId: p.ID,
+			}
+			err = tcp.Delete(c, tx)
 			break
 		}
 	}
@@ -65,7 +90,25 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, tx *gorm.DB) (err er
 		tx.Rollback()
 		return
 	}
-	err = tx.Delete(p).Error
+	slb := &ServiceLoadBalance{
+		ServiceId: p.ID,
+	}
+	err = slb.Delete(c, tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	sac := &ServiceAccessControl{
+		ServiceId: p.ID,
+	}
+	err = sac.Delete(c, tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	err = p.Delete(c, tx)
 	if err != nil {
 		tx.Rollback()
 		return
@@ -84,52 +127,51 @@ type ServiceDetail struct {
 }
 
 func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *ServiceDetail, err error) {
-
+	out = &ServiceDetail{}
 	//todo wait next step optimization.
-	//switch p.LoadType {
-	//case LoadTypeHttp:
-	//	{
-	//		break
-	//	}
-	//case LoadTypeTcp:
-	//	{
-	//		break
-	//	}
-	//case LoadTypeGrpc:
-	//	{
-	//		break
-	//	}
-	//}
-
-	httpRule := &ServiceHttpRule{
-		ServiceId: p.ID,
+	switch p.LoadType {
+	case LoadTypeHttp:
+		{
+			httpRule := &ServiceHttpRule{
+				ServiceId: p.ID,
+			}
+			httpRule, err = httpRule.FindOne(c, db)
+			if err != nil {
+				return
+			}
+			out.HTTP = httpRule
+			break
+		}
+	case LoadTypeTcp:
+		{
+			tcpRule := &ServiceTcpRule{
+				ServiceId: p.ID,
+			}
+			tcpRule, err = tcpRule.FindOne(c, db)
+			if err != nil {
+				return
+			}
+			out.TCP = tcpRule
+			break
+		}
+	case LoadTypeGrpc:
+		{
+			grpcRule := &ServiceGrpcRule{
+				ServiceId: p.ID,
+			}
+			grpcRule, err = grpcRule.FindOne(c, db)
+			if err != nil {
+				return
+			}
+			out.GRPC = grpcRule
+			break
+		}
 	}
-	httpRule, err = httpRule.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return
-	}
-
-	tcpRule := &ServiceTcpRule{
-		ServiceId: p.ID,
-	}
-	tcpRule, err = tcpRule.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return
-	}
-
-	grpcRule := &ServiceGrpcRule{
-		ServiceId: p.ID,
-	}
-	grpcRule, err = grpcRule.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return
-	}
-
 	accessControl := &ServiceAccessControl{
 		ServiceId: p.ID,
 	}
 	accessControl, err = accessControl.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil {
 		return
 	}
 
@@ -137,19 +179,15 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 		ServiceId: p.ID,
 	}
 	loadBalance, err = loadBalance.FindOne(c, db)
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil {
 		return
 	}
 
-	out = &ServiceDetail{
-		Info:          p,
-		HTTP:          httpRule,
-		GRPC:          grpcRule,
-		TCP:           tcpRule,
-		LoadBalance:   loadBalance,
-		AccessControl: accessControl,
-	}
-	return out, nil
+	out.AccessControl = accessControl
+	out.LoadBalance = loadBalance
+	out.Info = p
+
+	return
 }
 
 func (p *ServiceInfo) AddAfterCheck(c *gin.Context, db *gorm.DB) error {
