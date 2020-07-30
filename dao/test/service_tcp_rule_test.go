@@ -2,8 +2,8 @@ package test
 
 import (
 	"gateway/dao"
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"reflect"
 	"testing"
 )
@@ -12,7 +12,7 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 	initDB()
 	type fields struct {
 		ID        uint
-		ServiceId uint
+		ServiceID uint
 		Port      uint16
 	}
 	type args struct {
@@ -55,7 +55,7 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &dao.ServiceTcpRule{
-				ServiceId: tt.fields.ServiceId,
+				ServiceID: tt.fields.ServiceID,
 				Port:      tt.fields.Port,
 			}
 			gotOut, err := p.FindOne(tt.args.c, tt.args.tx)
@@ -73,7 +73,7 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 func TestServiceTcpRule_Save(t *testing.T) {
 	type fields struct {
 		ID        uint
-		ServiceId uint
+		ServiceID uint
 		Port      uint16
 	}
 	type args struct {
@@ -94,7 +94,7 @@ func TestServiceTcpRule_Save(t *testing.T) {
 				Model: gorm.Model{
 					ID: tt.fields.ID,
 				},
-				ServiceId: tt.fields.ServiceId,
+				ServiceID: tt.fields.ServiceID,
 				Port:      tt.fields.Port,
 			}
 			if err := p.Save(tt.args.c, tt.args.tx); (err != nil) != tt.wantErr {

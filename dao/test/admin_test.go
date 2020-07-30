@@ -2,11 +2,9 @@ package test
 
 import (
 	"gateway/dao"
-	"github.com/e421083458/golang_common/lib"
-	"github.com/e421083458/gorm"
+	"gateway/lib"
 	"github.com/gin-gonic/gin"
-	"log"
-	"os"
+	"gorm.io/gorm"
 	"reflect"
 	"testing"
 )
@@ -15,9 +13,7 @@ var db *gorm.DB
 
 func initDB() {
 	lib.InitDBPool("../../conf/dev/mysql_map.toml")
-	db, _ = lib.GetGormPool("default")
-	db.SetLogger(gorm.Logger{log.New(os.Stdout, "\n", 0)})
-	db.SingularTable(true)
+	db, _ = lib.GetDefaultDB()
 }
 
 func TestAdmin_FindOne(t *testing.T) {
@@ -137,8 +133,7 @@ func TestAdmin_Updates(t *testing.T) {
 				Model: gorm.Model{
 					ID: 1,
 				},
-				Username: "admin",
-				Salt:     "",
+				Username: "",
 			},
 			args{
 				c:  &gin.Context{},

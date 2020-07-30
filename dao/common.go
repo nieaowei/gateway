@@ -10,7 +10,7 @@ const (
 )
 
 type PageSize struct {
-	Size uint
-	No   uint
+	Size int
+	No   int
 	Info string
 }

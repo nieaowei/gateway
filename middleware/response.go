@@ -3,7 +3,7 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/e421083458/golang_common/lib"
+	"gateway/lib"
 	"github.com/gin-gonic/gin"
 	"strings"
 )

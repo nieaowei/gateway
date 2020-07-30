@@ -2,52 +2,52 @@ package dao
 
 import (
 	"gateway/public"
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 )
 
-type ServiceTcpRule struct {
-	gorm.Model
-	ServiceId uint   `json:"service_id"`
-	Port      uint16 `json:"port"`
-}
+//type ServiceTCPRule struct {
+//	gorm.Model
+//	ServiceID uint   `json:"service_id"`
+//	Port      uint16 `json:"port"`
+//}
 
-func (p *ServiceTcpRule) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceTcpRule, err error) {
-	out = &ServiceTcpRule{}
-	err = tx.SetCtx(public.GetTraceContext(c)).Where(p).First(out).Error
+func (p *ServiceTCPRule) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceTCPRule, err error) {
+	out = &ServiceTCPRule{}
+	err = tx.Where(p).First(out).Error
 	if err != nil {
 		return nil, err
 	}
 	return
 }
 
-func (p *ServiceTcpRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id").SetCtx(public.GetTraceContext(c)).Save(p).Error
+func (p *ServiceTCPRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
+	err = tx.Omit("id").Save(p).Error
 	if err != nil {
 		return
 	}
 	return
 }
 
-func (p *ServiceTcpRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+func (p *ServiceTCPRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
 
 	return tx.Where(p).Delete(p).Error
 }
 
-func (p *ServiceTcpRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
+func (p *ServiceTCPRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
 	if check {
 		//check integrity
-		serviceHttpRule := &ServiceHttpRule{
-			ServiceId: p.ServiceId,
+		ServiceHTTPRule := &ServiceHTTPRule{
+			ServiceID: p.ServiceID,
 		}
-		err = db.First(serviceHttpRule, serviceHttpRule).Error
+		err = db.First(ServiceHTTPRule, ServiceHTTPRule).Error
 		if err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
 		serviceGrpcRule := &ServiceGrpcRule{
-			ServiceId: p.ServiceId,
+			ServiceID: p.ServiceID,
 		}
 		err = db.First(serviceGrpcRule, serviceGrpcRule).Error
 		if err != nil {
@@ -56,18 +56,18 @@ func (p *ServiceTcpRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) 
 
 		//check foregin
 		serviceInfo := &ServiceInfo{
-			Model: gorm.Model{ID: p.ServiceId},
+			Model: gorm.Model{ID: p.ServiceID},
 		}
 		err = db.First(serviceInfo, serviceInfo).Error
 		if err != nil {
 			return errors.New("In violation of the foreign key constraints")
 		}
 
-		// check unique ServiceId
-		serviceTcpRule := &ServiceTcpRule{
-			ServiceId: p.ServiceId,
+		// check unique ServiceID
+		ServiceTCPRule := &ServiceTCPRule{
+			ServiceID: p.ServiceID,
 		}
-		err = db.First(serviceTcpRule, serviceTcpRule).Error
+		err = db.First(ServiceTCPRule, ServiceTCPRule).Error
 		if err != nil {
 			return errors.New("Violation of the uniqueness constraint")
 		}

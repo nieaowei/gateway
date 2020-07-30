@@ -2,15 +2,15 @@ create table app
 (
     id         bigint unsigned auto_increment comment '自增id'
         primary key,
-    app_id     varchar(255)  default ''                    not null comment '租户id',
-    name       varchar(255)  default ''                    not null comment '租户名称',
-    secret     varchar(255)  default ''                    not null comment '密钥',
-    white_ips  varchar(1000) default ''                    not null comment 'ip白名单，支持前缀匹配',
-    qpd        bigint        default 0                     not null comment '日请求量限制',
-    qps        bigint        default 0                     not null comment '每秒请求量限制',
-    created_at datetime     default current_timestamp not null comment '新增时间',
-    updated_at datetime     default current_timestamp not null comment '更新时间',
-    deleted_at datetime                                   null comment '删除时间'
+    app_id     varchar(255)  default ''                not null comment '租户id',
+    name       varchar(255)  default ''                not null comment '租户名称',
+    secret     varchar(255)  default ''                not null comment '密钥',
+    white_ips  varchar(1000) default ''                not null comment 'ip白名单，支持前缀匹配',
+    qpd        bigint        default 0                 not null comment '日请求量限制',
+    qps        bigint        default 0                 not null comment '每秒请求量限制',
+    created_at datetime      default CURRENT_TIMESTAMP not null comment '新增时间',
+    updated_at datetime      default CURRENT_TIMESTAMP not null comment '更新时间',
+    deleted_at datetime                                null comment '删除时间'
 )
     comment '网关租户表';
 

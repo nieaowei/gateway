@@ -1,9 +1,9 @@
 package main
 
 import (
+	"gateway/lib"
 	"gateway/router"
-	"github.com/e421083458/golang_common/lib"
-	"github.com/e421083458/gorm"
+	"gorm.io/gorm"
 	"log"
 	"os"
 	"os/signal"

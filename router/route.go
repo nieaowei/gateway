@@ -3,8 +3,8 @@ package router
 import (
 	"gateway/controller"
 	"gateway/docs"
+	"gateway/lib"
 	"gateway/middleware"
-	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
@@ -76,7 +76,7 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	adminLoginRouter := router.Group("/admin")
-	store, err := sessions.NewRedisStore(10, "tcp", "192.168.0.1:6379", "", []byte("secret"))
+	store, err := sessions.NewRedisStore(10, "tcp", "47.106.251.178:6379", "", []byte("secret"))
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

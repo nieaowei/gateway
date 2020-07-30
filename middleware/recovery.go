@@ -3,8 +3,8 @@ package middleware
 import (
 	"errors"
 	"fmt"
+	"gateway/lib"
 	"gateway/public"
-	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
 	"runtime/debug"
 )

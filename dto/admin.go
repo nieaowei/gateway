@@ -2,11 +2,11 @@ package dto
 
 import (
 	"gateway/dao"
+	"gateway/lib"
 	"gateway/public"
-	"github.com/e421083458/golang_common/lib"
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type AdminInfoOutput struct {
@@ -31,7 +31,7 @@ func (p *ChangePwdInput) ChangePwd(c *gin.Context) (err error) {
 		Username: adminSession.Username,
 	}
 	// get database.
-	db, err := lib.GetGormPool("default")
+	db, err := lib.GetDefaultDB()
 	if err != nil {
 		return
 	}

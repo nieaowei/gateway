@@ -2,8 +2,8 @@ package test
 
 import (
 	"gateway/dao"
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"reflect"
 	"testing"
 )

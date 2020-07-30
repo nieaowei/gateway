@@ -2,17 +2,17 @@ package dto
 
 import (
 	"gateway/dao"
+	"gateway/lib"
 	"gateway/public"
-	"github.com/e421083458/golang_common/lib"
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"strconv"
 )
 
 type ServiceListInput struct {
 	Info     string `json:"info" form:"info"`
-	PageNo   uint   `json:"page_no" form:"page_no" validate:"required"`
-	PageSize uint   `json:"page_size" form:"page_size" validate:"required"`
+	PageNo   int    `json:"page_no" form:"page_no" validate:"required"`
+	PageSize int    `json:"page_size" form:"page_size" validate:"required"`
 }
 
 type ServiceListItem struct {
@@ -27,13 +27,13 @@ type ServiceListItem struct {
 }
 
 type ServiceListOutput struct {
-	Total uint              `json:"total" form:"total" validate:""`
+	Total int64             `json:"total" form:"total" validate:""`
 	List  []ServiceListItem `json:"list" form:"list" validate:""`
 }
 
 func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutput, err error) {
 	serviceInfo := &dao.ServiceInfo{}
-	db, err := lib.GetGormPool("default")
+	db, err := lib.GetDefaultDB()
 	if err != nil {
 		return
 	}
@@ -63,11 +63,11 @@ func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutpu
 		case dao.LoadTypeHttp:
 			{
 				loadType = "HTTP"
-				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHttps == 0 {
+				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHTTPs == 0 {
 					serviceAddr = clusterIP + ":" + clusterPort + serviceDetail.HTTP.Rule
 
 				}
-				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHttps == 1 {
+				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHTTPs == 1 {
 					serviceAddr = clusterIP + ":" + clusterSSLPort + serviceDetail.HTTP.Rule
 				}
 				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypeDomain {
@@ -115,7 +115,7 @@ type ServiceDeleteInput struct {
 }
 
 func (p *ServiceDeleteInput) Delete(c *gin.Context) (err error) {
-	db, err := lib.GetGormPool("default")
+	db, err := lib.GetDefaultDB()
 	if err != nil {
 		return
 	}
@@ -160,7 +160,7 @@ type ServiceAddHttpInput struct {
 	//UpstreamIdleTimeout    uint16 `json:"upstream_idle_timeout"`
 	//UpstreamMaxIdle        uint16 `json:"upstream_max_idle"`
 	dao.ServiceInfo
-	dao.ServiceHttpRule
+	dao.ServiceHTTPRule
 	dao.ServiceAccessControl
 	dao.ServiceLoadBalance
 }
@@ -170,7 +170,7 @@ func (p *ServiceAddHttpInput) BindValidParam(c *gin.Context) (err error) {
 }
 
 func (p *ServiceAddHttpInput) AddHttpService(c *gin.Context) (err error) {
-	db, err := lib.GetGormPool("default")
+	db, err := lib.GetDefaultDB()
 	if err != nil {
 		return
 	}
@@ -184,19 +184,19 @@ func (p *ServiceAddHttpInput) AddHttpService(c *gin.Context) (err error) {
 		return
 	}
 
-	p.ServiceHttpRule.ServiceId = p.ServiceInfo.ID
-	err = p.ServiceHttpRule.InsertAfterCheck(c, db, true)
+	p.ServiceHTTPRule.ServiceID = p.ServiceInfo.ID
+	err = p.ServiceHTTPRule.InsertAfterCheck(c, db, true)
 	if err != nil {
 		db.Rollback()
 		return
 	}
-	p.ServiceLoadBalance.ServiceId = p.ServiceInfo.ID
+	p.ServiceLoadBalance.ServiceID = p.ServiceInfo.ID
 	err = p.ServiceLoadBalance.InsertAfterCheck(c, db, true)
 	if err != nil {
 		db.Rollback()
 		return
 	}
-	p.ServiceAccessControl.ServiceId = p.ServiceInfo.ID
+	p.ServiceAccessControl.ServiceID = p.ServiceInfo.ID
 	err = p.ServiceAccessControl.InsertAfterCheck(c, db, true)
 	if err != nil {
 		db.Rollback()

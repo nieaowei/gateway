@@ -1,22 +1,17 @@
 package dao
 
 import (
-	"gateway/public"
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 )
 
-type ServiceInfo struct {
-	gorm.Model
-	LoadType    uint   `json:"load_type" validate:"oneof=0 1 2"`
-	ServiceName string `json:"service_name" validate:"required,alphanum,max=255,min=6"`
-	ServiceDesc string `json:"service_desc" validate:"required,max=255,min=1"`
-}
-
-func (p *ServiceInfo) TableName() string {
-	return "service_info"
-}
+//type ServiceInfo struct {
+//	gorm.Model
+//	LoadType    uint   `json:"load_type" validate:"oneof=0 1 2"`
+//	ServiceName string `json:"service_name" validate:"required,alphanum,max=255,min=6"`
+//	ServiceDesc string `json:"service_desc" validate:"required,max=255,min=1"`
+//}
 
 func (p *ServiceInfo) ServiceDetail() string {
 	return "service_info"
@@ -24,7 +19,7 @@ func (p *ServiceInfo) ServiceDetail() string {
 
 func (p *ServiceInfo) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceInfo, err error) {
 	out = &ServiceInfo{}
-	err = tx.SetCtx(public.GetTraceContext(c)).Where(p).First(out).Error
+	err = tx.Where(p).First(out).Error
 	if err != nil {
 		return nil, err
 	}
@@ -35,9 +30,9 @@ func (p *ServiceInfo) Delete(c *gin.Context, tx *gorm.DB) (err error) {
 	return tx.Where(p).Delete(p).Error
 }
 
-func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (list []ServiceInfo, count uint, err error) {
+func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (list []ServiceInfo, count int64, err error) {
 	offset := (params.No - 1) * params.Size
-	query := tx.SetCtx(public.GetTraceContext(c)).Model(p)
+	query := tx.Model(p)
 	if params.Info != "" {
 		query = query.Where("service_name like ? or service_desc like ?", "%"+params.Info+"%", "%"+params.Info+"%")
 	}
@@ -63,8 +58,8 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, tx *gorm.DB) (err er
 	switch p.LoadType {
 	case LoadTypeHttp:
 		{
-			http := ServiceHttpRule{
-				ServiceId: p.ID,
+			http := ServiceHTTPRule{
+				ServiceID: p.ID,
 			}
 			err = http.Delete(c, tx)
 			break
@@ -72,15 +67,15 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, tx *gorm.DB) (err er
 	case LoadTypeGrpc:
 		{
 			grpc := ServiceGrpcRule{
-				ServiceId: p.ID,
+				ServiceID: p.ID,
 			}
 			err = grpc.Delete(c, tx)
 			break
 		}
 	case LoadTypeTcp:
 		{
-			tcp := ServiceTcpRule{
-				ServiceId: p.ID,
+			tcp := ServiceTCPRule{
+				ServiceID: p.ID,
 			}
 			err = tcp.Delete(c, tx)
 			break
@@ -91,7 +86,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, tx *gorm.DB) (err er
 		return
 	}
 	slb := &ServiceLoadBalance{
-		ServiceId: p.ID,
+		ServiceID: p.ID,
 	}
 	err = slb.Delete(c, tx)
 	if err != nil {
@@ -100,7 +95,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, tx *gorm.DB) (err er
 	}
 
 	sac := &ServiceAccessControl{
-		ServiceId: p.ID,
+		ServiceID: p.ID,
 	}
 	err = sac.Delete(c, tx)
 	if err != nil {
@@ -119,21 +114,20 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, tx *gorm.DB) (err er
 
 type ServiceDetail struct {
 	Info          *ServiceInfo          `json:"info"`
-	HTTP          *ServiceHttpRule      `json:"http"`
+	HTTP          *ServiceHTTPRule      `json:"http"`
 	GRPC          *ServiceGrpcRule      `json:"grpc"`
-	TCP           *ServiceTcpRule       `json:"tcp"`
+	TCP           *ServiceTCPRule       `json:"tcp"`
 	LoadBalance   *ServiceLoadBalance   `json:"load_balance"`
 	AccessControl *ServiceAccessControl `json:"access_control"`
 }
 
 func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *ServiceDetail, err error) {
 	out = &ServiceDetail{}
-	//todo wait next step optimization.
 	switch p.LoadType {
 	case LoadTypeHttp:
 		{
-			httpRule := &ServiceHttpRule{
-				ServiceId: p.ID,
+			httpRule := &ServiceHTTPRule{
+				ServiceID: p.ID,
 			}
 			httpRule, err = httpRule.FindOne(c, db)
 			if err != nil {
@@ -144,8 +138,8 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 		}
 	case LoadTypeTcp:
 		{
-			tcpRule := &ServiceTcpRule{
-				ServiceId: p.ID,
+			tcpRule := &ServiceTCPRule{
+				ServiceID: p.ID,
 			}
 			tcpRule, err = tcpRule.FindOne(c, db)
 			if err != nil {
@@ -157,7 +151,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 	case LoadTypeGrpc:
 		{
 			grpcRule := &ServiceGrpcRule{
-				ServiceId: p.ID,
+				ServiceID: p.ID,
 			}
 			grpcRule, err = grpcRule.FindOne(c, db)
 			if err != nil {
@@ -168,7 +162,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 		}
 	}
 	accessControl := &ServiceAccessControl{
-		ServiceId: p.ID,
+		ServiceID: p.ID,
 	}
 	accessControl, err = accessControl.FindOne(c, db)
 	if err != nil {
@@ -176,7 +170,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 	}
 
 	loadBalance := &ServiceLoadBalance{
-		ServiceId: p.ID,
+		ServiceID: p.ID,
 	}
 	loadBalance, err = loadBalance.FindOne(c, db)
 	if err != nil {
