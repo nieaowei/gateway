@@ -3,21 +3,17 @@ package main
 import (
 	"gateway/lib"
 	"gateway/router"
-	"gorm.io/gorm"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
 func main() {
-	lib.InitModule("./conf/dev/", []string{"base", "mysql", "redis"})
-	defer lib.Destroy()
-	for _, val := range lib.GORMMapPool {
-		val.SetLogger(gorm.Logger{log.New(os.Stdout, "\r\n", 0)})
-		val.LogMode(true)
-		val.SingularTable(true)
-	}
+	//lib.InitModule("./conf/dev/", []string{"base", "mysql", "redis"})
+	//defer lib.Destroy()
+	lib.InitBaseConf("./conf/dev")
+	lib.InitMysqlConf("./conf/dev")
+	lib.InitRedisConf("./conf/dev")
 	router.HttpServerRun()
 
 	quit := make(chan os.Signal)

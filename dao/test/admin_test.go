@@ -12,7 +12,7 @@ import (
 var db *gorm.DB
 
 func initDB() {
-	lib.InitDBPool("../../conf/dev/mysql_map.toml")
+	lib.InitDBPool("../../conf/dev/mysql.toml")
 	db, _ = lib.GetDefaultDB()
 }
 

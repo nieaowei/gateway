@@ -69,21 +69,21 @@ func InitModule(configPath string, modules []string) error {
 	}
 
 	// 加载redis配置
-	if InArrayString("redis", modules) {
-		if err := InitRedisConf(GetConfPath("redis_map")); err != nil {
-			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitRedisConf:"+err.Error())
-		}
-	}
+	//if InArrayString("redis", modules) {
+	//	if err := InitRedisConf(GetConfPath("redis")); err != nil {
+	//		fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitRedisConf:"+err.Error())
+	//	}
+	//}
 
 	// 加载mysql配置并初始化实例
 	if InArrayString("mysql", modules) {
-		if err := InitDBPool(GetConfPath("mysql_map")); err != nil {
+		if err := InitDBPool(GetConfPath("mysql")); err != nil {
 			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitDBPool:"+err.Error())
 		}
 	}
 
 	// 设置时区
-	if location, err := time.LoadLocation(ConfBase.TimeLocation); err != nil {
+	if location, err := time.LoadLocation(GetDefaultConfBase().Base.TimeLocation); err != nil {
 		return err
 	} else {
 		TimeLocation = location

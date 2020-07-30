@@ -49,9 +49,9 @@ func (p *ServiceListInput) GetServiceList(c *gin.Context) (out *ServiceListOutpu
 		Total: count,
 		List:  []ServiceListItem{},
 	}
-	clusterIP := lib.GetStringConf("base.cluster.cluster_ip")
-	clusterPort := lib.GetStringConf("base.cluster.cluster_port")
-	clusterSSLPort := lib.GetStringConf("base.cluster.cluster_ssl_port")
+	clusterIP := lib.GetDefaultConfBase().Cluster.Ip
+	clusterPort := lib.GetDefaultConfBase().Cluster.Port
+	clusterSSLPort := lib.GetDefaultConfBase().Cluster.SslPort
 	for _, info := range serviceInfos {
 		serviceDetail, err := info.FindOneServiceDetail(c, db)
 		if err != nil {

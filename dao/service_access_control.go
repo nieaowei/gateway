@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"gateway/public"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )

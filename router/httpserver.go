@@ -14,19 +14,19 @@ var (
 )
 
 func HttpServerRun() {
-	gin.SetMode(lib.ConfBase.DebugMode)
+	gin.SetMode(lib.GetDefaultConfBase().Base.DebugMode)
 	r := InitRouter()
 	HttpSrvHandler = &http.Server{
-		Addr:           lib.GetStringConf("base.http.addr"),
+		Addr:           lib.GetDefaultConfBase().Http.Addr,
 		Handler:        r,
-		ReadTimeout:    time.Duration(lib.GetIntConf("base.http.read_timeout")) * time.Second,
-		WriteTimeout:   time.Duration(lib.GetIntConf("base.http.write_timeout")) * time.Second,
-		MaxHeaderBytes: 1 << uint(lib.GetIntConf("base.http.max_header_bytes")),
+		ReadTimeout:    time.Duration(lib.GetDefaultConfBase().Http.ReadTimeout) * time.Second,
+		WriteTimeout:   time.Duration(lib.GetDefaultConfBase().Http.WriteTimeout) * time.Second,
+		MaxHeaderBytes: 1 << uint(lib.GetDefaultConfBase().Http.MaxHeaderBytes),
 	}
 	go func() {
-		log.Printf(" [INFO] HttpServerRun:%s\n", lib.GetStringConf("base.http.addr"))
+		log.Printf(" [INFO] HttpServerRun:%s\n", lib.GetDefaultConfBase().Http.Addr)
 		if err := HttpSrvHandler.ListenAndServe(); err != nil {
-			log.Fatalf(" [ERROR] HttpServerRun:%s err:%v\n", lib.GetStringConf("base.http.addr"), err)
+			log.Fatalf(" [ERROR] HttpServerRun:%s err:%v\n", lib.GetDefaultConfBase().Http.Addr, err)
 		}
 	}()
 }

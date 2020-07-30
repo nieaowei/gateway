@@ -2,13 +2,9 @@ package router
 
 import (
 	"gateway/controller"
-	"gateway/docs"
-	"gateway/lib"
 	"gateway/middleware"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
 	"log"
 )
 
@@ -58,13 +54,6 @@ import (
 // @x-extension-openapi {"example": "value on a json format"}
 
 func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
-	// programatically set swagger info
-	docs.SwaggerInfo.Title = lib.GetStringConf("base.swagger.title")
-	docs.SwaggerInfo.Description = lib.GetStringConf("base.swagger.desc")
-	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = lib.GetStringConf("base.swagger.host")
-	docs.SwaggerInfo.BasePath = lib.GetStringConf("base.swagger.base_path")
-	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	router := gin.Default()
 	router.Use(middlewares...)
@@ -73,7 +62,6 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 			"message": "pong",
 		})
 	})
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	adminLoginRouter := router.Group("/admin")
 	store, err := sessions.NewRedisStore(10, "tcp", "47.106.251.178:6379", "", []byte("secret"))
