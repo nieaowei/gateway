@@ -77,7 +77,7 @@ func InitModule(configPath string, modules []string) error {
 
 	// 加载mysql配置并初始化实例
 	if InArrayString("mysql", modules) {
-		if err := InitDBPool(GetConfPath("mysql")); err != nil {
+		if err := InitDBPool(); err != nil {
 			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitDBPool:"+err.Error())
 		}
 	}

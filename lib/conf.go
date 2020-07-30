@@ -82,9 +82,9 @@ type RedisConf struct {
 }
 
 //全局变量
-var ConfBase *BaseConf = &BaseConf{}
-var ConfRedis *RedisMapConf = &RedisMapConf{}
-var ConfMysql *MysqlConf = &MysqlConf{}
+var ConfBase *BaseConf
+var ConfRedis *RedisMapConf
+var ConfMysql *MysqlConf
 
 var ViperConfMap map[string]*viper.Viper = map[string]*viper.Viper{}
 
@@ -107,26 +107,32 @@ func InitConf(path string, config Config) (err error) {
 }
 
 func InitBaseConf(path string) (err error) {
-	err = InitConf(path, ConfBase)
+	conf := &BaseConf{}
+	err = InitConf(path, conf)
 	if err != nil {
 		panic("init conf base")
 	}
+	ConfBase = conf
 	return
 }
 
 func InitRedisConf(path string) (err error) {
-	err = InitConf(path, ConfRedis)
+	conf := &RedisMapConf{}
+	err = InitConf(path, conf)
 	if err != nil {
 		panic("init conf base")
 	}
+	ConfRedis = conf
 	return
 }
 
 func InitMysqlConf(path string) (err error) {
-	err = InitConf(path, ConfMysql)
+	conf := &MysqlConf{}
+	err = InitConf(path, conf)
 	if err != nil {
 		panic("init conf base")
 	}
+	ConfMysql = conf
 	return
 }
 
@@ -137,13 +143,22 @@ func InitViperConf() error {
 }
 
 func GetDefaultConfMysql() *MySQLConf {
+	if ConfMysql == nil {
+		panic("conf not init")
+	}
 	return ConfMysql.List["default"]
 }
 
 func GetDefaultConfRedis() *RedisConf {
+	if ConfRedis == nil {
+		panic("conf not init")
+	}
 	return ConfRedis.List["default"]
 }
 
 func GetDefaultConfBase() *BaseConf {
+	if ConfBase == nil {
+		panic("conf not init")
+	}
 	return ConfBase
 }

@@ -7,7 +7,7 @@ import (
 
 var DefaultDB *gorm.DB
 
-func InitDBPool(path string) error {
+func InitDBPool() error {
 	//普通的db方式
 	var err error
 	DefaultDB, err = gorm.Open(mysql.Open(GetDefaultConfMysql().DataSourceName), &gorm.Config{})
@@ -17,6 +17,9 @@ func InitDBPool(path string) error {
 	return nil
 }
 func GetDefaultDB() (*gorm.DB, error) {
+	if DefaultDB == nil {
+		panic("db not init")
+	}
 	return DefaultDB, nil
 }
 
