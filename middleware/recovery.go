@@ -3,8 +3,8 @@ package middleware
 import (
 	"errors"
 	"fmt"
+	"gateway/lib"
 	"gateway/public"
-	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
 	"runtime/debug"
 )
@@ -21,7 +21,7 @@ func RecoveryMiddleware() gin.HandlerFunc {
 					"stack": string(debug.Stack()),
 				})
 
-				if lib.ConfBase.DebugMode != "debug" {
+				if lib.GetDefaultConfBase().Base.DebugMode != "debug" {
 					ResponseError(c, 500, errors.New("内部错误"))
 					return
 				} else {

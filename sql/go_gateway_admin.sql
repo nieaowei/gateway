@@ -2,12 +2,12 @@ create table admin
 (
     id         bigint auto_increment comment '自增id'
         primary key,
-    username   varchar(255) default ''                    not null comment '用户名',
-    salt       varchar(50)  default ''                    not null comment '盐',
-    password   varchar(255) default ''                    not null comment '密码',
-    created_at datetime     default current_timestamp not null comment '新增时间',
-    updated_at datetime     default current_timestamp not null comment '更新时间',
-    deleted_at datetime                                   null comment '删除时间'
+    username   varchar(255) default ''                not null comment '用户名',
+    salt       varchar(50)  default ''                not null comment '盐',
+    password   varchar(255) default ''                not null comment '密码',
+    created_at datetime     default CURRENT_TIMESTAMP not null comment '新增时间',
+    updated_at datetime     default CURRENT_TIMESTAMP not null comment '更新时间',
+    deleted_at datetime                               null comment '删除时间'
 )
     comment '管理员表';
 

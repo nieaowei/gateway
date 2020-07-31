@@ -1,71 +1,77 @@
 package dao
 
 import (
-	"gateway/public"
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 )
 
-type ServiceGrpcRule struct {
-	gorm.Model
-	ServiceId      uint   `json:"service_id"`
-	Port           uint16 `json:"port"`
-	HeaderTransfor string `json:"header_transfor"`
+//type ServiceGrpcRule struct {
+//	gorm.Model
+//	ServiceID      uint   `json:"service_id"`
+//	Port           uint16 `json:"port"`
+//	HeaderTransfor string `json:"header_transfor"`
+//}
+func (p *ServiceGrpcRule) BeforeUpdate(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at")
+	return nil
+}
+
+func (p *ServiceGrpcRule) BeforeDelete(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL")
+	return nil
 }
 
 func (p *ServiceGrpcRule) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceGrpcRule, err error) {
 	out = &ServiceGrpcRule{}
-	err = tx.SetCtx(public.GetTraceContext(c)).Where(p).First(out).Error
-	if err != nil {
-		return nil, err
-	}
+	result := tx.Where(p).First(out)
+	err = ErrorHandle(result)
 	return
 }
 
-func (p *ServiceGrpcRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id").SetCtx(public.GetTraceContext(c)).Save(p).Error
-	if err != nil {
-		return
-	}
+func (p *ServiceGrpcRule) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
+	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)
+	err = ErrorHandle(result)
 	return
 }
 
-func (p *ServiceGrpcRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-	return tx.Where(p).Delete(p).Error
+func (p *ServiceGrpcRule) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
+	result := tx.Delete(p)
+	err = ErrorHandle(result)
+	return
 }
 
 func (p *ServiceGrpcRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
 	if check {
 		//check integrity
-		serviceHttpRule := &ServiceHttpRule{
-			ServiceId: p.ServiceId,
+		ServiceHTTPRule := &ServiceHTTPRule{
+			ServiceID: p.ServiceID,
 		}
-		err = db.First(serviceHttpRule, serviceHttpRule).Error
+		err = db.First(ServiceHTTPRule, ServiceHTTPRule).Error
 		if err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
-		serviceTcpRule := &ServiceTcpRule{
-			ServiceId: p.ServiceId,
+		ServiceTCPRule := &ServiceTCPRule{
+			ServiceID: p.ServiceID,
 		}
-		err = db.First(serviceTcpRule, serviceTcpRule).Error
+		err = db.First(ServiceTCPRule, ServiceTCPRule).Error
 		if err != nil {
 			return errors.New("Integrity violation constraint")
 		}
 
 		//check foregin
 		serviceInfo := &ServiceInfo{
-			Model: gorm.Model{ID: p.ServiceId},
+			Model: gorm.Model{ID: p.ServiceID},
 		}
 		err = db.First(serviceInfo, serviceInfo).Error
 		if err != nil {
 			return errors.New("In violation of the foreign key constraints")
 		}
 
-		// check unique ServiceId
+		// check unique ServiceID
 		serviceGrpcRule := &ServiceGrpcRule{
-			ServiceId: p.ServiceId,
+			ServiceID: p.ServiceID,
 		}
 		err = db.First(serviceGrpcRule, serviceGrpcRule).Error
 		if err != nil {

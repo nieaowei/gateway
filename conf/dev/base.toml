@@ -33,6 +33,6 @@
     base_path=""
 
 [cluster]
-    cluster_ip="127.0.0.1"
-    cluster_port="8880"
-    cluster_ssl_port="4880"
+    ip="127.0.0.1"
+    port="8880"
+    ssl_port="4880"

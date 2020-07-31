@@ -1,18 +1,17 @@
 package dao
 
 import (
-	"gateway/public"
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"time"
 )
 
-type Admin struct {
-	gorm.Model
-	Salt     string `json:"salt"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
+//type Admin struct {
+//	gorm.Model
+//	Salt     string `json:"salt"`
+//	Username string `json:"username"`
+//	Password string `json:"password"`
+//}
 
 type AdminSessionInfo struct {
 	ID        uint      `json:"id"`
@@ -22,15 +21,13 @@ type AdminSessionInfo struct {
 
 func (p *Admin) FindOne(c *gin.Context, tx *gorm.DB) (out *Admin, err error) {
 	out = &Admin{}
-	err = tx.SetCtx(public.GetTraceContext(c)).Where(p).First(out).Error
-	if err != nil {
-		return nil, err
-	}
+	result := tx.Where(p).First(out)
+	err = ErrorHandle(result)
 	return
 }
 
 func (p *Admin) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id", "created_at", "deleted_at").SetCtx(public.GetTraceContext(c)).Save(p).Error
+	err = tx.Omit("id", "created_at", "deleted_at").Save(p).Error
 	if err != nil {
 		return
 	}
@@ -38,13 +35,15 @@ func (p *Admin) Save(c *gin.Context, tx *gorm.DB) (err error) {
 }
 
 func (p *Admin) Updates(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Model(p).Omit("id", "created_at", "deleted_at").SetCtx(public.GetTraceContext(c)).Updates(p).Error
+	err = tx.Model(p).Omit("id", "created_at", "deleted_at").Updates(p).Error
 	if err != nil {
 		return
 	}
 	return
 }
 
-func (p *Admin) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-	return tx.Delete(p).Error
+func (p *Admin) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
+	result := tx.Delete(p)
+	err = ErrorHandle(result)
+	return
 }

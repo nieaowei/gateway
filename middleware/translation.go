@@ -117,7 +117,7 @@ func TranslationMiddleware() gin.HandlerFunc {
 			val.RegisterValidation("valid_ip_list", func(fl validator.FieldLevel) bool {
 				data := strings.Split(fl.Field().String(), "\n")
 				for _, datum := range data {
-					matched, _ := regexp.Match("^\\S:\\d+$", []byte(datum))
+					matched, _ := regexp.Match("^\\S+:\\d+$", []byte(datum))
 					if !matched {
 						return false
 					}
