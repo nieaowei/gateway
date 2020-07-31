@@ -17,10 +17,8 @@ import (
 
 func (p *App) FindOne(c *gin.Context, tx *gorm.DB) (out *App, err error) {
 	out = &App{}
-	err = tx.Where(p).First(out).Error
-	if err != nil {
-		return nil, err
-	}
+	result := tx.Where(p).First(out)
+	err = ErrorHandle(result)
 	return
 }
 
@@ -32,6 +30,8 @@ func (p *App) Save(c *gin.Context, tx *gorm.DB) (err error) {
 	return
 }
 
-func (p *App) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-	return tx.Delete(p).Error
+func (p *App) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
+	result := tx.Delete(p)
+	err = ErrorHandle(result)
+	return
 }

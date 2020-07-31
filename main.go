@@ -15,6 +15,8 @@ func main() {
 	lib.InitMysqlConf("./conf/dev")
 	lib.InitRedisConf("./conf/dev")
 	lib.InitDBPool()
+	//db,_:=lib.GetDefaultDB()
+	//db.Logger.LogMode(logger.Info)
 	router.HttpServerRun()
 
 	quit := make(chan os.Signal)

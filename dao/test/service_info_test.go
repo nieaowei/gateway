@@ -12,7 +12,7 @@ func TestServiceInfo_PageList(t *testing.T) {
 	initDB()
 	type fields struct {
 		Model       gorm.Model
-		LoadType    uint
+		LoadType    int8
 		ServiceName string
 		ServiceDesc string
 	}
@@ -26,7 +26,7 @@ func TestServiceInfo_PageList(t *testing.T) {
 		fields    fields
 		args      args
 		wantList  []dao.ServiceInfo
-		wantCount uint
+		wantCount int64
 		wantErr   bool
 	}{
 		// TODO: Add test cases.
@@ -123,7 +123,7 @@ func TestServiceInfo_AddAfterCheck(t *testing.T) {
 	initDB()
 	type fields struct {
 		Model       gorm.Model
-		LoadType    uint
+		LoadType    int8
 		ServiceName string
 		ServiceDesc string
 	}
@@ -161,8 +161,103 @@ func TestServiceInfo_AddAfterCheck(t *testing.T) {
 				ServiceName: tt.fields.ServiceName,
 				ServiceDesc: tt.fields.ServiceDesc,
 			}
-			if err := p.AddAfterCheck(tt.args.c, tt.args.db); (err != nil) != tt.wantErr {
-				t.Errorf("AddAfterCheck() error = %v, wantErr %v", err, tt.wantErr)
+			if err := p.Insert(tt.args.c, tt.args.db); (err != nil) != tt.wantErr {
+				t.Errorf("Insert() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestServiceInfo_Delete(t *testing.T) {
+	initDB()
+	type fields struct {
+		Model       gorm.Model
+		LoadType    int8
+		ServiceName string
+		ServiceDesc string
+	}
+	type args struct {
+		c  *gin.Context
+		tx *gorm.DB
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "",
+			fields: fields{
+				Model: gorm.Model{
+					ID: 95,
+				},
+			},
+			args: args{
+				tx: db,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &dao.ServiceInfo{
+				Model:       tt.fields.Model,
+				LoadType:    tt.fields.LoadType,
+				ServiceName: tt.fields.ServiceName,
+				ServiceDesc: tt.fields.ServiceDesc,
+			}
+			if err := p.DeleteByID(tt.args.c, tt.args.tx); (err != nil) != tt.wantErr {
+				t.Errorf("DeleteByID() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestServiceInfo_UpdateAll(t *testing.T) {
+	initDB()
+	type fields struct {
+		Model       gorm.Model
+		LoadType    int8
+		ServiceName string
+		ServiceDesc string
+	}
+	type args struct {
+		c  *gin.Context
+		db *gorm.DB
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "",
+			fields: fields{
+				Model: gorm.Model{
+					ID: 96,
+				},
+				ServiceName: "33344",
+			},
+			args: args{
+				db: db,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &dao.ServiceInfo{
+				Model:       tt.fields.Model,
+				LoadType:    tt.fields.LoadType,
+				ServiceName: tt.fields.ServiceName,
+				ServiceDesc: tt.fields.ServiceDesc,
+			}
+			if err := p.UpdateAll(tt.args.c, tt.args.db); (err != nil) != tt.wantErr {
+				t.Errorf("UpdateAllByServiceID() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

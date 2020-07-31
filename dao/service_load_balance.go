@@ -22,20 +22,20 @@ import (
 //	UpstreamMaxIdle        uint16 `json:"upstream_max_idle"`
 //}
 
-func (p *ServiceLoadBalance) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceLoadBalance, err error) {
-	out = &ServiceLoadBalance{}
-	err = tx.Where(p).First(out).Error
-	if err != nil {
-		return nil, err
-	}
-	return
+func (p *ServiceLoadBalance) BeforeUpdate(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at")
+	return nil
 }
 
-func (p *ServiceLoadBalance) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id").Save(p).Error
-	if err != nil {
-		return
-	}
+func (p *ServiceLoadBalance) BeforeDelete(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL")
+	return nil
+}
+
+func (p *ServiceLoadBalance) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceLoadBalance, err error) {
+	out = &ServiceLoadBalance{}
+	result := tx.Where(p).First(out)
+	err = ErrorHandle(result)
 	return
 }
 
@@ -43,9 +43,16 @@ func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
 	return Split(p.IPList, ",")
 }
 
-func (p *ServiceLoadBalance) Delete(c *gin.Context, tx *gorm.DB) (err error) {
+func (p *ServiceLoadBalance) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
+	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)
+	err = ErrorHandle(result)
+	return
+}
 
-	return tx.Where(p).Delete(p).Error
+func (p *ServiceLoadBalance) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
+	result := tx.Delete(p)
+	err = ErrorHandle(result)
+	return
 }
 
 func (p *ServiceLoadBalance) InsertAfterCheck(c *gin.Context, tx *gorm.DB, check bool) (err error) {

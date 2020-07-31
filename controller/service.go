@@ -34,13 +34,13 @@ func (p *ServiceController) ServiceAddHttp(c *gin.Context) {
 }
 
 func (p *ServiceController) ServiceUpdateHttp(c *gin.Context) {
-	params := &dto.ServiceAddHttpInput{}
+	params := &dto.HttpServiceUpdateInput{}
 	if err := params.BindValidParam(c); err != nil {
 		middleware.ResponseError(c, 1001, err)
 		return
 	}
 	//pass
-	err := params.AddHttpService(c)
+	err := params.UpdateHttpService(c)
 	if err != nil {
 		middleware.ResponseError(c, 1002, err)
 		return

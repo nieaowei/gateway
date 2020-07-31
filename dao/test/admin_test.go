@@ -5,6 +5,7 @@ import (
 	"gateway/lib"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"reflect"
 	"testing"
 )
@@ -12,8 +13,10 @@ import (
 var db *gorm.DB
 
 func initDB() {
-	lib.InitDBPool("../../conf/dev/mysql.toml")
+	lib.InitMysqlConf("../../conf/dev")
+	lib.InitDBPool()
 	db, _ = lib.GetDefaultDB()
+	db.Logger.LogMode(logger.Info)
 }
 
 func TestAdmin_FindOne(t *testing.T) {
@@ -22,6 +25,7 @@ func TestAdmin_FindOne(t *testing.T) {
 		Model    gorm.Model
 		Username string
 		Password string
+		Salt     string
 	}
 	type args struct {
 		c  *gin.Context
@@ -71,7 +75,7 @@ func TestAdmin_FindOne(t *testing.T) {
 				tx: db,
 			},
 			&dao.Admin{},
-			true,
+			false,
 		},
 	}
 	for _, tt := range tests {

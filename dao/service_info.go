@@ -19,15 +19,42 @@ func (p *ServiceInfo) ServiceDetail() string {
 
 func (p *ServiceInfo) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceInfo, err error) {
 	out = &ServiceInfo{}
-	err = tx.Where(p).First(out).Error
-	if err != nil {
-		return nil, err
-	}
+	result := tx.Where(p).First(out)
+	err = ErrorHandle(result)
 	return
 }
 
-func (p *ServiceInfo) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-	return tx.Where(p).Delete(p).Error
+func (p *ServiceInfo) BeforeUpdate(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at")
+	return nil
+}
+
+func (p *ServiceInfo) BeforeDelete(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL")
+	return nil
+}
+func (p *ServiceInfo) BeforeCreate(tx *gorm.DB) error {
+	serviceInfo := &ServiceInfo{
+		ServiceName: p.ServiceName,
+	}
+	// check unique ServiceName
+	err := tx.First(serviceInfo, serviceInfo).Error
+	if err != gorm.ErrRecordNotFound {
+		return errors.New("Violation of the uniqueness constraint #ServiceInfo.ServiceName")
+	}
+	// make sure insert
+	tx = tx.Statement.Omit("id")
+	return nil
+}
+
+func (p *ServiceInfo) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
+	return db.Save(p).Error
+}
+
+func (p *ServiceInfo) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
+	result := tx.Delete(p)
+	err = ErrorHandle(result)
+	return
 }
 
 func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (list []ServiceInfo, count int64, err error) {
@@ -60,7 +87,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 					http := ServiceHTTPRule{
 						ServiceID: p.ID,
 					}
-					err = http.Delete(c, tx)
+					err = http.DeleteByID(c, tx)
 					break
 				}
 			case LoadTypeGrpc:
@@ -68,7 +95,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 					grpc := ServiceGrpcRule{
 						ServiceID: p.ID,
 					}
-					err = grpc.Delete(c, tx)
+					err = grpc.DeleteByID(c, tx)
 					break
 				}
 			case LoadTypeTcp:
@@ -76,7 +103,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 					tcp := ServiceTCPRule{
 						ServiceID: p.ID,
 					}
-					err = tcp.Delete(c, tx)
+					err = tcp.DeleteByID(c, tx)
 					break
 				}
 			}
@@ -86,7 +113,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 			slb := &ServiceLoadBalance{
 				ServiceID: p.ID,
 			}
-			err = slb.Delete(c, tx)
+			err = slb.DeleteByID(c, tx)
 			if err != nil {
 				return
 			}
@@ -94,12 +121,12 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 			sac := &ServiceAccessControl{
 				ServiceID: p.ID,
 			}
-			err = sac.Delete(c, tx)
+			err = sac.DeleteByID(c, tx)
 			if err != nil {
 				return
 			}
 
-			err = p.Delete(c, tx)
+			err = p.DeleteByID(c, tx)
 			if err != nil {
 				return
 			}
@@ -181,17 +208,8 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 	return
 }
 
-func (p *ServiceInfo) AddAfterCheck(c *gin.Context, db *gorm.DB) error {
-	serviceInfo := &ServiceInfo{
-		ServiceName: p.ServiceName,
-	}
-	// check unique ServiceName
-	err := db.First(serviceInfo, serviceInfo).Error
-	if err != gorm.ErrRecordNotFound {
-		return errors.New("Violation of the uniqueness constraint #ServiceInfo.ServiceName")
-	}
-	// make sure insert
-	p.ID = 0
-	err = db.Create(p).Error
+func (p *ServiceInfo) Insert(c *gin.Context, db *gorm.DB) error {
+
+	err := db.Create(p).Error
 	return err
 }

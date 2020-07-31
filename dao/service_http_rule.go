@@ -18,26 +18,33 @@ import (
 //	HeaderTransfor string `json:"header_transfor"`
 //}
 
+func (p *ServiceHTTPRule) BeforeUpdate(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at")
+	return nil
+}
+
+func (p *ServiceHTTPRule) BeforeDelete(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL")
+	return nil
+}
+
 func (p *ServiceHTTPRule) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceHTTPRule, err error) {
 	out = &ServiceHTTPRule{}
-	err = tx.Where(p).First(out).Error
-	if err != nil {
-		return nil, err
-	}
+	result := tx.Where(p).First(out)
+	err = ErrorHandle(result)
 	return
 }
 
-func (p *ServiceHTTPRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id").Save(p).Error
-	if err != nil {
-		return
-	}
+func (p *ServiceHTTPRule) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
+	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)
+	err = ErrorHandle(result)
 	return
 }
 
-func (p *ServiceHTTPRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-
-	return tx.Where(p).Delete(p).Error
+func (p *ServiceHTTPRule) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
+	result := tx.Delete(p)
+	err = ErrorHandle(result)
+	return
 }
 
 func (p *ServiceHTTPRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {

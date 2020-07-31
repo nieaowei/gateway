@@ -21,10 +21,8 @@ type AdminSessionInfo struct {
 
 func (p *Admin) FindOne(c *gin.Context, tx *gorm.DB) (out *Admin, err error) {
 	out = &Admin{}
-	err = tx.Where(p).First(out).Error
-	if err != nil {
-		return nil, err
-	}
+	result := tx.Where(p).First(out)
+	err = ErrorHandle(result)
 	return
 }
 
@@ -44,6 +42,8 @@ func (p *Admin) Updates(c *gin.Context, tx *gorm.DB) (err error) {
 	return
 }
 
-func (p *Admin) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-	return tx.Delete(p).Error
+func (p *Admin) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
+	result := tx.Delete(p)
+	err = ErrorHandle(result)
+	return
 }

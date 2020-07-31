@@ -12,26 +12,33 @@ import (
 //	Port      uint16 `json:"port"`
 //}
 
+func (p *ServiceTCPRule) BeforeUpdate(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at")
+	return nil
+}
+
+func (p *ServiceTCPRule) BeforeDelete(tx *gorm.DB) error {
+	tx = tx.Statement.Where("deleted_at IS NULL")
+	return nil
+}
+
 func (p *ServiceTCPRule) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceTCPRule, err error) {
 	out = &ServiceTCPRule{}
-	err = tx.Where(p).First(out).Error
-	if err != nil {
-		return nil, err
-	}
+	result := tx.Where(p).First(out)
+	err = ErrorHandle(result)
 	return
 }
 
-func (p *ServiceTCPRule) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id").Save(p).Error
-	if err != nil {
-		return
-	}
+func (p *ServiceTCPRule) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
+	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)
+	err = ErrorHandle(result)
 	return
 }
 
-func (p *ServiceTCPRule) Delete(c *gin.Context, tx *gorm.DB) (err error) {
-
-	return tx.Where(p).Delete(p).Error
+func (p *ServiceTCPRule) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
+	result := tx.Delete(p)
+	err = ErrorHandle(result)
+	return
 }
 
 func (p *ServiceTCPRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {

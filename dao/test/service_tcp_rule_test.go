@@ -13,7 +13,7 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 	type fields struct {
 		ID        uint
 		ServiceID uint
-		Port      uint16
+		Port      int
 	}
 	type args struct {
 		c  *gin.Context
@@ -23,7 +23,7 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		wantOut *dao.ServiceTcpRule
+		wantOut *dao.ServiceTCPRule
 		wantErr bool
 	}{
 		// TODO: Add test cases.
@@ -36,7 +36,7 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 				c:  &gin.Context{},
 				tx: db,
 			},
-			&dao.ServiceTcpRule{},
+			&dao.ServiceTCPRule{},
 			false,
 		},
 		{
@@ -48,13 +48,13 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 				c:  &gin.Context{},
 				tx: db,
 			},
-			&dao.ServiceTcpRule{},
+			&dao.ServiceTCPRule{},
 			true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &dao.ServiceTcpRule{
+			p := &dao.ServiceTCPRule{
 				ServiceID: tt.fields.ServiceID,
 				Port:      tt.fields.Port,
 			}
@@ -65,40 +65,6 @@ func TestServiceTcpRule_FindOne(t *testing.T) {
 			}
 			if !reflect.DeepEqual(gotOut, tt.wantOut) {
 				t.Logf("FindOne() gotOut = %v, want %v", gotOut, tt.wantOut)
-			}
-		})
-	}
-}
-
-func TestServiceTcpRule_Save(t *testing.T) {
-	type fields struct {
-		ID        uint
-		ServiceID uint
-		Port      uint16
-	}
-	type args struct {
-		c  *gin.Context
-		tx *gorm.DB
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := &dao.ServiceTcpRule{
-				Model: gorm.Model{
-					ID: tt.fields.ID,
-				},
-				ServiceID: tt.fields.ServiceID,
-				Port:      tt.fields.Port,
-			}
-			if err := p.Save(tt.args.c, tt.args.tx); (err != nil) != tt.wantErr {
-				t.Errorf("Save() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
