@@ -125,63 +125,64 @@ func (p *ServiceDeleteInput) Delete(c *gin.Context) (err error) {
 		},
 	}
 
-	err = db.Transaction(func(tx *gorm.DB) (err error) {
-		serviceInfo, err = serviceInfo.FindOne(c, tx)
-		if err != nil {
-			return
-		}
-
-		switch serviceInfo.LoadType {
-		case dao.LoadTypeHttp:
-			{
-				http := dao.ServiceHTTPRule{
-					ServiceID: serviceInfo.ID,
-				}
-				err = http.Delete(c, tx)
-				break
+	err = db.Transaction(
+		func(tx *gorm.DB) (err error) {
+			serviceInfo, err = serviceInfo.FindOne(c, tx)
+			if err != nil {
+				return
 			}
-		case dao.LoadTypeGrpc:
-			{
-				grpc := dao.ServiceGrpcRule{
-					ServiceID: serviceInfo.ID,
-				}
-				err = grpc.Delete(c, tx)
-				break
-			}
-		case dao.LoadTypeTcp:
-			{
-				tcp := dao.ServiceTCPRule{
-					ServiceID: serviceInfo.ID,
-				}
-				err = tcp.Delete(c, tx)
-				break
-			}
-		}
-		if err != nil {
-			return
-		}
-		slb := &dao.ServiceLoadBalance{
-			ServiceID: serviceInfo.ID,
-		}
-		err = slb.Delete(c, tx)
-		if err != nil {
-			return
-		}
 
-		sac := &dao.ServiceAccessControl{
-			ServiceID: serviceInfo.ID,
-		}
-		err = sac.Delete(c, tx)
-		if err != nil {
-			return
-		}
+			switch serviceInfo.LoadType {
+			case dao.LoadTypeHttp:
+				{
+					http := dao.ServiceHTTPRule{
+						ServiceID: serviceInfo.ID,
+					}
+					err = http.Delete(c, tx)
+					break
+				}
+			case dao.LoadTypeGrpc:
+				{
+					grpc := dao.ServiceGrpcRule{
+						ServiceID: serviceInfo.ID,
+					}
+					err = grpc.Delete(c, tx)
+					break
+				}
+			case dao.LoadTypeTcp:
+				{
+					tcp := dao.ServiceTCPRule{
+						ServiceID: serviceInfo.ID,
+					}
+					err = tcp.Delete(c, tx)
+					break
+				}
+			}
+			if err != nil {
+				return
+			}
+			slb := &dao.ServiceLoadBalance{
+				ServiceID: serviceInfo.ID,
+			}
+			err = slb.Delete(c, tx)
+			if err != nil {
+				return
+			}
 
-		err = serviceInfo.Delete(c, tx)
-		if err != nil {
+			sac := &dao.ServiceAccessControl{
+				ServiceID: serviceInfo.ID,
+			}
+			err = sac.Delete(c, tx)
+			if err != nil {
+				return
+			}
+
+			err = serviceInfo.Delete(c, tx)
+			if err != nil {
+				return
+			}
 			return
-		}
-		return
-	})
+		})
 	return err
 }
 
@@ -237,22 +238,22 @@ func (p *ServiceAddHttpInput) AddHttpService(c *gin.Context) (err error) {
 	// start
 	err = db.Transaction(
 		func(tx *gorm.DB) (err error) {
-			err = p.ServiceInfo.AddAfterCheck(c, db)
+			err = p.ServiceInfo.AddAfterCheck(c, tx)
 			if err != nil {
 				return
 			}
 			p.ServiceHTTPRule.ServiceID = p.ServiceInfo.ID
-			err = p.ServiceHTTPRule.InsertAfterCheck(c, db, true)
+			err = p.ServiceHTTPRule.InsertAfterCheck(c, tx, true)
 			if err != nil {
 				return
 			}
 			p.ServiceLoadBalance.ServiceID = p.ServiceInfo.ID
-			err = p.ServiceLoadBalance.InsertAfterCheck(c, db, true)
+			err = p.ServiceLoadBalance.InsertAfterCheck(c, tx, true)
 			if err != nil {
 				return
 			}
 			p.ServiceAccessControl.ServiceID = p.ServiceInfo.ID
-			err = p.ServiceAccessControl.InsertAfterCheck(c, db, true)
+			err = p.ServiceAccessControl.InsertAfterCheck(c, tx, true)
 			if err != nil {
 				return
 			}

@@ -47,63 +47,64 @@ func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (l
 }
 
 func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err error) {
-	err = db.Transaction(func(tx *gorm.DB) (err error) {
-		p, err = p.FindOne(c, tx)
-		if err != nil {
-			return
-		}
-
-		switch p.LoadType {
-		case LoadTypeHttp:
-			{
-				http := ServiceHTTPRule{
-					ServiceID: p.ID,
-				}
-				err = http.Delete(c, tx)
-				break
+	err = db.Transaction(
+		func(tx *gorm.DB) (err error) {
+			p, err = p.FindOne(c, tx)
+			if err != nil {
+				return
 			}
-		case LoadTypeGrpc:
-			{
-				grpc := ServiceGrpcRule{
-					ServiceID: p.ID,
-				}
-				err = grpc.Delete(c, tx)
-				break
-			}
-		case LoadTypeTcp:
-			{
-				tcp := ServiceTCPRule{
-					ServiceID: p.ID,
-				}
-				err = tcp.Delete(c, tx)
-				break
-			}
-		}
-		if err != nil {
-			return
-		}
-		slb := &ServiceLoadBalance{
-			ServiceID: p.ID,
-		}
-		err = slb.Delete(c, tx)
-		if err != nil {
-			return
-		}
 
-		sac := &ServiceAccessControl{
-			ServiceID: p.ID,
-		}
-		err = sac.Delete(c, tx)
-		if err != nil {
-			return
-		}
+			switch p.LoadType {
+			case LoadTypeHttp:
+				{
+					http := ServiceHTTPRule{
+						ServiceID: p.ID,
+					}
+					err = http.Delete(c, tx)
+					break
+				}
+			case LoadTypeGrpc:
+				{
+					grpc := ServiceGrpcRule{
+						ServiceID: p.ID,
+					}
+					err = grpc.Delete(c, tx)
+					break
+				}
+			case LoadTypeTcp:
+				{
+					tcp := ServiceTCPRule{
+						ServiceID: p.ID,
+					}
+					err = tcp.Delete(c, tx)
+					break
+				}
+			}
+			if err != nil {
+				return
+			}
+			slb := &ServiceLoadBalance{
+				ServiceID: p.ID,
+			}
+			err = slb.Delete(c, tx)
+			if err != nil {
+				return
+			}
 
-		err = p.Delete(c, tx)
-		if err != nil {
+			sac := &ServiceAccessControl{
+				ServiceID: p.ID,
+			}
+			err = sac.Delete(c, tx)
+			if err != nil {
+				return
+			}
+
+			err = p.Delete(c, tx)
+			if err != nil {
+				return
+			}
 			return
-		}
-		return
-	})
+		})
 
 	return
 }
