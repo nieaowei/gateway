@@ -144,21 +144,21 @@ func InitViperConf() error {
 
 func GetDefaultConfMysql() *MySQLConf {
 	if ConfMysql == nil {
-		panic("conf not init")
+		panic("Mysql conf not init")
 	}
 	return ConfMysql.List["default"]
 }
 
 func GetDefaultConfRedis() *RedisConf {
 	if ConfRedis == nil {
-		panic("conf not init")
+		panic("Redis conf not init")
 	}
 	return ConfRedis.List["default"]
 }
 
 func GetDefaultConfBase() *BaseConf {
 	if ConfBase == nil {
-		panic("conf not init")
+		panic("Base conf not init")
 	}
 	return ConfBase
 }

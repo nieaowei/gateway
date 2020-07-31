@@ -51,22 +51,17 @@ func InitModule(configPath string, modules []string) error {
 		LocalIP = ips[0]
 	}
 
-	// 解析配置文件目录
-	if err := ParseConfPath(*conf); err != nil {
-		return err
-	}
-
 	//初始化配置文件
 	if err := InitViperConf(); err != nil {
 		return err
 	}
 
-	// 加载base配置
-	if InArrayString("base", modules) {
-		if err := InitBaseConf(GetConfPath("base")); err != nil {
-			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitBaseConf:"+err.Error())
-		}
-	}
+	//// 加载base配置
+	//if InArrayString("base", modules) {
+	//	if err := InitBaseConf(GetConfPath("base")); err != nil {
+	//		fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitBaseConf:"+err.Error())
+	//	}
+	//}
 
 	// 加载redis配置
 	//if InArrayString("redis", modules) {
