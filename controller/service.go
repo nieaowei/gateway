@@ -2,7 +2,6 @@ package controller
 
 import (
 	"gateway/dto"
-	"gateway/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,63 +19,63 @@ func ServiceRigster(group *gin.RouterGroup) {
 func (p *ServiceController) AddHttpService(c *gin.Context) {
 	params := &dto.AddHttpServiceInput{}
 	if err := params.BindValidParam(c); err != nil {
-		middleware.ResponseError(c, 1001, err)
+		ResponseError(c, 1001, err)
 		return
 	}
 	//pass
 	err := params.AddHttpService(c)
 	if err != nil {
-		middleware.ResponseError(c, 1002, err)
+		ResponseError(c, 1002, err)
 		return
 	}
-	middleware.ResponseSuccess(c, params)
+	ResponseSuccess(c, params)
 	return
 }
 
 func (p *ServiceController) UpdateHttpService(c *gin.Context) {
 	params := &dto.UpdateHttpServiceInput{}
 	if err := params.BindValidParam(c); err != nil {
-		middleware.ResponseError(c, 1001, err)
+		ResponseError(c, 1001, err)
 		return
 	}
 	//pass
 	err := params.UpdateHttpService(c)
 	if err != nil {
-		middleware.ResponseError(c, 1002, err)
+		ResponseError(c, 1002, err)
 		return
 	}
-	middleware.ResponseSuccess(c, params)
+	ResponseSuccess(c, params)
 	return
 }
 
 func (p *ServiceController) ServiceList(c *gin.Context) {
 	params := &dto.ServiceListInput{}
 	if err := params.BindValidParam(c); err != nil {
-		middleware.ResponseError(c, 1001, err)
+		ResponseError(c, 1001, err)
 		return
 	}
 	//pass
 	out, err := params.GetServiceList(c)
 	if err != nil {
-		middleware.ResponseError(c, 1002, err)
+		ResponseError(c, 1002, err)
 		return
 	}
-	middleware.ResponseSuccess(c, out)
+	ResponseSuccess(c, out)
 	return
 }
 
 func (p *ServiceController) DeleteService(c *gin.Context) {
 	params := &dto.DeleteServiceInput{}
 	if err := params.BindValidParam(c); err != nil {
-		middleware.ResponseError(c, 1001, err)
+		ResponseError(c, 1001, err)
 		return
 	}
 	//pass
 	err := params.Delete(c)
 	if err != nil {
-		middleware.ResponseError(c, 1002, err)
+		ResponseError(c, 1002, err)
 		return
 	}
-	middleware.ResponseSuccess(c, "")
+	ResponseSuccess(c, "")
 	return
 }

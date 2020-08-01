@@ -3,7 +3,6 @@ package controller
 import (
 	"gateway/dao"
 	"gateway/dto"
-	"gateway/middleware"
 	"gateway/public"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -25,10 +24,10 @@ func (p *AdminController) AdminLogout(c *gin.Context) {
 	sessions.Default(c).Delete(public.AdminSessionsKey)
 	err := sessions.Default(c).Save()
 	if err != nil {
-		middleware.ResponseError(c, 10000, err)
+		ResponseError(c, 10000, err)
 		return
 	}
-	middleware.ResponseSuccess(c, nil)
+	ResponseSuccess(c, nil)
 	return
 }
 
@@ -41,7 +40,7 @@ func (p *AdminController) AdminInfo(c *gin.Context) {
 		Introduction:     "",
 		Roles:            nil,
 	}
-	middleware.ResponseSuccess(c, adminInfo)
+	ResponseSuccess(c, adminInfo)
 	return
 }
 
@@ -50,15 +49,15 @@ func (p *AdminController) AdminChangePwd(c *gin.Context) {
 	//get parameters and validate it.
 	params := &dto.AdminChangePwdInput{}
 	if err := params.BindValidParam(c); err != nil {
-		middleware.ResponseError(c, 1001, err)
+		ResponseError(c, 1001, err)
 		return
 	}
 	//pass
 	err := params.ChangePwd(c)
 	if err != nil {
-		middleware.ResponseError(c, 1002, err)
+		ResponseError(c, 1002, err)
 		return
 	}
-	middleware.ResponseSuccess(c, "")
+	ResponseSuccess(c, "")
 	return
 }
