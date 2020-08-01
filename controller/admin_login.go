@@ -14,16 +14,6 @@ func AdminLoginRegister(group *gin.RouterGroup) {
 	group.POST("/login", adminLogin.AdminLogin)
 }
 
-// AdminLogin godoc
-// @Summary 测试数据绑定
-// @Description 测试数据绑定
-// @Tags 用户
-// @ID /admin/login
-// @Accept  json
-// @Produce  json
-// @Param polygon body dto.AdminLoginInput true "body"
-// @Success 200 {object} middleware.Response{data=dto.AdminLoginOutput} "success"
-// @Router /admin/login [post]
 func (p *AdminLoginController) AdminLogin(c *gin.Context) {
 	params := &dto.AdminLoginInput{}
 	if err := params.BindValidParam(c); err != nil {

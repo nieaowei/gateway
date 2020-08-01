@@ -7,7 +7,6 @@ import (
 	"gateway/public"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type AdminController struct {
@@ -18,7 +17,7 @@ func AdminRegister(group *gin.RouterGroup) {
 	admin := &AdminController{}
 	group.GET("/admin_info", admin.AdminInfo)
 	group.GET("/logout", admin.AdminLogout)
-	group.POST("/change/password", admin.ChangePassword)
+	group.POST("/change/password", admin.AdminChangePwd)
 }
 
 //AdminLogout is the administrator login interface.
@@ -46,10 +45,10 @@ func (p *AdminController) AdminInfo(c *gin.Context) {
 	return
 }
 
-//ChangePassword
-func (p *AdminController) ChangePassword(c *gin.Context) {
+//AdminChangePwd
+func (p *AdminController) AdminChangePwd(c *gin.Context) {
 	//get parameters and validate it.
-	params := &dto.ChangePwdInput{}
+	params := &dto.AdminChangePwdInput{}
 	if err := params.BindValidParam(c); err != nil {
 		middleware.ResponseError(c, 1001, err)
 		return
@@ -62,24 +61,4 @@ func (p *AdminController) ChangePassword(c *gin.Context) {
 	}
 	middleware.ResponseSuccess(c, "")
 	return
-}
-
-/******sql******
-CREATE TABLE `admin` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `username` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名',
-  `salt` varchar(50) NOT NULL DEFAULT '' COMMENT '盐',
-  `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '新增时间',
-  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='管理员表'
-******sql******/
-// Admin 管理员表
-type Admin struct {
-	gorm.Model
-	Username string // 用户名
-	Salt     string // 盐
-	Password string // 密码
 }

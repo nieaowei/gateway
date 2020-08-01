@@ -110,11 +110,11 @@ func (p *ServiceListInput) BindValidParam(c *gin.Context) (err error) {
 	return public.DefaultGetValidParams(c, p)
 }
 
-type ServiceDeleteInput struct {
+type DeleteServiceInput struct {
 	ID uint `json:"id" form:"id" validate:"required"`
 }
 
-func (p *ServiceDeleteInput) Delete(c *gin.Context) (err error) {
+func (p *DeleteServiceInput) Delete(c *gin.Context) (err error) {
 	db, err := lib.GetDefaultDB()
 	if err != nil {
 		return
@@ -186,11 +186,11 @@ func (p *ServiceDeleteInput) Delete(c *gin.Context) (err error) {
 	return err
 }
 
-func (p *ServiceDeleteInput) BindValidParam(c *gin.Context) (err error) {
+func (p *DeleteServiceInput) BindValidParam(c *gin.Context) (err error) {
 	return public.DefaultGetValidParams(c, p)
 }
 
-type ServiceAddHttpInput struct {
+type AddHttpServiceInput struct {
 	//LoadType               uint   `json:"load_type"`
 	//ServiceName            string `json:"service_name"`
 	//ServiceDesc            string `json:"service_desc"`
@@ -224,11 +224,11 @@ type ServiceAddHttpInput struct {
 	dao.ServiceLoadBalance
 }
 
-func (p *ServiceAddHttpInput) BindValidParam(c *gin.Context) (err error) {
+func (p *AddHttpServiceInput) BindValidParam(c *gin.Context) (err error) {
 	return public.DefaultGetValidParams(c, p)
 }
 
-func (p *ServiceAddHttpInput) AddHttpService(c *gin.Context) (err error) {
+func (p *AddHttpServiceInput) AddHttpService(c *gin.Context) (err error) {
 	db, err := lib.GetDefaultDB()
 	if err != nil {
 		return
@@ -262,7 +262,7 @@ func (p *ServiceAddHttpInput) AddHttpService(c *gin.Context) (err error) {
 	return
 }
 
-type HttpServiceUpdateInput struct {
+type UpdateHttpServiceInput struct {
 	//LoadType               uint   `json:"load_type"`
 	//ServiceDesc            string `json:"service_desc"`
 	//RuleType               uint8  `json:"rule_type"`
@@ -296,7 +296,7 @@ type HttpServiceUpdateInput struct {
 	dao.ServiceLoadBalance
 }
 
-func (p *HttpServiceUpdateInput) UpdateHttpService(c *gin.Context) (err error) {
+func (p *UpdateHttpServiceInput) UpdateHttpService(c *gin.Context) (err error) {
 	db, err := lib.GetDefaultDB()
 	if err != nil {
 		return
@@ -331,6 +331,6 @@ func (p *HttpServiceUpdateInput) UpdateHttpService(c *gin.Context) (err error) {
 	return
 }
 
-func (p *HttpServiceUpdateInput) BindValidParam(c *gin.Context) (err error) {
+func (p *UpdateHttpServiceInput) BindValidParam(c *gin.Context) (err error) {
 	return public.DefaultGetValidParams(c, p)
 }

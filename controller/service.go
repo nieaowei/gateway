@@ -12,13 +12,13 @@ type ServiceController struct {
 func ServiceRigster(group *gin.RouterGroup) {
 	service := &ServiceController{}
 	group.GET("/list", service.ServiceList)
-	group.GET("/del", service.ServiceDelete)
-	group.POST("/http/add", service.ServiceAddHttp)
-	group.POST("/http/update", service.ServiceUpdateHttp)
+	group.GET("/del", service.DeleteService)
+	group.POST("/http/add", service.AddHttpService)
+	group.POST("/http/update", service.UpdateHttpService)
 }
 
-func (p *ServiceController) ServiceAddHttp(c *gin.Context) {
-	params := &dto.ServiceAddHttpInput{}
+func (p *ServiceController) AddHttpService(c *gin.Context) {
+	params := &dto.AddHttpServiceInput{}
 	if err := params.BindValidParam(c); err != nil {
 		middleware.ResponseError(c, 1001, err)
 		return
@@ -33,8 +33,8 @@ func (p *ServiceController) ServiceAddHttp(c *gin.Context) {
 	return
 }
 
-func (p *ServiceController) ServiceUpdateHttp(c *gin.Context) {
-	params := &dto.HttpServiceUpdateInput{}
+func (p *ServiceController) UpdateHttpService(c *gin.Context) {
+	params := &dto.UpdateHttpServiceInput{}
 	if err := params.BindValidParam(c); err != nil {
 		middleware.ResponseError(c, 1001, err)
 		return
@@ -65,8 +65,8 @@ func (p *ServiceController) ServiceList(c *gin.Context) {
 	return
 }
 
-func (p *ServiceController) ServiceDelete(c *gin.Context) {
-	params := &dto.ServiceDeleteInput{}
+func (p *ServiceController) DeleteService(c *gin.Context) {
+	params := &dto.DeleteServiceInput{}
 	if err := params.BindValidParam(c); err != nil {
 		middleware.ResponseError(c, 1001, err)
 		return
