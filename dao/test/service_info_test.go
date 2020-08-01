@@ -128,8 +128,9 @@ func TestServiceInfo_AddAfterCheck(t *testing.T) {
 		ServiceDesc string
 	}
 	type args struct {
-		c  *gin.Context
-		db *gorm.DB
+		c     *gin.Context
+		db    *gorm.DB
+		check bool
 	}
 	tests := []struct {
 		name    string
@@ -161,8 +162,8 @@ func TestServiceInfo_AddAfterCheck(t *testing.T) {
 				ServiceName: tt.fields.ServiceName,
 				ServiceDesc: tt.fields.ServiceDesc,
 			}
-			if err := p.Insert(tt.args.c, tt.args.db); (err != nil) != tt.wantErr {
-				t.Errorf("Insert() error = %v, wantErr %v", err, tt.wantErr)
+			if err := p.InsertAfterCheck(tt.args.c, tt.args.db, tt.args.check); (err != nil) != tt.wantErr {
+				t.Errorf("InsertAfterCheck() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

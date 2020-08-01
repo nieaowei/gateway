@@ -48,7 +48,7 @@ func StructToMap(obj interface{}) map[string]interface{} {
 	return data
 }
 
-func ErrorHandle(res *gorm.DB) (err error) {
+func ErrorHandleForDB(res *gorm.DB) (err error) {
 	if res.Error != nil {
 		err = res.Error
 		return
@@ -57,5 +57,5 @@ func ErrorHandle(res *gorm.DB) (err error) {
 		err = errors.New("not updated")
 		return
 	}
-	return nil
+	return
 }

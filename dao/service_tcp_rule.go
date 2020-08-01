@@ -13,7 +13,7 @@ import (
 //}
 
 func (p *ServiceTCPRule) BeforeUpdate(tx *gorm.DB) error {
-	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at")
+	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at", "service_id", "deleted_at", "id")
 	return nil
 }
 
@@ -22,22 +22,27 @@ func (p *ServiceTCPRule) BeforeDelete(tx *gorm.DB) error {
 	return nil
 }
 
+func (p *ServiceTCPRule) BeforeCreate(db *gorm.DB) error {
+	db.Statement.Omit("id")
+	return nil
+}
+
 func (p *ServiceTCPRule) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceTCPRule, err error) {
 	out = &ServiceTCPRule{}
 	result := tx.Where(p).First(out)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
-func (p *ServiceTCPRule) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
+func (p *ServiceTCPRule) UpdateAllByServiceID(c *gin.Context, db *gorm.DB) (err error) {
 	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
 func (p *ServiceTCPRule) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	result := tx.Delete(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
