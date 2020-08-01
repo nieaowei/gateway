@@ -238,7 +238,7 @@ func (p *ServiceAddHttpInput) AddHttpService(c *gin.Context) (err error) {
 	// start
 	err = db.Transaction(
 		func(tx *gorm.DB) (err error) {
-			err = p.ServiceInfo.Insert(c, tx)
+			err = p.ServiceInfo.InsertAfterCheck(c, tx, true)
 			if err != nil {
 				return
 			}
@@ -312,12 +312,12 @@ func (p *HttpServiceUpdateInput) UpdateHttpService(c *gin.Context) (err error) {
 				return
 			}
 			p.ServiceHTTPRule.ServiceID = p.ServiceInfo.ID
-			err = p.ServiceHTTPRule.UpdateAll(c, tx)
+			err = p.ServiceHTTPRule.UpdateAllByServiceID(c, tx)
 			if err != nil {
 				return
 			}
 			p.ServiceLoadBalance.ServiceID = p.ServiceInfo.ID
-			err = p.ServiceLoadBalance.UpdateAll(c, tx)
+			err = p.ServiceLoadBalance.UpdateAllByServiceID(c, tx)
 			if err != nil {
 				return
 			}

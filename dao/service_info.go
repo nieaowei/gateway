@@ -20,7 +20,7 @@ func (p *ServiceInfo) ServiceDetail() string {
 func (p *ServiceInfo) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceInfo, err error) {
 	out = &ServiceInfo{}
 	result := tx.Where(p).First(out)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
@@ -33,17 +33,8 @@ func (p *ServiceInfo) BeforeDelete(tx *gorm.DB) error {
 	tx = tx.Statement.Where("deleted_at IS NULL")
 	return nil
 }
-func (p *ServiceInfo) BeforeCreate(tx *gorm.DB) error {
-	serviceInfo := &ServiceInfo{
-		ServiceName: p.ServiceName,
-	}
-	// check unique ServiceName
-	err := tx.First(serviceInfo, serviceInfo).Error
-	if err != gorm.ErrRecordNotFound {
-		return errors.New("Violation of the uniqueness constraint #ServiceInfo.ServiceName")
-	}
-	// make sure insert
-	tx = tx.Statement.Omit("id")
+func (p *ServiceInfo) BeforeCreate(db *gorm.DB) error {
+	db.Statement.Omit("id")
 	return nil
 }
 
@@ -53,7 +44,7 @@ func (p *ServiceInfo) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
 
 func (p *ServiceInfo) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	result := tx.Delete(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
@@ -208,8 +199,19 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 	return
 }
 
-func (p *ServiceInfo) Insert(c *gin.Context, db *gorm.DB) error {
-
-	err := db.Create(p).Error
-	return err
+func (p *ServiceInfo) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
+	if check {
+		serviceInfo := &ServiceInfo{
+			ServiceName: p.ServiceName,
+		}
+		// check unique ServiceName
+		err = db.First(serviceInfo, serviceInfo).Error
+		if err != gorm.ErrRecordNotFound {
+			return errors.New("Violation of the uniqueness constraint #ServiceInfo.ServiceName")
+		}
+	}
+	// make sure insert
+	res := db.Create(p)
+	err = ErrorHandleForDB(res)
+	return
 }

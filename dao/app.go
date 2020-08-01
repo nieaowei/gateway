@@ -18,20 +18,18 @@ import (
 func (p *App) FindOne(c *gin.Context, tx *gorm.DB) (out *App, err error) {
 	out = &App{}
 	result := tx.Where(p).First(out)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
 func (p *App) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id", "created_at").Save(p).Error
-	if err != nil {
-		return
-	}
+	res := tx.Omit("id", "created_at").Save(p)
+	err = ErrorHandleForDB(res)
 	return
 }
 
 func (p *App) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	result := tx.Delete(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }

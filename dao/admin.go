@@ -22,28 +22,24 @@ type AdminSessionInfo struct {
 func (p *Admin) FindOne(c *gin.Context, tx *gorm.DB) (out *Admin, err error) {
 	out = &Admin{}
 	result := tx.Where(p).First(out)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
-func (p *Admin) Save(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Omit("id", "created_at", "deleted_at").Save(p).Error
-	if err != nil {
-		return
-	}
+func (p *Admin) UpdateAllByID(c *gin.Context, tx *gorm.DB) (err error) {
+	res := tx.Omit("id", "created_at", "deleted_at").Save(p)
+	err = ErrorHandleForDB(res)
 	return
 }
 
-func (p *Admin) Updates(c *gin.Context, tx *gorm.DB) (err error) {
-	err = tx.Model(p).Omit("id", "created_at", "deleted_at").Updates(p).Error
-	if err != nil {
-		return
-	}
+func (p *Admin) UpdateByID(c *gin.Context, tx *gorm.DB) (err error) {
+	res := tx.Model(p).Omit("id", "created_at", "deleted_at").Updates(p)
+	err = ErrorHandleForDB(res)
 	return
 }
 
 func (p *Admin) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	result := tx.Delete(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }

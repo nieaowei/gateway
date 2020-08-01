@@ -13,7 +13,7 @@ import (
 //	HeaderTransfor string `json:"header_transfor"`
 //}
 func (p *ServiceGrpcRule) BeforeUpdate(tx *gorm.DB) error {
-	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at")
+	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at", "service_id", "deleted_at", "id")
 	return nil
 }
 
@@ -22,22 +22,27 @@ func (p *ServiceGrpcRule) BeforeDelete(tx *gorm.DB) error {
 	return nil
 }
 
+func (p *ServiceGrpcRule) BeforeCreate(db *gorm.DB) error {
+	db.Statement.Omit("id")
+	return nil
+}
+
 func (p *ServiceGrpcRule) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceGrpcRule, err error) {
 	out = &ServiceGrpcRule{}
 	result := tx.Where(p).First(out)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
-func (p *ServiceGrpcRule) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
+func (p *ServiceGrpcRule) UpdateAllByServiceID(c *gin.Context, db *gorm.DB) (err error) {
 	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
 func (p *ServiceGrpcRule) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	result := tx.Delete(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 

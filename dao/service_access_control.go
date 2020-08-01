@@ -26,10 +26,15 @@ func (p *ServiceAccessControl) BeforeDelete(tx *gorm.DB) error {
 	return nil
 }
 
+func (p *ServiceAccessControl) BeforeCreate(db *gorm.DB) error {
+	db.Statement.Omit("id")
+	return nil
+}
+
 func (p *ServiceAccessControl) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceAccessControl, err error) {
 	out = &ServiceAccessControl{}
 	result := tx.Where(p).First(out)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
@@ -45,13 +50,13 @@ func (p *ServiceAccessControl) UpdateAllByServiceID(c *gin.Context, db *gorm.DB)
 	//return nil
 
 	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
 func (p *ServiceAccessControl) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	result := tx.Delete(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }
 
@@ -68,6 +73,6 @@ func (p *ServiceAccessControl) InsertAfterCheck(c *gin.Context, tx *gorm.DB, che
 		err = nil
 	}
 	result := tx.Create(p)
-	err = ErrorHandle(result)
+	err = ErrorHandleForDB(result)
 	return
 }

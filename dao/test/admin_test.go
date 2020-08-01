@@ -154,8 +154,8 @@ func TestAdmin_Updates(t *testing.T) {
 				Username: tt.fields.Username,
 				Password: tt.fields.Password,
 			}
-			if err := p.Updates(tt.args.c, tt.args.tx); (err != nil) != tt.wantErr {
-				t.Errorf("Updates() error = %v, wantErr %v", err, tt.wantErr)
+			if err := p.UpdateByID(tt.args.c, tt.args.tx); (err != nil) != tt.wantErr {
+				t.Errorf("UpdateByID() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -219,8 +219,8 @@ func TestAdmin_Save(t *testing.T) {
 				Username: tt.fields.Username,
 				Password: tt.fields.Password,
 			}
-			if err := p.Save(tt.args.c, tt.args.tx); (err != nil) != tt.wantErr {
-				t.Errorf("Save() error = %v, wantErr %v", err, tt.wantErr)
+			if err := p.UpdateAllByID(tt.args.c, tt.args.tx); (err != nil) != tt.wantErr {
+				t.Errorf("UpdateAllByID() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

@@ -47,7 +47,7 @@ func (p *ChangePwdInput) ChangePwd(c *gin.Context) (err error) {
 		},
 		Password: public.GenSha256BySecret(p.Password, adminInfo.Salt),
 	}
-	err = adminInfo.Updates(c, db)
+	err = adminInfo.UpdateByID(c, db)
 	if err != nil {
 		return
 	}
