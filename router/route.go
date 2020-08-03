@@ -2,11 +2,7 @@ package router
 
 import (
 	"gateway/controller"
-	"gateway/lib"
-	"gateway/middleware"
-	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
@@ -19,45 +15,11 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		})
 	})
 
-	adminLoginRouter := router.Group("/admin")
-	store, err := sessions.NewRedisStore(lib.GetDefaultConfRedis().MaxIdle, "tcp", lib.GetDefaultConfRedis().ProxyList[0], "", []byte("secret"))
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	adminLoginRouter.Use(
-		sessions.Sessions("mysession", store),
-		middleware.RecoveryMiddleware(),
-		middleware.RequestLog(),
-		middleware.TranslationMiddleware(),
-	)
-	{
-		controller.AdminLoginRegister(adminLoginRouter)
-	}
+	Register(router, &controller.AdminLoginController{})
 
-	adminRouter := router.Group("/admin")
+	Register(router, &controller.AdminController{})
 
-	adminRouter.Use(
-		sessions.Sessions("mysession", store),
-		middleware.RecoveryMiddleware(),
-		middleware.RequestLog(),
-		middleware.SessionAuthMiddleware(),
-		middleware.TranslationMiddleware(),
-	)
-	{
-		controller.AdminRegister(adminRouter)
-	}
+	Register(router, &controller.ServiceController{})
 
-	serviceRouter := router.Group("/service")
-
-	serviceRouter.Use(
-		sessions.Sessions("mysession", store),
-		middleware.RecoveryMiddleware(),
-		middleware.RequestLog(),
-		middleware.SessionAuthMiddleware(),
-		middleware.TranslationMiddleware(),
-	)
-	{
-		controller.ServiceRigster(serviceRouter)
-	}
 	return router
 }

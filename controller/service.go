@@ -2,20 +2,40 @@ package controller
 
 import (
 	"gateway/dto"
+	"gateway/lib"
+	"gateway/middleware"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"log"
 )
 
 type ServiceController struct {
 }
 
-func ServiceRigster(group *gin.RouterGroup) {
-	service := &ServiceController{}
-	group.GET("/list", service.ServiceList)
-	group.GET("/del", service.DeleteService)
-	group.POST("/http/add", service.AddHttpService)
-	group.POST("/http/update", service.UpdateHttpService)
-	group.GET("/detail", service.GetServiceDetail)
+func (p *ServiceController) Register(group *gin.RouterGroup) {
+	group.GET("/list", p.ServiceList)
+	group.GET("/del", p.DeleteService)
+	group.POST("/http/add", p.AddHttpService)
+	group.POST("/http/update", p.UpdateHttpService)
+	group.GET("/detail", p.GetServiceDetail)
+}
 
+func (p *ServiceController) GroupName() string {
+	return "/service"
+}
+
+func (p *ServiceController) Middleware() []gin.HandlerFunc {
+	store, err := sessions.NewRedisStore(lib.GetDefaultConfRedis().MaxIdle, "tcp", lib.GetDefaultConfRedis().ProxyList[0], "", []byte("secret"))
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	return []gin.HandlerFunc{
+		sessions.Sessions("mysession", store),
+		middleware.RecoveryMiddleware(),
+		middleware.RequestLog(),
+		middleware.SessionAuthMiddleware(),
+		middleware.TranslationMiddleware(),
+	}
 }
 
 func (p *ServiceController) GetServiceDetail(c *gin.Context) {
