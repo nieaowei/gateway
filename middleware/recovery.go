@@ -3,7 +3,7 @@ package middleware
 import (
 	"errors"
 	"fmt"
-	"gateway/controller"
+	"gateway/dto"
 	"gateway/lib"
 	"gateway/public"
 	"github.com/gin-gonic/gin"
@@ -23,10 +23,10 @@ func RecoveryMiddleware() gin.HandlerFunc {
 				})
 
 				if lib.GetDefaultConfBase().Base.DebugMode != "debug" {
-					controller.ResponseError(c, 500, errors.New("内部错误"))
+					dto.ResponseError(c, 500, errors.New("内部错误"))
 					return
 				} else {
-					controller.ResponseError(c, 500, errors.New(fmt.Sprint(err)))
+					dto.ResponseError(c, 500, errors.New(fmt.Sprint(err)))
 					return
 				}
 			}
