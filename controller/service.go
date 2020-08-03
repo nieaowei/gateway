@@ -12,7 +12,7 @@ import (
 type ServiceController struct {
 }
 
-func (p *ServiceController) Register(group *gin.RouterGroup) {
+func (p *ServiceController) RouterRegister(group *gin.RouterGroup) {
 	group.GET("/list", p.ServiceList)
 	group.GET("/del", p.DeleteService)
 	group.POST("/http/add", p.AddHttpService)
@@ -20,7 +20,7 @@ func (p *ServiceController) Register(group *gin.RouterGroup) {
 	group.GET("/detail", p.GetServiceDetail)
 }
 
-func (p *ServiceController) GroupName() string {
+func (p *ServiceController) RouterGroupName() string {
 	return "/service"
 }
 

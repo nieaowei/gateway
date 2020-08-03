@@ -14,7 +14,7 @@ import (
 type AdminController struct {
 }
 
-func (p *AdminController) GroupName() string {
+func (p *AdminController) RouterGroupName() string {
 	return "/admin"
 }
 
@@ -33,7 +33,7 @@ func (p *AdminController) Middleware() []gin.HandlerFunc {
 }
 
 //AdminRegister is used for router registration.
-func (p *AdminController) Register(group *gin.RouterGroup) {
+func (p *AdminController) RouterRegister(group *gin.RouterGroup) {
 	group.GET("/admin_info", p.AdminInfo)
 	group.GET("/logout", p.AdminLogout)
 	group.POST("/change/password", p.AdminChangePwd)

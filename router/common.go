@@ -1,16 +1,11 @@
 package router
 
 import (
+	"gateway/controller"
 	"github.com/gin-gonic/gin"
 )
 
-type Controller interface {
-	Register(group *gin.RouterGroup)
-	GroupName() string
-	Middleware() []gin.HandlerFunc
-}
-
-func Register(router *gin.Engine, c Controller) {
-	group := router.Group(c.GroupName(), c.Middleware()...)
-	c.Register(group)
+func Register(router *gin.Engine, c controller.Controller) {
+	group := router.Group(c.RouterGroupName(), c.Middleware()...)
+	c.RouterRegister(group)
 }

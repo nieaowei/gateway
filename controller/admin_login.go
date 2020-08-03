@@ -12,11 +12,11 @@ import (
 type AdminLoginController struct {
 }
 
-func (p *AdminLoginController) Register(group *gin.RouterGroup) {
+func (p *AdminLoginController) RouterRegister(group *gin.RouterGroup) {
 	group.POST("/login", p.AdminLogin)
 }
 
-func (p *AdminLoginController) GroupName() string {
+func (p *AdminLoginController) RouterGroupName() string {
 	return "/admin"
 }
 
