@@ -1,4 +1,4 @@
-package controller
+package dto
 
 import (
 	"encoding/json"

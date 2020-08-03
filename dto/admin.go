@@ -24,7 +24,11 @@ func (p *AdminChangePwdInput) BindValidParam(c *gin.Context) (err error) {
 	return public.DefaultGetValidParams(c, p)
 }
 
-func (p *AdminChangePwdInput) ChangePwd(c *gin.Context) (err error) {
+func (p *AdminChangePwdInput) ErrorHandle(c *gin.Context, err error) {
+	ResponseError(c, 1002, err)
+}
+
+func (p *AdminChangePwdInput) Exec(c *gin.Context) (out interface{}, err error) {
 	// get session information.
 	adminSession := sessions.Default(c).Get(public.AdminSessionsKey).(*dao.AdminSessionInfo)
 	adminInfo := &dao.Admin{

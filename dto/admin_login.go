@@ -28,7 +28,7 @@ func (p *AdminLoginInput) BindValidParam(c *gin.Context) error {
 	return public.DefaultGetValidParams(c, p)
 }
 
-func (p *AdminLoginInput) LoginCheck(c *gin.Context) (out *AdminLoginOutput, err error) {
+func (p *AdminLoginInput) Exec(c *gin.Context) (out interface{}, err error) {
 	adminInfo := &dao.Admin{
 		Username: p.Username,
 	}
@@ -61,4 +61,8 @@ func (p *AdminLoginInput) LoginCheck(c *gin.Context) (out *AdminLoginOutput, err
 	out = &AdminLoginOutput{Token: adminInfo.Password}
 
 	return
+}
+
+func (p *AdminLoginInput) ErrorHandle(c *gin.Context, err error) {
+	ResponseError(c, 1002, err)
 }

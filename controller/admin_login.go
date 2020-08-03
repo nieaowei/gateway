@@ -14,18 +14,6 @@ func AdminLoginRegister(group *gin.RouterGroup) {
 }
 
 func (p *AdminLoginController) AdminLogin(c *gin.Context) {
-	params := &dto.AdminLoginInput{}
-	if err := params.BindValidParam(c); err != nil {
-		ResponseError(c, 1001, err)
-		return
-	}
-
-	out, err := params.LoginCheck(c)
-	if err != nil {
-		ResponseError(c, 1002, err)
-		return
-	}
-
-	ResponseSuccess(c, out)
+	dto.Exec(&dto.AdminLoginInput{}, c)
 	return
 }

@@ -24,10 +24,10 @@ func (p *AdminController) AdminLogout(c *gin.Context) {
 	sessions.Default(c).Delete(public.AdminSessionsKey)
 	err := sessions.Default(c).Save()
 	if err != nil {
-		ResponseError(c, 10000, err)
+		dto.ResponseError(c, 10000, err)
 		return
 	}
-	ResponseSuccess(c, nil)
+	dto.ResponseSuccess(c, nil)
 	return
 }
 
@@ -40,24 +40,12 @@ func (p *AdminController) AdminInfo(c *gin.Context) {
 		Introduction:     "",
 		Roles:            nil,
 	}
-	ResponseSuccess(c, adminInfo)
+	dto.ResponseSuccess(c, adminInfo)
 	return
 }
 
 //AdminChangePwd
 func (p *AdminController) AdminChangePwd(c *gin.Context) {
-	//get parameters and validate it.
-	params := &dto.AdminChangePwdInput{}
-	if err := params.BindValidParam(c); err != nil {
-		ResponseError(c, 1001, err)
-		return
-	}
-	//pass
-	err := params.ChangePwd(c)
-	if err != nil {
-		ResponseError(c, 1002, err)
-		return
-	}
-	ResponseSuccess(c, "")
+	dto.Exec(&dto.AdminChangePwdInput{}, c)
 	return
 }
