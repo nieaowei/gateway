@@ -13,7 +13,7 @@ type ServiceController struct {
 }
 
 func (p *ServiceController) RouterRegister(group *gin.RouterGroup) {
-	group.GET("/list", p.ServiceList)
+	group.GET("/list", p.GetServiceList)
 	group.GET("/del", p.DeleteService)
 	group.POST("/http/add", p.AddHttpService)
 	group.POST("/http/update", p.UpdateHttpService)
@@ -53,8 +53,8 @@ func (p *ServiceController) UpdateHttpService(c *gin.Context) {
 	return
 }
 
-func (p *ServiceController) ServiceList(c *gin.Context) {
-	dto.Exec(&dto.ServiceListInput{}, c)
+func (p *ServiceController) GetServiceList(c *gin.Context) {
+	dto.Exec(&dto.GetServiceListInput{}, c)
 	return
 }
 

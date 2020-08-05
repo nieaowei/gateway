@@ -50,6 +50,10 @@ func (p *AddHttpServiceInput) ErrorHandle(c *gin.Context, err error) {
 	ResponseError(c, 10002, err)
 }
 
+func (p *AddHttpServiceInput) OutputHandle(c *gin.Context, outIn interface{}) (out interface{}) {
+	return outIn
+}
+
 func (p *AddHttpServiceInput) Exec(c *gin.Context) (out interface{}, err error) {
 	db, err := lib.GetDefaultDB()
 	if err != nil {
@@ -162,18 +166,6 @@ func (p *UpdateHttpServiceInput) Exec(c *gin.Context) (out interface{}, err erro
 	return
 }
 
-type GetServiceDetailInput struct {
-	ServiceID uint `json:"service_id"`
-}
-
-func (p *GetServiceDetailInput) BindValidParam(c *gin.Context) (err error) {
-	return public.DefaultGetValidParams(c, p)
-}
-
-func (p *GetServiceDetailInput) ErrorHandle(c *gin.Context, err error) {
-	ResponseError(c, 1002, err)
-}
-
-func (p *GetServiceDetailInput) Exec(c *gin.Context) (out interface{}, err error) {
-	return
+func (p *UpdateHttpServiceInput) OutputHandle(c *gin.Context, outIn interface{}) (out interface{}) {
+	return outIn
 }

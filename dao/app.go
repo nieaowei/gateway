@@ -22,6 +22,13 @@ func (p *App) FindOne(c *gin.Context, tx *gorm.DB) (out *App, err error) {
 	return
 }
 
+func (p *App) FindOneScan(c *gin.Context, tx *gorm.DB, out interface{}) (err error) {
+	//out = &ServiceInfo{}
+	result := tx.Model(p).Where(p).Limit(1).Scan(out)
+	err = ErrorHandleForDB(result)
+	return
+}
+
 func (p *App) Save(c *gin.Context, tx *gorm.DB) (err error) {
 	res := tx.Omit("id", "created_at").Save(p)
 	err = ErrorHandleForDB(res)

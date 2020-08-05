@@ -1,11 +1,21 @@
 package dto
 
-import "github.com/gin-gonic/gin"
+import (
+	"encoding/gob"
+	"gateway/dao"
+	"github.com/gin-gonic/gin"
+)
+
+func init() {
+	gob.Register(&dao.AdminSessionInfo{})
+	gob.Register(&GetServiceDetailOutput{})
+}
 
 type DTO interface {
-	BindValidParam(c *gin.Context) error
+	BindValidParam(c *gin.Context) (err error)
 	Exec(c *gin.Context) (out interface{}, err error)
 	ErrorHandle(c *gin.Context, err error)
+	OutputHandle(c *gin.Context, outIn interface{}) (out interface{})
 }
 
 func Exec(dto DTO, c *gin.Context) {
@@ -26,6 +36,6 @@ func Exec(dto DTO, c *gin.Context) {
 		//ResponseError(c, 1002, err)
 		return
 	}
-	ResponseSuccess(c, out)
+	ResponseSuccess(c, dto.OutputHandle(c, out))
 	return
 }

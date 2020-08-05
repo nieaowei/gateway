@@ -1,7 +1,6 @@
 package dto
 
 import (
-	"encoding/gob"
 	"gateway/dao"
 	"gateway/lib"
 	"gateway/public"
@@ -10,10 +9,6 @@ import (
 	"github.com/pkg/errors"
 	"time"
 )
-
-func init() {
-	gob.Register(&dao.AdminSessionInfo{})
-}
 
 type AdminLoginInput struct {
 	Username string `json:"username" form:"username" comment:"姓名" example:"admin" validate:"required,is_valid_username"`
@@ -26,6 +21,14 @@ type AdminLoginOutput struct {
 
 func (p *AdminLoginInput) BindValidParam(c *gin.Context) error {
 	return public.DefaultGetValidParams(c, p)
+}
+
+func (p *AdminLoginInput) ErrorHandle(c *gin.Context, err error) {
+	ResponseError(c, 1002, err)
+}
+
+func (p *AdminLoginInput) OutputHandle(c *gin.Context, outIn interface{}) (out interface{}) {
+	return outIn
 }
 
 func (p *AdminLoginInput) Exec(c *gin.Context) (out interface{}, err error) {
@@ -61,8 +64,4 @@ func (p *AdminLoginInput) Exec(c *gin.Context) (out interface{}, err error) {
 	out = &AdminLoginOutput{Token: adminInfo.Password}
 
 	return
-}
-
-func (p *AdminLoginInput) ErrorHandle(c *gin.Context, err error) {
-	ResponseError(c, 1002, err)
 }

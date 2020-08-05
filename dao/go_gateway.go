@@ -1,6 +1,9 @@
 package dao
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 /******sql******
 CREATE TABLE `admin` (
@@ -165,10 +168,13 @@ CREATE TABLE `service_info` (
 ******sql******/
 // ServiceInfo 网关基本信息表
 type ServiceInfo struct {
-	gorm.Model
-	LoadType    int8   `gorm:"column:load_type;type:tinyint(4);not null" json:"load_type"`         // 负载类型 0=http 1=tcp 2=grpc
-	ServiceName string `gorm:"column:service_name;type:varchar(255);not null" json:"service_name"` // 服务名称 6-128 数字字母下划线
-	ServiceDesc string `gorm:"column:service_desc;type:varchar(255);not null" json:"service_desc"` // 服务描述
+	ID          uint           `gorm:"primarykey" json:"id"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
+	LoadType    int8           `gorm:"column:load_type;type:tinyint(4);not null" json:"load_type"`         // 负载类型 0=http 1=tcp 2=grpc
+	ServiceName string         `gorm:"column:service_name;type:varchar(255);not null" json:"service_name"` // 服务名称 6-128 数字字母下划线
+	ServiceDesc string         `gorm:"column:service_desc;type:varchar(255);not null" json:"service_desc"` // 服务描述
 }
 
 // TableName get sql table name.获取数据库表名

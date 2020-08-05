@@ -28,6 +28,10 @@ func (p *AdminChangePwdInput) ErrorHandle(c *gin.Context, err error) {
 	ResponseError(c, 1002, err)
 }
 
+func (p *AdminChangePwdInput) OutputHandle(c *gin.Context, outIn interface{}) (out interface{}) {
+	return outIn
+}
+
 func (p *AdminChangePwdInput) Exec(c *gin.Context) (out interface{}, err error) {
 	// get session information.
 	adminSession := sessions.Default(c).Get(public.AdminSessionsKey).(*dao.AdminSessionInfo)

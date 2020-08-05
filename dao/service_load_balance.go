@@ -44,7 +44,17 @@ func (p *ServiceLoadBalance) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceL
 	return
 }
 
+func (p *ServiceLoadBalance) FindOneScan(c *gin.Context, db *gorm.DB, out interface{}) (err error) {
+	result := db.Model(p).Where(p).Limit(1).Scan(out)
+	err = ErrorHandleForDB(result)
+	return
+}
+
 func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
+	return Split(p.IPList, ",")
+}
+
+func (p *ServiceLoadBalanceExceptModel) GetIPListByModel() (list []string) {
 	return Split(p.IPList, ",")
 }
 

@@ -34,6 +34,13 @@ func (p *ServiceTCPRule) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceTCPRu
 	return
 }
 
+func (p *ServiceTCPRule) FindOneScan(c *gin.Context, tx *gorm.DB, out interface{}) (err error) {
+	//out = &ServiceInfo{}
+	result := tx.Model(p).Where(p).Limit(1).Scan(out)
+	err = ErrorHandleForDB(result)
+	return
+}
+
 func (p *ServiceTCPRule) UpdateAllByServiceID(c *gin.Context, db *gorm.DB) (err error) {
 	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)
 	err = ErrorHandleForDB(result)
@@ -67,7 +74,7 @@ func (p *ServiceTCPRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) 
 
 		//check foregin
 		serviceInfo := &ServiceInfo{
-			Model: gorm.Model{ID: p.ServiceID},
+			ID: p.ServiceID,
 		}
 		err = db.First(serviceInfo, serviceInfo).Error
 		if err != nil {

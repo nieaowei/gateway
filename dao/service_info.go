@@ -24,6 +24,13 @@ func (p *ServiceInfo) FindOne(c *gin.Context, tx *gorm.DB) (out *ServiceInfo, er
 	return
 }
 
+func (p *ServiceInfo) FindOneScan(c *gin.Context, tx *gorm.DB, out interface{}) (err error) {
+	//out = &ServiceInfo{}
+	result := tx.Model(p).Where(p).Limit(1).Scan(out)
+	err = ErrorHandleForDB(result)
+	return
+}
+
 func (p *ServiceInfo) BeforeUpdate(tx *gorm.DB) error {
 	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at")
 	return nil
@@ -128,27 +135,35 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 }
 
 type ServiceDetail struct {
-	Info          *ServiceInfo          `json:"info"`
-	HTTP          *ServiceHTTPRule      `json:"http"`
-	GRPC          *ServiceGrpcRule      `json:"grpc"`
-	TCP           *ServiceTCPRule       `json:"tcp"`
-	LoadBalance   *ServiceLoadBalance   `json:"load_balance"`
-	AccessControl *ServiceAccessControl `json:"access_control"`
+	*ServiceInfoExceptModel
+	//ServiceHTTPRuleExceptModel
+	//ServiceGrpcRuleExceptModel
+	//ServiceTCPRuleExceptModel
+	Service interface{} `json:"service"`
+	*ServiceLoadBalanceExceptModel
+	*ServiceAccessControlExceptModel
 }
 
 func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *ServiceDetail, err error) {
+
 	out = &ServiceDetail{}
-	switch p.LoadType {
+	out.ServiceInfoExceptModel = &ServiceInfoExceptModel{}
+	err = p.FindOneScan(c, db, out.ServiceInfoExceptModel)
+	if err != nil {
+		return
+	}
+	switch out.ServiceInfoExceptModel.LoadType {
 	case LoadTypeHttp:
 		{
 			httpRule := &ServiceHTTPRule{
 				ServiceID: p.ID,
 			}
-			httpRule, err = httpRule.FindOne(c, db)
+			httpOut := &ServiceHTTPRuleExceptModel{}
+			err = httpRule.FindOneScan(c, db, httpOut)
 			if err != nil {
 				return
 			}
-			out.HTTP = httpRule
+			out.Service = httpOut
 			break
 		}
 	case LoadTypeTcp:
@@ -156,11 +171,13 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 			tcpRule := &ServiceTCPRule{
 				ServiceID: p.ID,
 			}
-			tcpRule, err = tcpRule.FindOne(c, db)
+			tcpOut := &ServiceTCPRuleExceptModel{}
+			err = tcpRule.FindOneScan(c, db, tcpOut)
 			if err != nil {
 				return
 			}
-			out.TCP = tcpRule
+			out.Service = tcpOut
+
 			break
 		}
 	case LoadTypeGrpc:
@@ -168,18 +185,22 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 			grpcRule := &ServiceGrpcRule{
 				ServiceID: p.ID,
 			}
-			grpcRule, err = grpcRule.FindOne(c, db)
+			grpcOut := &ServiceGrpcRuleExceptModel{}
+
+			err = grpcRule.FindOneScan(c, db, grpcOut)
 			if err != nil {
 				return
 			}
-			out.GRPC = grpcRule
+			out.Service = grpcOut
+
 			break
 		}
 	}
 	accessControl := &ServiceAccessControl{
 		ServiceID: p.ID,
 	}
-	accessControl, err = accessControl.FindOne(c, db)
+	out.ServiceAccessControlExceptModel = &ServiceAccessControlExceptModel{}
+	err = accessControl.FindOneScan(c, db, out.ServiceAccessControlExceptModel)
 	if err != nil {
 		return
 	}
@@ -187,15 +208,12 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 	loadBalance := &ServiceLoadBalance{
 		ServiceID: p.ID,
 	}
-	loadBalance, err = loadBalance.FindOne(c, db)
+	out.ServiceLoadBalanceExceptModel = &ServiceLoadBalanceExceptModel{}
+
+	err = loadBalance.FindOneScan(c, db, out.ServiceLoadBalanceExceptModel)
 	if err != nil {
 		return
 	}
-
-	out.AccessControl = accessControl
-	out.LoadBalance = loadBalance
-	out.Info = p
-
 	return
 }
 

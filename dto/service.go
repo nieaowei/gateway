@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-type ServiceListInput struct {
+type GetServiceListInput struct {
 	Info     string `json:"info" form:"info"`
 	PageNo   int    `json:"page_no" form:"page_no" validate:"required"`
 	PageSize int    `json:"page_size" form:"page_size" validate:"required"`
@@ -26,12 +26,24 @@ type ServiceListItem struct {
 	TotalNode   uint   `json:"total_node" form:"total_node"`
 }
 
-type ServiceListOutput struct {
+type GetServiceListOutput struct {
 	Total int64             `json:"total" form:"total" validate:""`
 	List  []ServiceListItem `json:"list" form:"list" validate:""`
 }
 
-func (p *ServiceListInput) Exec(c *gin.Context) (out interface{}, err error) {
+func (p *GetServiceListInput) BindValidParam(c *gin.Context) (err error) {
+	return public.DefaultGetValidParams(c, p)
+}
+
+func (p *GetServiceListInput) ErrorHandle(c *gin.Context, err error) {
+	ResponseError(c, 1002, err)
+}
+
+func (p *GetServiceListInput) OutputHandle(c *gin.Context, outIn interface{}) (out interface{}) {
+	return outIn
+}
+
+func (p *GetServiceListInput) Exec(c *gin.Context) (out interface{}, err error) {
 	serviceInfo := &dao.ServiceInfo{}
 	db, err := lib.GetDefaultDB()
 	if err != nil {
@@ -45,7 +57,7 @@ func (p *ServiceListInput) Exec(c *gin.Context) (out interface{}, err error) {
 	if err != nil {
 		return
 	}
-	outE := &ServiceListOutput{
+	outE := &GetServiceListOutput{
 		Total: count,
 		List:  []ServiceListItem{},
 	}
@@ -59,36 +71,41 @@ func (p *ServiceListInput) Exec(c *gin.Context) (out interface{}, err error) {
 		}
 		serviceAddr := ""
 		loadType := ""
-		switch serviceDetail.Info.LoadType {
+		switch serviceDetail.LoadType {
 		case dao.LoadTypeHttp:
 			{
 				loadType = "HTTP"
-				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHTTPs == 0 {
-					serviceAddr = clusterIP + ":" + clusterPort + serviceDetail.HTTP.Rule
+				service := serviceDetail.Service.(*dao.ServiceHTTPRuleExceptModel)
+				if service.RuleType == dao.HttpRuleTypePrefixURL && service.NeedHTTPs == 0 {
+					serviceAddr = clusterIP + ":" + clusterPort + service.Rule
 
 				}
-				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypePrefixURL && serviceDetail.HTTP.NeedHTTPs == 1 {
-					serviceAddr = clusterIP + ":" + clusterSSLPort + serviceDetail.HTTP.Rule
+				if service.RuleType == dao.HttpRuleTypePrefixURL && service.NeedHTTPs == 1 {
+					serviceAddr = clusterIP + ":" + clusterSSLPort + service.Rule
 				}
-				if serviceDetail.HTTP.RuleType == dao.HttpRuleTypeDomain {
-					serviceAddr = serviceDetail.HTTP.Rule
+				if service.RuleType == dao.HttpRuleTypeDomain {
+					serviceAddr = service.Rule
 				}
 				break
 			}
 		case dao.LoadTypeTcp:
 			{
 				loadType = "TCP"
-				serviceAddr = clusterIP + ":" + strconv.Itoa(int(serviceDetail.TCP.Port))
+				service := serviceDetail.Service.(*dao.ServiceTCPRuleExceptModel)
+
+				serviceAddr = clusterIP + ":" + strconv.Itoa(int(service.Port))
 				break
 			}
 		case dao.LoadTypeGrpc:
 			{
 				loadType = "GRPC"
-				serviceAddr = clusterIP + ":" + strconv.Itoa(int(serviceDetail.GRPC.Port))
+				service := serviceDetail.Service.(*dao.ServiceGrpcRuleExceptModel)
+
+				serviceAddr = clusterIP + ":" + strconv.Itoa(int(service.Port))
 				break
 			}
 		}
-		ipList := serviceDetail.LoadBalance.GetIPListByModel()
+		ipList := serviceDetail.ServiceLoadBalanceExceptModel.GetIPListByModel()
 
 		item := ServiceListItem{
 			ID:          info.ID,
@@ -105,14 +122,6 @@ func (p *ServiceListInput) Exec(c *gin.Context) (out interface{}, err error) {
 	return outE, nil
 }
 
-func (p *ServiceListInput) BindValidParam(c *gin.Context) (err error) {
-	return public.DefaultGetValidParams(c, p)
-}
-
-func (p *ServiceListInput) ErrorHandle(c *gin.Context, err error) {
-	ResponseError(c, 1002, err)
-}
-
 type DeleteServiceInput struct {
 	ID uint `json:"id" form:"id" validate:"required"`
 }
@@ -125,15 +134,17 @@ func (p *DeleteServiceInput) ErrorHandle(c *gin.Context, err error) {
 	ResponseError(c, 1002, err)
 }
 
+func (p *DeleteServiceInput) OutputHandle(c *gin.Context, outIn interface{}) (out interface{}) {
+	return outIn
+}
+
 func (p *DeleteServiceInput) Exec(c *gin.Context) (out interface{}, err error) {
 	db, err := lib.GetDefaultDB()
 	if err != nil {
 		return
 	}
 	serviceInfo := &dao.ServiceInfo{
-		Model: gorm.Model{
-			ID: p.ID,
-		},
+		ID: p.ID,
 	}
 
 	err = db.Transaction(
@@ -194,5 +205,41 @@ func (p *DeleteServiceInput) Exec(c *gin.Context) (out interface{}, err error) {
 			}
 			return
 		})
+	return
+}
+
+type GetServiceDetailInput struct {
+	ServiceID uint `json:"service_id" form:"service_id"`
+}
+
+type GetServiceDetailOutput struct {
+	dao.ServiceDetail
+}
+
+func (p *GetServiceDetailInput) BindValidParam(c *gin.Context) (err error) {
+	err = public.DefaultGetValidParams(c, p)
+	return
+}
+
+func (p *GetServiceDetailInput) ErrorHandle(c *gin.Context, err error) {
+	ResponseError(c, 1002, err)
+}
+
+func (p *GetServiceDetailInput) OutputHandle(c *gin.Context, outIn interface{}) (out interface{}) {
+	return outIn
+}
+
+func (p *GetServiceDetailInput) Exec(c *gin.Context) (out interface{}, err error) {
+	db, err := lib.GetDefaultDB()
+	if err != nil {
+		return
+	}
+	info := &dao.ServiceInfo{
+		ID: p.ServiceID,
+	}
+	out, err = info.FindOneServiceDetail(c, db)
+	if err != nil {
+		return
+	}
 	return
 }

@@ -38,6 +38,13 @@ func (p *ServiceAccessControl) FindOne(c *gin.Context, tx *gorm.DB) (out *Servic
 	return
 }
 
+func (p *ServiceAccessControl) FindOneScan(c *gin.Context, tx *gorm.DB, out interface{}) (err error) {
+	//out = &ServiceInfo{}
+	result := tx.Model(p).Where(p).Limit(1).Scan(out)
+	err = ErrorHandleForDB(result)
+	return
+}
+
 func (p *ServiceAccessControl) UpdateAllByServiceID(c *gin.Context, db *gorm.DB) (err error) {
 	//data := map[string]interface{}{}
 	//data["ServiceID"] = p.ServiceID
