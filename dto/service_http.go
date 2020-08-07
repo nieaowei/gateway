@@ -55,10 +55,7 @@ func (p *AddHttpServiceInput) OutputHandle(c *gin.Context, outIn interface{}) (o
 }
 
 func (p *AddHttpServiceInput) Exec(c *gin.Context) (out interface{}, err error) {
-	db, err := lib.GetDefaultDB()
-	if err != nil {
-		return
-	}
+	db := lib.GetDefaultDB()
 	// set http type
 	p.LoadType = dao.LoadTypeHttp
 	// start
@@ -132,10 +129,7 @@ func (p *UpdateHttpServiceInput) ErrorHandle(c *gin.Context, err error) {
 }
 
 func (p *UpdateHttpServiceInput) Exec(c *gin.Context) (out interface{}, err error) {
-	db, err := lib.GetDefaultDB()
-	if err != nil {
-		return
-	}
+	db := lib.GetDefaultDB()
 	// set http type
 	p.LoadType = dao.LoadTypeHttp
 	// start

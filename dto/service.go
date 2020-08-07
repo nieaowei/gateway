@@ -45,10 +45,7 @@ func (p *GetServiceListInput) OutputHandle(c *gin.Context, outIn interface{}) (o
 
 func (p *GetServiceListInput) Exec(c *gin.Context) (out interface{}, err error) {
 	serviceInfo := &dao.ServiceInfo{}
-	db, err := lib.GetDefaultDB()
-	if err != nil {
-		return
-	}
+	db := lib.GetDefaultDB()
 	serviceInfos, count, err := serviceInfo.PageList(c, db, &dao.PageSize{
 		Size: p.PageSize,
 		No:   p.PageNo,
@@ -61,9 +58,10 @@ func (p *GetServiceListInput) Exec(c *gin.Context) (out interface{}, err error) 
 		Total: count,
 		List:  []ServiceListItem{},
 	}
-	clusterIP := lib.GetDefaultConfBase().Cluster.Ip
-	clusterPort := lib.GetDefaultConfBase().Cluster.Port
-	clusterSSLPort := lib.GetDefaultConfBase().Cluster.SslPort
+	conf := lib.GetDefaultConfBase()
+	clusterIP := conf.Cluster.Ip
+	clusterPort := conf.Cluster.Port
+	clusterSSLPort := conf.Cluster.SslPort
 	for _, info := range serviceInfos {
 		serviceDetail, err := info.FindOneServiceDetail(c, db)
 		if err != nil {
@@ -139,10 +137,7 @@ func (p *DeleteServiceInput) OutputHandle(c *gin.Context, outIn interface{}) (ou
 }
 
 func (p *DeleteServiceInput) Exec(c *gin.Context) (out interface{}, err error) {
-	db, err := lib.GetDefaultDB()
-	if err != nil {
-		return
-	}
+	db := lib.GetDefaultDB()
 	serviceInfo := &dao.ServiceInfo{
 		ID: p.ID,
 	}
@@ -230,10 +225,7 @@ func (p *GetServiceDetailInput) OutputHandle(c *gin.Context, outIn interface{}) 
 }
 
 func (p *GetServiceDetailInput) Exec(c *gin.Context) (out interface{}, err error) {
-	db, err := lib.GetDefaultDB()
-	if err != nil {
-		return
-	}
+	db := lib.GetDefaultDB()
 	info := &dao.ServiceInfo{
 		ID: p.ServiceID,
 	}

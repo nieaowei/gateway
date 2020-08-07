@@ -11,10 +11,11 @@ import (
 
 var DefaultDB *gorm.DB
 
-func InitDBPool() error {
-	//普通的db方式
+func InitDBPool() {
+	//普通的db方式G
 	var err error
-	DefaultDB, err = gorm.Open(mysql.Open(GetDefaultConfMysql().DataSourceName), &gorm.Config{
+	conf := GetDefaultConfMysql()
+	DefaultDB, err = gorm.Open(mysql.Open(conf.DataSourceName), &gorm.Config{
 		Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
 			SlowThreshold: 100 * time.Millisecond,
 			LogLevel:      logger.Info,
@@ -22,15 +23,15 @@ func InitDBPool() error {
 		}),
 	})
 	if err != nil {
-		return err
+		panic(err)
 	}
-	return nil
 }
-func GetDefaultDB() (*gorm.DB, error) {
+func GetDefaultDB() (db *gorm.DB) {
 	if DefaultDB == nil {
-		panic("db not init")
+		//panic("db not init")
+		InitDBPool()
 	}
-	return DefaultDB, nil
+	return DefaultDB
 }
 
 func CloseDB() {

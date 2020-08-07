@@ -6,6 +6,6 @@ import (
 )
 
 func Register(router *gin.Engine, c controller.Controller) {
-	group := router.Group(c.RouterGroupName(), c.Middleware()...)
+	group := router.Group(c.RouterGroupName(), c.Middlewares()...)
 	c.RouterRegister(group)
 }

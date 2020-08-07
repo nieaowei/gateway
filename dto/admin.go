@@ -39,10 +39,7 @@ func (p *AdminChangePwdInput) Exec(c *gin.Context) (out interface{}, err error) 
 		Username: adminSession.Username,
 	}
 	// get database.
-	db, err := lib.GetDefaultDB()
-	if err != nil {
-		return
-	}
+	db := lib.GetDefaultDB()
 	// get admin information by username.
 	adminInfo, err = adminInfo.FindOne(c, db)
 	if err != nil {

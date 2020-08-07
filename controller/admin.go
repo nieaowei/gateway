@@ -18,8 +18,15 @@ func (p *AdminController) RouterGroupName() string {
 	return "/admin"
 }
 
-func (p *AdminController) Middleware() []gin.HandlerFunc {
-	store, err := sessions.NewRedisStore(lib.GetDefaultConfRedis().MaxIdle, "tcp", lib.GetDefaultConfRedis().ProxyList[0], "", []byte("secret"))
+func (p *AdminController) Middlewares() (middlewares []gin.HandlerFunc) {
+	conf := lib.GetDefaultConfRedis()
+	store, err := sessions.NewRedisStore(
+		conf.MaxIdle,
+		"tcp",
+		conf.ProxyList[0],
+		"",
+		[]byte("secret"),
+	)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

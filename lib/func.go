@@ -33,7 +33,7 @@ func Init(configPath string) error {
 }
 
 //模块初始化
-func InitModule(configPath string, modules []string) error {
+func InitModule(configPath string, modules []string) (err error) {
 	conf := flag.String("config", configPath, "input config file like ./conf/dev/")
 	flag.Parse()
 	if *conf == "" {
@@ -52,8 +52,8 @@ func InitModule(configPath string, modules []string) error {
 	}
 
 	//初始化配置文件
-	if err := InitViperConf(); err != nil {
-		return err
+	if err = InitViperConf(); err != nil {
+		return
 	}
 
 	//// 加载base配置
@@ -72,13 +72,11 @@ func InitModule(configPath string, modules []string) error {
 
 	// 加载mysql配置并初始化实例
 	if InArrayString("mysql", modules) {
-		if err := InitDBPool(); err != nil {
-			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitDBPool:"+err.Error())
-		}
+		InitDBPool()
 	}
-
+	confB := GetDefaultConfBase()
 	// 设置时区
-	if location, err := time.LoadLocation(GetDefaultConfBase().Base.TimeLocation); err != nil {
+	if location, err := time.LoadLocation(confB.Base.TimeLocation); err != nil {
 		return err
 	} else {
 		TimeLocation = location
@@ -86,7 +84,7 @@ func InitModule(configPath string, modules []string) error {
 
 	log.Printf("[INFO] %s\n", " success loading resources.")
 	log.Println("------------------------------------------------------------------------")
-	return nil
+	return
 }
 
 //公共销毁函数

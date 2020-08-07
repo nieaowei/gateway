@@ -24,8 +24,15 @@ func (p *ServiceController) RouterGroupName() string {
 	return "/service"
 }
 
-func (p *ServiceController) Middleware() []gin.HandlerFunc {
-	store, err := sessions.NewRedisStore(lib.GetDefaultConfRedis().MaxIdle, "tcp", lib.GetDefaultConfRedis().ProxyList[0], "", []byte("secret"))
+func (p *ServiceController) Middlewares() (middlewares []gin.HandlerFunc) {
+	conf := lib.GetDefaultConfRedis()
+	store, err := sessions.NewRedisStore(
+		conf.MaxIdle,
+		"tcp",
+		conf.ProxyList[0],
+		"",
+		[]byte("secret"),
+	)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

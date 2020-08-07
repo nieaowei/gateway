@@ -21,8 +21,11 @@ func RecoveryMiddleware() gin.HandlerFunc {
 					"error": fmt.Sprint(err),
 					"stack": string(debug.Stack()),
 				})
-
-				if lib.GetDefaultConfBase().Base.DebugMode != "debug" {
+				conf := lib.GetDefaultConfBase()
+				if err != nil {
+					panic("RecoveryMiddleware error")
+				}
+				if conf.Base.DebugMode != "debug" {
 					dto.ResponseError(c, 500, errors.New("内部错误"))
 					return
 				} else {

@@ -92,7 +92,7 @@ func InitConf(path string, config Config) (err error) {
 	v := viper.New()
 	v.SetConfigName(config.ConfName())
 	if path == "" {
-		v.AddConfigPath("./")
+		v.AddConfigPath("../conf/dev")
 	}
 	v.AddConfigPath(path)
 	err = v.ReadInConfig()
@@ -106,9 +106,9 @@ func InitConf(path string, config Config) (err error) {
 	return
 }
 
-func InitBaseConf(path string) (err error) {
+func InitBaseConf(path string) {
 	conf := &BaseConf{}
-	err = InitConf(path, conf)
+	err := InitConf(path, conf)
 	if err != nil {
 		panic("init conf base")
 	}
@@ -116,9 +116,9 @@ func InitBaseConf(path string) (err error) {
 	return
 }
 
-func InitRedisConf(path string) (err error) {
+func InitRedisConf(path string) {
 	conf := &RedisMapConf{}
-	err = InitConf(path, conf)
+	err := InitConf(path, conf)
 	if err != nil {
 		panic("init conf base")
 	}
@@ -126,9 +126,9 @@ func InitRedisConf(path string) (err error) {
 	return
 }
 
-func InitMysqlConf(path string) (err error) {
+func InitMysqlConf(path string) {
 	conf := &MysqlConf{}
-	err = InitConf(path, conf)
+	err := InitConf(path, conf)
 	if err != nil {
 		panic("init conf base")
 	}
@@ -144,21 +144,21 @@ func InitViperConf() error {
 
 func GetDefaultConfMysql() *MySQLConf {
 	if ConfMysql == nil {
-		panic("Mysql conf not init")
+		InitMysqlConf("")
 	}
 	return ConfMysql.List["default"]
 }
 
 func GetDefaultConfRedis() *RedisConf {
 	if ConfRedis == nil {
-		panic("Redis conf not init")
+		InitRedisConf("")
 	}
 	return ConfRedis.List["default"]
 }
 
 func GetDefaultConfBase() *BaseConf {
 	if ConfBase == nil {
-		panic("Base conf not init")
+		InitBaseConf("")
 	}
 	return ConfBase
 }

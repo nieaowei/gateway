@@ -9,9 +9,10 @@ import (
 )
 
 func IPAuthMiddleware() gin.HandlerFunc {
+	conf := lib.GetDefaultConfBase()
 	return func(c *gin.Context) {
 		isMatched := false
-		for _, host := range lib.GetDefaultConfBase().Http.AllowIP {
+		for _, host := range conf.Http.AllowIP {
 			if c.ClientIP() == host {
 				isMatched = true
 			}

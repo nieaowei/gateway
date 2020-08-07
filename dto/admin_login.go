@@ -35,10 +35,7 @@ func (p *AdminLoginInput) Exec(c *gin.Context) (out interface{}, err error) {
 	adminInfo := &dao.Admin{
 		Username: p.Username,
 	}
-	db, err := lib.GetDefaultDB()
-	if err != nil {
-		return
-	}
+	db := lib.GetDefaultDB()
 	adminInfo, err = adminInfo.FindOne(c, db)
 	if err != nil {
 		return nil, errors.New("用户不存在")

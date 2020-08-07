@@ -26,6 +26,12 @@ func (p *Admin) FindOne(c *gin.Context, tx *gorm.DB) (out *Admin, err error) {
 	return
 }
 
+func (p *Admin) FindOneScan(c *gin.Context, tx *gorm.DB, out interface{}) (err error) {
+	result := tx.Model(p).Where(p).Limit(1).Scan(out)
+	err = ErrorHandleForDB(result)
+	return
+}
+
 func (p *Admin) UpdateAllByID(c *gin.Context, tx *gorm.DB) (err error) {
 	res := tx.Omit("id", "created_at", "deleted_at").Save(p)
 	err = ErrorHandleForDB(res)
