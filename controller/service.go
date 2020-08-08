@@ -18,6 +18,10 @@ func (p *ServiceController) RouterRegister(group *gin.RouterGroup) {
 	group.POST("/http/add", p.AddHttpService)
 	group.POST("/http/update", p.UpdateHttpService)
 	group.GET("/detail", p.GetServiceDetail)
+	group.POST("/tcp/add", p.AddTcpService)
+	group.POST("/tcp/update", p.UpdateTcpService)
+	group.POST("/grpc/add", p.AddGrpcService)
+	group.POST("/grpc/update", p.UpdateGrpcService)
 }
 
 func (p *ServiceController) RouterGroupName() string {
@@ -67,5 +71,25 @@ func (p *ServiceController) GetServiceList(c *gin.Context) {
 
 func (p *ServiceController) DeleteService(c *gin.Context) {
 	dto.Exec(&dto.DeleteServiceInput{}, c)
+	return
+}
+
+func (p *ServiceController) AddTcpService(c *gin.Context) {
+	dto.Exec(&dto.AddTcpServiceInput{}, c)
+	return
+}
+
+func (p *ServiceController) UpdateTcpService(c *gin.Context) {
+	dto.Exec(&dto.UpdateTcpServiceInput{}, c)
+	return
+}
+
+func (p *ServiceController) AddGrpcService(c *gin.Context) {
+	dto.Exec(&dto.AddGrpcServiceInput{}, c)
+	return
+}
+
+func (p *ServiceController) UpdateGrpcService(c *gin.Context) {
+	dto.Exec(&dto.UpdateGrpcServiceInput{}, c)
 	return
 }

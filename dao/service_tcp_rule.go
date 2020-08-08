@@ -53,14 +53,14 @@ func (p *ServiceTCPRule) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	return
 }
 
-func (p *ServiceTCPRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
+func (p *ServiceTCPRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
 	if check {
 		//check integrity
 		ServiceHTTPRule := &ServiceHTTPRule{
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(ServiceHTTPRule, ServiceHTTPRule).Error
-		if err != gorm.ErrRecordNotFound {
+		if err != nil && err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
@@ -68,7 +68,7 @@ func (p *ServiceTCPRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) 
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(serviceGrpcRule, serviceGrpcRule).Error
-		if err != nil {
+		if err != nil && err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
@@ -77,7 +77,7 @@ func (p *ServiceTCPRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) 
 			ID: p.ServiceID,
 		}
 		err = db.First(serviceInfo, serviceInfo).Error
-		if err != nil {
+		if err != nil && err != gorm.ErrRecordNotFound {
 			return errors.New("In violation of the foreign key constraints")
 		}
 
@@ -86,7 +86,7 @@ func (p *ServiceTCPRule) AddAfterCheck(c *gin.Context, db *gorm.DB, check bool) 
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(ServiceTCPRule, ServiceTCPRule).Error
-		if err != nil {
+		if err != nil && err != gorm.ErrRecordNotFound {
 			return errors.New("Violation of the uniqueness constraint")
 		}
 	}
