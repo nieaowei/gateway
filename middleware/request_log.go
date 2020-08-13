@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"bytes"
+	"fmt"
 	"gateway/lib"
 	"gateway/public"
 	"github.com/gin-gonic/gin"
@@ -54,6 +55,7 @@ func RequestOutLog(c *gin.Context) {
 
 func RequestLog() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		fmt.Println(c.Request.Host, c.Request.URL.Path)
 		RequestInLog(c)
 		defer RequestOutLog(c)
 		c.Next()

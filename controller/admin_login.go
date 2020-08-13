@@ -40,6 +40,16 @@ func (p *AdminLoginController) Middlewares() (middlewares []gin.HandlerFunc) {
 	}
 }
 
+// AdminLogin godoc
+// @Summary 管理员登陆
+// @Description 管理员登陆
+// @Tags 管理员接口
+// @ID /admin/login
+// @Accept  json
+// @Produce  json
+// @Param body body dto.AdminLoginInput true "body"
+// @Success 200 {object} dto.Response{data=dto.AdminLoginOutput} "success"
+// @Router /admin/login [post]
 func (p *AdminLoginController) AdminLogin(c *gin.Context) {
 	dto.Exec(&dto.AdminLoginInput{}, c)
 	return

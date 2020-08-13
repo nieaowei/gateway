@@ -39,7 +39,6 @@ func (p *AdminController) Middlewares() (middlewares []gin.HandlerFunc) {
 	}
 }
 
-//AdminRegister is used for router registration.
 func (p *AdminController) RouterRegister(group *gin.RouterGroup) {
 	group.GET("/admin_info", p.AdminInfo)
 	group.GET("/logout", p.AdminLogout)
@@ -47,6 +46,15 @@ func (p *AdminController) RouterRegister(group *gin.RouterGroup) {
 }
 
 //AdminLogout is the administrator login interface.
+// AdminLogout godoc
+// @Summary 管理员登出
+// @Description 管理员登出
+// @Tags 管理员接口
+// @ID /admin/login
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} dto.Response "success"
+// @Router /admin/logout [get]
 func (p *AdminController) AdminLogout(c *gin.Context) {
 	sessions.Default(c).Delete(public.AdminSessionsKey)
 	err := sessions.Default(c).Save()

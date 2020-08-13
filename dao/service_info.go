@@ -61,13 +61,13 @@ func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (l
 	if params.Info != "" {
 		query = query.Where("service_name like ? or service_desc like ?", "%"+params.Info+"%", "%"+params.Info+"%")
 	}
+	query.Count(&count)
 
 	err = query.Limit(params.Size).Offset(offset).Order("id desc").Find(&list).Error
 
 	if err != nil {
 		return
 	}
-	query.Count(&count)
 	return
 }
 
