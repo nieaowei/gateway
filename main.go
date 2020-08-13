@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	_ "gateway/docs"
 	"gateway/lib"
 	"gateway/router"
@@ -79,13 +80,24 @@ func Swagger() {
 	r.Run(":8080")
 }
 
+var ()
+
 func main() {
 	//lib.InitModule("./conf/dev/", []string{"base", "mysql", "redis"})
 	//defer lib.Destroy()
-	lib.InitBaseConf("./conf/dev")
-	lib.InitMysqlConf("./conf/dev")
-	lib.InitRedisConf("./conf/dev")
-	lib.InitDBPool()
+	conf := flag.String("conf", "dev", "dev or pro")
+	flag.Parse()
+	if *conf == "pro" {
+		lib.InitBaseConf("./conf/pro")
+		lib.InitMysqlConf("./conf/pro")
+		lib.InitRedisConf("./conf/pro")
+		lib.InitDBPool()
+	} else {
+		lib.InitBaseConf("./conf/dev")
+		lib.InitMysqlConf("./conf/dev")
+		lib.InitRedisConf("./conf/dev")
+		lib.InitDBPool()
+	}
 	//db,_:=lib.GetDefaultDB()
 	//db.Logger.LogMode(logger.Info)
 	router.HttpServerRun()

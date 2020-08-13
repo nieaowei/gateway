@@ -1,8 +1,12 @@
 FROM golang:1.14
 
-RUN ls -a
+WORKDIR /go/src/app
+
+COPY . .
 
 RUN go get -d -v -t ./...
 RUN go build -v .
 
-ENTRYPOINT ["./main"]
+EXPOSE 8880
+
+ENTRYPOINT["./gateway","-conf=pro"]
