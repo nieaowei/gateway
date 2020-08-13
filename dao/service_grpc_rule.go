@@ -48,7 +48,7 @@ func (p *ServiceGrpcRule) UpdateAllByServiceID(c *gin.Context, db *gorm.DB) (err
 }
 
 func (p *ServiceGrpcRule) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
-	result := tx.Delete(p)
+	result := tx.Where(p).Delete(p)
 	err = ErrorHandleForDB(result)
 	return
 }
