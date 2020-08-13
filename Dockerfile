@@ -9,4 +9,4 @@ RUN go build -v .
 
 EXPOSE 8880
 
-ENTRYPOINT["./gateway","-conf=pro"]
+ENTRYPOINT ["./gateway","-conf=pro"]
