@@ -25,6 +25,7 @@ func InitDBPool() {
 	if err != nil {
 		panic(err)
 	}
+	log.Println("[MYSQL] " + conf.DataSourceName)
 }
 func GetDefaultDB() (db *gorm.DB) {
 	if DefaultDB == nil {
