@@ -73,7 +73,7 @@ func (p *GetServiceListInput) Exec(c *gin.Context) (out interface{}, err error) 
 		case dao.LoadTypeHttp:
 			{
 				loadType = "HTTP"
-				service := serviceDetail.Service.(*dao.ServiceHTTPRuleExceptModel)
+				service := serviceDetail.ServiceHTTPRuleExceptModel
 				if service.RuleType == dao.HttpRuleTypePrefixURL && service.NeedHTTPs == 0 {
 					serviceAddr = clusterIP + ":" + clusterPort + service.Rule
 
@@ -89,7 +89,7 @@ func (p *GetServiceListInput) Exec(c *gin.Context) (out interface{}, err error) 
 		case dao.LoadTypeTcp:
 			{
 				loadType = "TCP"
-				service := serviceDetail.Service.(*dao.ServiceTCPRuleExceptModel)
+				service := serviceDetail.ServiceTCPRuleExceptModel
 
 				serviceAddr = clusterIP + ":" + strconv.Itoa(int(service.Port))
 				break
@@ -97,7 +97,7 @@ func (p *GetServiceListInput) Exec(c *gin.Context) (out interface{}, err error) 
 		case dao.LoadTypeGrpc:
 			{
 				loadType = "GRPC"
-				service := serviceDetail.Service.(*dao.ServiceGrpcRuleExceptModel)
+				service := serviceDetail.ServiceGrpcRuleExceptModel
 
 				serviceAddr = clusterIP + ":" + strconv.Itoa(int(service.Port))
 				break

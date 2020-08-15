@@ -80,7 +80,7 @@ type ServiceGrpcRuleExceptModel struct {
 }
 
 type ServiceInfoExceptModel struct {
-	ID          uint   `gorm:"primarykey"`
+	ID          uint   `gorm:"primarykey" json:"id"`
 	LoadType    int8   `json:"load_type"`    // 负载类型 0=http 1=tcp 2=grpc
 	ServiceName string `json:"service_name"` // 服务名称 6-128 数字字母下划线
 	ServiceDesc string `json:"service_desc"` // 服务描述
