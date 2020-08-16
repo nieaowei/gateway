@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="@47.106.251.178" uuid="16d8aaf5-a4fb-478d-80a2-272bc9609ee8">
+    <data-source source="LOCAL" name="go_gateway@rm-wz9229f8eht9g9ih63o.mysql.rds.aliyuncs.com" uuid="16d8aaf5-a4fb-478d-80a2-272bc9609ee8">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://47.106.251.178:3306</jdbc-url>
+      <jdbc-url>jdbc:mysql://rm-wz9229f8eht9g9ih63o.mysql.rds.aliyuncs.com:3306/go_gateway</jdbc-url>
     </data-source>
   </component>
 </project>
