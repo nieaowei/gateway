@@ -75,8 +75,8 @@ type ServiceTCPRuleExceptModel struct {
 }
 
 type ServiceGrpcRuleExceptModel struct {
-	Port           int    `json:"port"`            // 端口
-	HeaderTransfor string `json:"header_transfor"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
+	Port           int    `json:"grpc_port"`            // 端口
+	HeaderTransfor string `json:"grpc_header_transfor"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
 }
 
 type ServiceInfoExceptModel struct {
