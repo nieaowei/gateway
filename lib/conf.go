@@ -12,6 +12,8 @@ type BaseConf struct {
 	Base struct {
 		DebugMode    string `mapstructure:"debug_mode"`
 		TimeLocation string `mapstructure:"time_location"`
+		StaticPath   string `mapstructure:"static_path"`
+		Domain       string `mapstructure:"domain"`
 	} `mapstructure:"base"`
 	Http struct {
 		Addr           string   `mapstructure:"addr"`

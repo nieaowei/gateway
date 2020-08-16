@@ -2,7 +2,9 @@ package router
 
 import (
 	"gateway/controller"
+	"gateway/lib"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
@@ -14,6 +16,7 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 			"message": "pong",
 		})
 	})
+	router.StaticFS("/static", http.Dir(lib.GetDefaultConfBase().Base.StaticPath))
 
 	Register(router, &controller.AdminLoginController{})
 
