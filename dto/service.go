@@ -135,6 +135,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			}
 			outE.List = append(outE.List, item)
 		}
+		out = outE
 		return
 	}
 
