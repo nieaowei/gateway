@@ -50,46 +50,55 @@ func (p *ServiceController) Middlewares() (middlewares []gin.HandlerFunc) {
 }
 
 func (p *ServiceController) GetServiceDetail(c *gin.Context) {
-	dto.Exec(&dto.GetServiceDetailInput{}, c)
+	exec := &dto.GetServiceDetailInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
 
 func (p *ServiceController) AddHttpService(c *gin.Context) {
-	dto.Exec(&dto.AddHttpServiceInput{}, c)
+	exec := &dto.AddHttpServiceInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
 
 func (p *ServiceController) UpdateHttpService(c *gin.Context) {
-	dto.Exec(&dto.UpdateHttpServiceInput{}, c)
+	exec := &dto.UpdateHttpServiceInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
 
 func (p *ServiceController) GetServiceList(c *gin.Context) {
-	dto.Exec(&dto.GetServiceListInput{}, c)
+	exec := &dto.GetServiceListInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
 
 func (p *ServiceController) DeleteService(c *gin.Context) {
-	dto.Exec(&dto.DeleteServiceInput{}, c)
+	exec := &dto.DeleteServiceInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
 
 func (p *ServiceController) AddTcpService(c *gin.Context) {
-	dto.Exec(&dto.AddTcpServiceInput{}, c)
+	exec := &dto.AddTcpServiceInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
 
 func (p *ServiceController) UpdateTcpService(c *gin.Context) {
-	dto.Exec(&dto.UpdateTcpServiceInput{}, c)
+	exec := &dto.UpdateTcpServiceInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
 
 func (p *ServiceController) AddGrpcService(c *gin.Context) {
-	dto.Exec(&dto.AddGrpcServiceInput{}, c)
+	exec := &dto.AddGrpcServiceInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
 
 func (p *ServiceController) UpdateGrpcService(c *gin.Context) {
-	dto.Exec(&dto.UpdateGrpcServiceInput{}, c)
+	exec := &dto.UpdateGrpcServiceInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }

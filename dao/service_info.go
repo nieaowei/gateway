@@ -45,8 +45,10 @@ func (p *ServiceInfo) BeforeCreate(db *gorm.DB) error {
 	return nil
 }
 
-func (p *ServiceInfo) UpdateAll(c *gin.Context, db *gorm.DB) (err error) {
-	return db.Save(p).Error
+func (p *ServiceInfo) UpdateAllByID(c *gin.Context, db *gorm.DB) (err error) {
+	result := db.Select(GetFields(p)).Where("id=?", p.ID).Updates(p)
+	err = ErrorHandleForDB(result)
+	return
 }
 
 func (p *ServiceInfo) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
@@ -139,7 +141,6 @@ type ServiceDetail struct {
 	*ServiceHTTPRuleExceptModel
 	*ServiceGrpcRuleExceptModel
 	*ServiceTCPRuleExceptModel
-	//*Service interface{} `json:"service"`
 	*ServiceLoadBalanceExceptModel
 	*ServiceAccessControlExceptModel
 }

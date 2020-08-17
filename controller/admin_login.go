@@ -51,6 +51,7 @@ func (p *AdminLoginController) Middlewares() (middlewares []gin.HandlerFunc) {
 // @Success 200 {object} dto.Response{data=dto.AdminLoginOutput} "success"
 // @Router /admin/login [post]
 func (p *AdminLoginController) AdminLogin(c *gin.Context) {
-	dto.Exec(&dto.AdminLoginInput{}, c)
+	exec := dto.AdminLoginInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }

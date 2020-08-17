@@ -81,6 +81,7 @@ func (p *AdminController) AdminInfo(c *gin.Context) {
 
 //AdminChangePwd
 func (p *AdminController) AdminChangePwd(c *gin.Context) {
-	dto.Exec(&dto.AdminChangePwdInput{}, c)
+	exec := dto.AdminChangePwdInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }

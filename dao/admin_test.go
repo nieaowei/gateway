@@ -104,3 +104,50 @@ func BenchmarkAdmin_FindOne(b *testing.B) {
 		_, _ = admin.FindOne(nil, db)
 	}
 }
+
+func TestAdmin_UpdateAllByID(t *testing.T) {
+	type fields struct {
+		Model    gorm.Model
+		Username string
+		Salt     string
+		Password string
+	}
+	type args struct {
+		c  *gin.Context
+		tx *gorm.DB
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "",
+			fields: fields{
+				Username: "nieaowei",
+				Salt:     "123",
+				Password: "nieaowei123",
+			},
+			args: args{
+				c:  nil,
+				tx: lib.GetDefaultDB(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &Admin{
+				Model:    tt.fields.Model,
+				Username: tt.fields.Username,
+				Salt:     tt.fields.Salt,
+				Password: tt.fields.Password,
+			}
+			if err := p.UpdateAllByID(tt.args.c, tt.args.tx); (err != nil) != tt.wantErr {
+				t.Errorf("UpdateAllByID() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
