@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="nekilc" uploadOnCheckin="53ca8601-a205-4a98-a18c-5452351a6ff9" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="nekilc" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="nekilc">
         <serverdata>
           <mappings>
-            <mapping deploy="/app/gateway" local="$PROJECT_DIR$/bin" web="/" />
+            <mapping deploy="/app/gateway" local="$PROJECT_DIR$/bin/" web="/login" />
           </mappings>
         </serverdata>
       </paths>
     </serverData>
-    <option name="myUploadOnCheckinName" value="nekilc" />
     <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>
