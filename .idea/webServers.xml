@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="53ca8601-a205-4a98-a18c-5452351a6ff9" name="nekilc" url="http://code.nekilc.com:8888">
+        <fileTransfer rootFolder="/root" accessType="SFTP" host="code.nekilc.com" port="22" sshConfigId="f8a43f06-1037-4b12-a7c1-382f21e6ebd2" sshConfig="root@code.nekilc.com:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
