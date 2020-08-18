@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: /
 definitions:
   dto.AdminLoginInput:
     properties:
@@ -12,6 +12,7 @@ definitions:
         type: string
     required:
     - password
+    - username
     type: object
   dto.AdminLoginOutput:
     properties:
@@ -32,7 +33,7 @@ definitions:
       trace_id:
         type: object
     type: object
-host: localhost:8080
+host: localhost:8880
 info:
   contact:
     email: support@swagger.io

@@ -5,10 +5,6 @@ import (
 	_ "gateway/docs"
 	"gateway/lib"
 	"gateway/router"
-	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
-	"github.com/swaggo/swag/example/celler/controller"
 	"os"
 	"os/signal"
 	"syscall"
@@ -26,8 +22,8 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8080
-// @BasePath /api/v1
+// @host localhost:8880
+// @BasePath /
 // @query.collection.format multi
 
 // @securityDefinitions.basic BasicAuth
@@ -56,36 +52,13 @@ import (
 // @tokenUrl https://example.com/oauth/token
 // @authorizationurl https://example.com/oauth/authorize
 // @scope.admin Grants read and write access to administrative information
-
 // @x-extension-openapi {"example": "value on a json format"}
-func Swagger() {
-	r := gin.Default()
-
-	c := controller.NewController()
-
-	v1 := r.Group("/api/v1")
-	{
-		accounts := v1.Group("/accounts")
-		{
-			accounts.GET(":id", c.ShowAccount)
-			accounts.GET("", c.ListAccounts)
-			accounts.POST("", c.AddAccount)
-			accounts.DELETE(":id", c.DeleteAccount)
-			accounts.PATCH(":id", c.UpdateAccount)
-			accounts.POST(":id/images", c.UploadAccountImage)
-		}
-		//...
-	}
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	r.Run(":8080")
-}
-
-var ()
 
 func main() {
 	//lib.InitModule("./conf/dev/", []string{"base", "mysql", "redis"})
 	//defer lib.Destroy()
 	conf := flag.String("conf", "dev", "dev or pro")
+	swag := flag.Bool("swag", false, "true and false")
 	flag.Parse()
 	if *conf == "pro" {
 		lib.InitBaseConf("./conf/pro")
@@ -100,8 +73,8 @@ func main() {
 	}
 	//db,_:=lib.GetDefaultDB()
 	//db.Logger.LogMode(logger.Info)
-	router.HttpServerRun()
-	//go Swagger()
+	router.HttpServerRun(*swag)
+
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGKILL, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGTERM)
 	<-quit

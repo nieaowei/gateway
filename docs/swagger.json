@@ -15,8 +15,8 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
-    "basePath": "/api/v1",
+    "host": "localhost:8880",
+    "basePath": "/",
     "paths": {
         "/admin/login": {
             "post": {
@@ -94,7 +94,8 @@
         "dto.AdminLoginInput": {
             "type": "object",
             "required": [
-                "password"
+                "password",
+                "username"
             ],
             "properties": {
                 "password": {

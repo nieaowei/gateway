@@ -13,10 +13,10 @@ var (
 	HttpSrvHandler *http.Server
 )
 
-func HttpServerRun() {
+func HttpServerRun(swag bool) {
 	conf := lib.GetDefaultConfBase()
 	gin.SetMode(conf.Base.DebugMode)
-	r := InitRouter()
+	r := InitRouter(swag)
 	HttpSrvHandler = &http.Server{
 		Addr:           conf.Http.Addr,
 		Handler:        r,
@@ -25,7 +25,6 @@ func HttpServerRun() {
 		MaxHeaderBytes: 1 << uint(conf.Http.MaxHeaderBytes),
 	}
 	go func() {
-
 		log.Printf(" [INFO] HttpServerRun:%s\n", conf.Http.Addr)
 		if err := HttpSrvHandler.ListenAndServe(); err != nil {
 			log.Fatalf(" [ERROR] HttpServerRun:%s err:%v\n", conf.Http.Addr, err)
