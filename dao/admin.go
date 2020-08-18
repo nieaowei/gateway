@@ -17,6 +17,7 @@ type AdminSessionInfo struct {
 	ID        uint      `json:"id"`
 	Username  string    `json:"username"`
 	LoginTime time.Time `json:"login_time"`
+	Avatar    string    `json:"avatar"`
 }
 
 func (p *Admin) FindOne(c *gin.Context, tx *gorm.DB) (out *Admin, err error) {

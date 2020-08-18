@@ -70,6 +70,7 @@ func (p *AdminLoginInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 			ID:        adminInfo.ID,
 			Username:  adminInfo.Username,
 			LoginTime: time.Now(),
+			Avatar:    adminInfo.Avatar,
 		}
 		sess := sessions.Default(c)
 		sess.Set(public.AdminSessionsKey, adminSession)

@@ -21,6 +21,7 @@ CREATE TABLE `admin` (
 type Admin struct {
 	gorm.Model
 	Username string `gorm:"column:username;type:varchar(255);not null" json:"username"` // 用户名
+	Avatar   string `gorm:"column:avatar;type:varchar(255);not null" json:"avatar"`     // 头像
 	Salt     string `gorm:"column:salt;type:varchar(50);not null" json:"salt"`          // 盐
 	Password string `gorm:"column:password;type:varchar(255);not null" json:"password"` // 密码
 }

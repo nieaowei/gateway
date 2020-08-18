@@ -24,5 +24,7 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 
 	Register(router, &controller.ServiceController{})
 
+	Register(router, &controller.PublicController{})
+
 	return router
 }

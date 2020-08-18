@@ -71,7 +71,6 @@ func (p *AdminController) AdminInfo(c *gin.Context) {
 	adminSession := sessions.Default(c).Get(public.AdminSessionsKey).(*dao.AdminSessionInfo)
 	adminInfo := dto.AdminInfoOutput{
 		AdminSessionInfo: adminSession,
-		Avatar:           "",
 		Introduction:     "",
 		Roles:            nil,
 	}

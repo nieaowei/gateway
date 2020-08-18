@@ -11,7 +11,6 @@ import (
 
 type AdminInfoOutput struct {
 	*dao.AdminSessionInfo
-	Avatar       string   `json:"avatar"`
 	Introduction string   `json:"introduction"`
 	Roles        []string `json:"roles"`
 }
