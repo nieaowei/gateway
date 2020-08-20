@@ -503,67 +503,86 @@ var doc = `{
             ],
             "properties": {
                 "black_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "192.168.1.0\n122.12.12.3"
                 },
                 "check_interval": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 123
                 },
                 "check_method": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "check_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "clientip_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "forbid_l_ist": {
                     "type": "string"
                 },
                 "header_transform": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "add a 32"
                 },
                 "ip_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "open_auth": {
                     "type": "integer"
                 },
                 "port": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 7777
                 },
                 "round_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "service_desc": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "service_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "service_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "upstream_connect_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 122
                 },
                 "upstream_header_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 322
                 },
                 "upstream_idle_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 321
                 },
                 "upstream_max_idle": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "weight_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "1\n2"
                 },
                 "white_host_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "nekilc.com"
                 },
                 "white_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.17.12.1"
                 }
             }
         },
@@ -575,82 +594,106 @@ var doc = `{
             ],
             "properties": {
                 "black_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "192.168.1.0\n122.12.12.3"
                 },
                 "check_interval": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 123
                 },
                 "check_method": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "check_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "clientip_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "forbid_l_ist": {
                     "type": "string"
                 },
                 "header_transform": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "add a 12\nadd b 13"
                 },
                 "ip_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "need_https": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "need_strip_uri": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "need_web_socket": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "open_auth": {
                     "type": "integer"
                 },
                 "round_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "rule": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "/dsads"
                 },
                 "rule_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "service_desc": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "service_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "service_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "upstream_connect_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 122
                 },
                 "upstream_header_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 322
                 },
                 "upstream_idle_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 321
                 },
                 "upstream_max_idle": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "url_rewrite": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "add w\ndel 1"
                 },
                 "weight_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "1\n2"
                 },
                 "white_host_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "nekilc.com"
                 },
                 "white_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.17.12.1"
                 }
             }
         },
@@ -662,64 +705,82 @@ var doc = `{
             ],
             "properties": {
                 "black_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "192.168.1.0\n122.12.12.3"
                 },
                 "check_interval": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 123
                 },
                 "check_method": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "check_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "clientip_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "forbid_l_ist": {
                     "type": "string"
                 },
                 "ip_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "open_auth": {
                     "type": "integer"
                 },
                 "port": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 9999
                 },
                 "round_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "service_desc": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "service_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "service_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "upstream_connect_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 122
                 },
                 "upstream_header_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 322
                 },
                 "upstream_idle_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 321
                 },
                 "upstream_max_idle": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "weight_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "1\n2"
                 },
                 "white_host_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "nekilc.com"
                 },
                 "white_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.17.12.1"
                 }
             }
         },
@@ -790,85 +851,109 @@ var doc = `{
             ],
             "properties": {
                 "black_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "192.168.1.0\n122.12.12.3"
                 },
                 "check_interval": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 123
                 },
                 "check_method": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "check_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "clientip_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "forbid_l_ist": {
                     "type": "string"
                 },
                 "header_transform": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "add a 12\nadd b 13"
                 },
                 "ip_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "need_https": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "need_strip_uri": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "need_web_socket": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "open_auth": {
                     "type": "integer"
                 },
                 "round_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "rule": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "/dsads"
                 },
                 "rule_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "service_desc": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "service_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "service_id": {
                     "type": "integer"
                 },
                 "service_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "upstream_connect_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 122
                 },
                 "upstream_header_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 322
                 },
                 "upstream_idle_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 321
                 },
                 "upstream_max_idle": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "url_rewrite": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "add w\ndel 1"
                 },
                 "weight_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "1\n2"
                 },
                 "white_host_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "nekilc.com"
                 },
                 "white_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.17.12.1"
                 }
             }
         },
@@ -975,70 +1060,89 @@ var doc = `{
             ],
             "properties": {
                 "black_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "192.168.1.0\n122.12.12.3"
                 },
                 "check_interval": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 123
                 },
                 "check_method": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "check_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "clientip_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "forbid_l_ist": {
                     "type": "string"
                 },
                 "header_transform": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "add a 32"
                 },
                 "ip_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "open_auth": {
                     "type": "integer"
                 },
                 "port": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 7777
                 },
                 "round_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "service_desc": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "service_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "service_id": {
                     "type": "integer"
                 },
                 "service_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "upstream_connect_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 122
                 },
                 "upstream_header_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 322
                 },
                 "upstream_idle_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 321
                 },
                 "upstream_max_idle": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "weight_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "1\n2"
                 },
                 "white_host_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "nekilc.com"
                 },
                 "white_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.17.12.1"
                 }
             }
         },
@@ -1050,85 +1154,109 @@ var doc = `{
             ],
             "properties": {
                 "black_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "192.168.1.0\n122.12.12.3"
                 },
                 "check_interval": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 123
                 },
                 "check_method": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "check_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "clientip_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "forbid_l_ist": {
                     "type": "string"
                 },
                 "header_transform": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "add a 12\nadd b 13"
                 },
                 "ip_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "need_https": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "need_strip_uri": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "need_web_socket": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "open_auth": {
                     "type": "integer"
                 },
                 "round_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "rule": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "/dsads"
                 },
                 "rule_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "service_desc": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "service_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "service_id": {
                     "type": "integer"
                 },
                 "service_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "upstream_connect_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 122
                 },
                 "upstream_header_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 322
                 },
                 "upstream_idle_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 321
                 },
                 "upstream_max_idle": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "url_rewrite": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "add w\ndel 1"
                 },
                 "weight_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "1\n2"
                 },
                 "white_host_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "nekilc.com"
                 },
                 "white_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.17.12.1"
                 }
             }
         },
@@ -1140,67 +1268,85 @@ var doc = `{
             ],
             "properties": {
                 "black_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "192.168.1.0\n122.12.12.3"
                 },
                 "check_interval": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 123
                 },
                 "check_method": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "check_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "clientip_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 23
                 },
                 "forbid_l_ist": {
                     "type": "string"
                 },
                 "ip_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "open_auth": {
                     "type": "integer"
                 },
                 "port": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 9999
                 },
                 "round_type": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "service_desc": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "service_flow_limit": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "service_id": {
                     "type": "integer"
                 },
                 "service_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "service_test"
                 },
                 "upstream_connect_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 122
                 },
                 "upstream_header_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 322
                 },
                 "upstream_idle_timeout": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 321
                 },
                 "upstream_max_idle": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "weight_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "1\n2"
                 },
                 "white_host_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "nekilc.com"
                 },
                 "white_list": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "172.17.12.1"
                 }
             }
         }

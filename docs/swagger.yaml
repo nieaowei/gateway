@@ -3,46 +3,71 @@ definitions:
   dto.AddGrpcServiceInput:
     properties:
       black_list:
+        example: |-
+          192.168.1.0
+          122.12.12.3
         type: string
       check_interval:
+        example: 123
         type: integer
       check_method:
+        example: 0
         type: integer
       check_timeout:
+        example: 23
         type: integer
       clientip_flow_limit:
+        example: 23
         type: integer
       forbid_l_ist:
         type: string
       header_transform:
+        example: add a 32
         type: string
       ip_list:
+        example: |-
+          172.1.1.1:80
+          172.11.1.2:87
         type: string
       open_auth:
         type: integer
       port:
+        example: 7777
         type: integer
       round_type:
+        example: 1
         type: integer
       service_desc:
+        example: service_test
         type: string
       service_flow_limit:
+        example: 12
         type: integer
       service_name:
+        example: service_test
         type: string
       upstream_connect_timeout:
+        example: 122
         type: integer
       upstream_header_timeout:
+        example: 322
         type: integer
       upstream_idle_timeout:
+        example: 321
         type: integer
       upstream_max_idle:
+        example: 12
         type: integer
       weight_list:
+        example: |-
+          1
+          2
         type: string
       white_host_name:
+        example: nekilc.com
         type: string
       white_list:
+        example: 172.17.12.1
         type: string
     required:
     - service_desc
@@ -51,56 +76,90 @@ definitions:
   dto.AddHttpServiceInput:
     properties:
       black_list:
+        example: |-
+          192.168.1.0
+          122.12.12.3
         type: string
       check_interval:
+        example: 123
         type: integer
       check_method:
+        example: 0
         type: integer
       check_timeout:
+        example: 23
         type: integer
       clientip_flow_limit:
+        example: 23
         type: integer
       forbid_l_ist:
         type: string
       header_transform:
+        example: |-
+          add a 12
+          add b 13
         type: string
       ip_list:
+        example: |-
+          172.1.1.1:80
+          172.11.1.2:87
         type: string
       need_https:
+        example: 1
         type: integer
       need_strip_uri:
+        example: 1
         type: integer
       need_web_socket:
+        example: 1
         type: integer
       open_auth:
         type: integer
       round_type:
+        example: 1
         type: integer
       rule:
+        example: /dsads
         type: string
       rule_type:
+        example: 1
         type: integer
       service_desc:
+        example: service_test
         type: string
       service_flow_limit:
+        example: 12
         type: integer
       service_name:
+        example: service_test
         type: string
       upstream_connect_timeout:
+        example: 122
         type: integer
       upstream_header_timeout:
+        example: 322
         type: integer
       upstream_idle_timeout:
+        example: 321
         type: integer
       upstream_max_idle:
+        example: 12
         type: integer
       url_rewrite:
+        example: |-
+          add w
+          del 1
         type: string
       weight_list:
+        example: |-
+          1
+          2
         type: string
       white_host_name:
+        example: nekilc.com
         type: string
       white_list:
+        example: 172.17.12.1
         type: string
     required:
     - service_desc
@@ -109,44 +168,68 @@ definitions:
   dto.AddTcpServiceInput:
     properties:
       black_list:
+        example: |-
+          192.168.1.0
+          122.12.12.3
         type: string
       check_interval:
+        example: 123
         type: integer
       check_method:
+        example: 0
         type: integer
       check_timeout:
+        example: 23
         type: integer
       clientip_flow_limit:
+        example: 23
         type: integer
       forbid_l_ist:
         type: string
       ip_list:
+        example: |-
+          172.1.1.1:80
+          172.11.1.2:87
         type: string
       open_auth:
         type: integer
       port:
+        example: 9999
         type: integer
       round_type:
+        example: 1
         type: integer
       service_desc:
+        example: service_test
         type: string
       service_flow_limit:
+        example: 12
         type: integer
       service_name:
+        example: service_test
         type: string
       upstream_connect_timeout:
+        example: 122
         type: integer
       upstream_header_timeout:
+        example: 322
         type: integer
       upstream_idle_timeout:
+        example: 321
         type: integer
       upstream_max_idle:
+        example: 12
         type: integer
       weight_list:
+        example: |-
+          1
+          2
         type: string
       white_host_name:
+        example: nekilc.com
         type: string
       white_list:
+        example: 172.17.12.1
         type: string
     required:
     - service_desc
@@ -195,58 +278,92 @@ definitions:
   dto.GetServiceDetailForHttpOutput:
     properties:
       black_list:
+        example: |-
+          192.168.1.0
+          122.12.12.3
         type: string
       check_interval:
+        example: 123
         type: integer
       check_method:
+        example: 0
         type: integer
       check_timeout:
+        example: 23
         type: integer
       clientip_flow_limit:
+        example: 23
         type: integer
       forbid_l_ist:
         type: string
       header_transform:
+        example: |-
+          add a 12
+          add b 13
         type: string
       ip_list:
+        example: |-
+          172.1.1.1:80
+          172.11.1.2:87
         type: string
       need_https:
+        example: 1
         type: integer
       need_strip_uri:
+        example: 1
         type: integer
       need_web_socket:
+        example: 1
         type: integer
       open_auth:
         type: integer
       round_type:
+        example: 1
         type: integer
       rule:
+        example: /dsads
         type: string
       rule_type:
+        example: 1
         type: integer
       service_desc:
+        example: service_test
         type: string
       service_flow_limit:
+        example: 12
         type: integer
       service_id:
         type: integer
       service_name:
+        example: service_test
         type: string
       upstream_connect_timeout:
+        example: 122
         type: integer
       upstream_header_timeout:
+        example: 322
         type: integer
       upstream_idle_timeout:
+        example: 321
         type: integer
       upstream_max_idle:
+        example: 12
         type: integer
       url_rewrite:
+        example: |-
+          add w
+          del 1
         type: string
       weight_list:
+        example: |-
+          1
+          2
         type: string
       white_host_name:
+        example: nekilc.com
         type: string
       white_list:
+        example: 172.17.12.1
         type: string
     required:
     - service_desc
@@ -318,48 +435,73 @@ definitions:
   dto.UpdateGrpcServiceInput:
     properties:
       black_list:
+        example: |-
+          192.168.1.0
+          122.12.12.3
         type: string
       check_interval:
+        example: 123
         type: integer
       check_method:
+        example: 0
         type: integer
       check_timeout:
+        example: 23
         type: integer
       clientip_flow_limit:
+        example: 23
         type: integer
       forbid_l_ist:
         type: string
       header_transform:
+        example: add a 32
         type: string
       ip_list:
+        example: |-
+          172.1.1.1:80
+          172.11.1.2:87
         type: string
       open_auth:
         type: integer
       port:
+        example: 7777
         type: integer
       round_type:
+        example: 1
         type: integer
       service_desc:
+        example: service_test
         type: string
       service_flow_limit:
+        example: 12
         type: integer
       service_id:
         type: integer
       service_name:
+        example: service_test
         type: string
       upstream_connect_timeout:
+        example: 122
         type: integer
       upstream_header_timeout:
+        example: 322
         type: integer
       upstream_idle_timeout:
+        example: 321
         type: integer
       upstream_max_idle:
+        example: 12
         type: integer
       weight_list:
+        example: |-
+          1
+          2
         type: string
       white_host_name:
+        example: nekilc.com
         type: string
       white_list:
+        example: 172.17.12.1
         type: string
     required:
     - service_desc
@@ -368,58 +510,92 @@ definitions:
   dto.UpdateHttpServiceInput:
     properties:
       black_list:
+        example: |-
+          192.168.1.0
+          122.12.12.3
         type: string
       check_interval:
+        example: 123
         type: integer
       check_method:
+        example: 0
         type: integer
       check_timeout:
+        example: 23
         type: integer
       clientip_flow_limit:
+        example: 23
         type: integer
       forbid_l_ist:
         type: string
       header_transform:
+        example: |-
+          add a 12
+          add b 13
         type: string
       ip_list:
+        example: |-
+          172.1.1.1:80
+          172.11.1.2:87
         type: string
       need_https:
+        example: 1
         type: integer
       need_strip_uri:
+        example: 1
         type: integer
       need_web_socket:
+        example: 1
         type: integer
       open_auth:
         type: integer
       round_type:
+        example: 1
         type: integer
       rule:
+        example: /dsads
         type: string
       rule_type:
+        example: 1
         type: integer
       service_desc:
+        example: service_test
         type: string
       service_flow_limit:
+        example: 12
         type: integer
       service_id:
         type: integer
       service_name:
+        example: service_test
         type: string
       upstream_connect_timeout:
+        example: 122
         type: integer
       upstream_header_timeout:
+        example: 322
         type: integer
       upstream_idle_timeout:
+        example: 321
         type: integer
       upstream_max_idle:
+        example: 12
         type: integer
       url_rewrite:
+        example: |-
+          add w
+          del 1
         type: string
       weight_list:
+        example: |-
+          1
+          2
         type: string
       white_host_name:
+        example: nekilc.com
         type: string
       white_list:
+        example: 172.17.12.1
         type: string
     required:
     - service_desc
@@ -428,46 +604,70 @@ definitions:
   dto.UpdateTcpServiceInput:
     properties:
       black_list:
+        example: |-
+          192.168.1.0
+          122.12.12.3
         type: string
       check_interval:
+        example: 123
         type: integer
       check_method:
+        example: 0
         type: integer
       check_timeout:
+        example: 23
         type: integer
       clientip_flow_limit:
+        example: 23
         type: integer
       forbid_l_ist:
         type: string
       ip_list:
+        example: |-
+          172.1.1.1:80
+          172.11.1.2:87
         type: string
       open_auth:
         type: integer
       port:
+        example: 9999
         type: integer
       round_type:
+        example: 1
         type: integer
       service_desc:
+        example: service_test
         type: string
       service_flow_limit:
+        example: 12
         type: integer
       service_id:
         type: integer
       service_name:
+        example: service_test
         type: string
       upstream_connect_timeout:
+        example: 122
         type: integer
       upstream_header_timeout:
+        example: 322
         type: integer
       upstream_idle_timeout:
+        example: 321
         type: integer
       upstream_max_idle:
+        example: 12
         type: integer
       weight_list:
+        example: |-
+          1
+          2
         type: string
       white_host_name:
+        example: nekilc.com
         type: string
       white_list:
+        example: 172.17.12.1
         type: string
     required:
     - service_desc
