@@ -52,7 +52,7 @@ func (p *AddGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadType_HTTP,
+					LoadType:    dao.LoadType_GRPC,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 				}
@@ -142,7 +142,7 @@ func (p *UpdateGrpcServiceInput) Exec(params interface{}, cIn *gin.Context, errI
 		func(tx *gorm.DB) (err error) {
 			// insert service info
 			serviceInfo := &dao.ServiceInfo{
-				LoadType:    dao.LoadType_HTTP,
+				LoadType:    dao.LoadType_GRPC,
 				ServiceName: p.ServiceName,
 				ServiceDesc: p.ServiceDesc,
 				ID:          p.ServiceID,
