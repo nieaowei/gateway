@@ -14,7 +14,7 @@ type AdminLoginInput struct {
 	//用户名
 	Username string `json:"username" form:"username" comment:"姓名" example:"admin" validate:"required,is_valid_username"`
 	//密码
-	Password string `json:"password" form:"password" comment:"密码" example:"12345" validate:"required"`
+	Password string `json:"password" form:"password" comment:"密码" example:"nieaowei123" validate:"required"`
 }
 
 type AdminLoginOutput struct {

@@ -6,14 +6,14 @@ import (
 	"reflect"
 )
 
-const (
-	LoadTypeHttp = 0
-	LoadTypeTcp  = 1
-	LoadTypeGrpc = 2
-
-	HttpRuleTypePrefixURL = 0
-	HttpRuleTypeDomain    = 1
-)
+//const (
+//	LoadType_HTTP = 0
+//	LoadType_TCP  = 1
+//	LoadType_GRPC = 2
+//
+//	HttpRuleTypePrefixURL = 0
+//	HttpRuleTypeDomain    = 1
+//)
 
 type PageSize struct {
 	Size int
@@ -61,13 +61,13 @@ func ErrorHandleForDB(res *gorm.DB) (err error) {
 }
 
 type ServiceHTTPRuleExceptModel struct {
-	RuleType       int8   `json:"rule_type"`       // 匹配类型 0=url前缀url_prefix 1=域名domain
-	Rule           string `json:"rule"`            // type=domain表示域名，type=url_prefix时表示url前缀
-	NeedHTTPs      int8   `json:"need_https"`      // 支持https 1=支持
-	NeedStripURI   int8   `json:"need_strip_uri"`  // 启用strip_uri 1=启用
-	NeedWebsocket  int8   `json:"need_websocket"`  // 是否支持websocket 1=支持
-	URLRewrite     string `json:"url_rewrite"`     // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
-	HeaderTransfor string `json:"header_transfor"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
+	RuleType        int8   `json:"rule_type"`        // 匹配类型 0=url前缀url_prefix 1=域名domain
+	Rule            string `json:"rule"`             // type=domain表示域名，type=url_prefix时表示url前缀
+	NeedHTTPs       int8   `json:"need_https"`       // 支持https 1=支持
+	NeedStripURI    int8   `json:"need_strip_uri"`   // 启用strip_uri 1=启用
+	NeedWebsocket   int8   `json:"need_websocket"`   // 是否支持websocket 1=支持
+	URLRewrite      string `json:"url_rewrite"`      // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
+	HeaderTransform string `json:"header_transform"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
 }
 
 type ServiceTCPRuleExceptModel struct {
@@ -75,8 +75,8 @@ type ServiceTCPRuleExceptModel struct {
 }
 
 type ServiceGrpcRuleExceptModel struct {
-	Port           int    `json:"grpc_port"`            // 端口
-	HeaderTransfor string `json:"grpc_header_transfor"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
+	Port            int    `json:"grpc_port"`             // 端口
+	HeaderTransform string `json:"grpc_header_transform"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
 }
 
 type ServiceInfoExceptModel struct {
@@ -91,7 +91,7 @@ type ServiceAccessControlExceptModel struct {
 	BlackList         string `json:"black_list"`          // 黑名单ip
 	WhiteList         string `json:"white_list"`          // 白名单ip
 	WhiteHostName     string `json:"white_host_name"`     // 白名单主机
-	ClientipFlowLimit int    `json:"clientip_flow_limit"` // 客户端ip限流
+	ClientipFlowLimit int    `json:"clientip_flow_limit"` // BS客户端ip限流
 	ServiceFlowLimit  int    `json:"service_flow_limit"`  // 服务端限流
 }
 

@@ -82,7 +82,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 			}
 
 			switch p.LoadType {
-			case LoadTypeHttp:
+			case LoadType_HTTP:
 				{
 					http := ServiceHTTPRule{
 						ServiceID: p.ID,
@@ -90,7 +90,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 					err = http.DeleteByID(c, tx)
 					break
 				}
-			case LoadTypeGrpc:
+			case LoadType_GRPC:
 				{
 					grpc := ServiceGrpcRule{
 						ServiceID: p.ID,
@@ -98,7 +98,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 					err = grpc.DeleteByID(c, tx)
 					break
 				}
-			case LoadTypeTcp:
+			case LoadType_TCP:
 				{
 					tcp := ServiceTCPRule{
 						ServiceID: p.ID,
@@ -154,7 +154,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 		return
 	}
 	switch out.ServiceInfoExceptModel.LoadType {
-	case LoadTypeHttp:
+	case LoadType_HTTP:
 		{
 			httpRule := &ServiceHTTPRule{
 				ServiceID: p.ID,
@@ -167,7 +167,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 			out.ServiceHTTPRuleExceptModel = httpOut
 			break
 		}
-	case LoadTypeTcp:
+	case LoadType_TCP:
 		{
 			tcpRule := &ServiceTCPRule{
 				ServiceID: p.ID,
@@ -181,7 +181,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 
 			break
 		}
-	case LoadTypeGrpc:
+	case LoadType_GRPC:
 		{
 			grpcRule := &ServiceGrpcRule{
 				ServiceID: p.ID,

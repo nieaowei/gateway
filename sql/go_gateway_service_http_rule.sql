@@ -16,5 +16,5 @@ create table service_http_rule
 )
     comment '网关路由匹配表';
 
-INSERT INTO go_gateway.service_http_rule (id, service_id, rule_type, rule, need_https, need_strip_uri, need_websocket, url_rewrite, header_transfor, created_at, updated_at, deleted_at) VALUES (192, 85, 70, 'do sed sit', 85, 45, 36, 'in anim adipisicing mollit', 'enim', '2020-07-23 03:27:30', '2020-07-23 03:27:30', '2020-07-23 03:28:03');
-INSERT INTO go_gateway.service_http_rule (id, service_id, rule_type, rule, need_https, need_strip_uri, need_websocket, url_rewrite, header_transfor, created_at, updated_at, deleted_at) VALUES (193, 86, 70, 'do sed sit', 85, 45, 36, 'in anim adipisicing mollit', 'enim', '2020-07-23 03:27:42', '2020-07-23 03:27:42', null);
+INSERT INTO go_gateway.service_http_rule (id, service_id, rule_type, rule, need_https, need_strip_uri, need_websocket, url_rewrite, header_transform, created_at, updated_at, deleted_at) VALUES (192, 85, 70, 'do sed sit', 85, 45, 36, 'in anim adipisicing mollit', 'enim', '2020-07-23 03:27:30', '2020-07-23 03:27:30', '2020-07-23 03:28:03');
+INSERT INTO go_gateway.service_http_rule (id, service_id, rule_type, rule, need_https, need_strip_uri, need_websocket, url_rewrite, header_transform, created_at, updated_at, deleted_at) VALUES (193, 86, 70, 'do sed sit', 85, 45, 36, 'in anim adipisicing mollit', 'enim', '2020-07-23 03:27:42', '2020-07-23 03:27:42', null);

@@ -7,3 +7,4 @@
 - [x] Refactor DTO. - 2020.8.17
 - [ ] Add avatar upload interface. - 2020.8.18
 - [ ] Organize validator and swag documents.
+- [ ] The part of DTO is wait to be completed. - 2020。8.19

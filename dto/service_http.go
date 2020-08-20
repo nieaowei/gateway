@@ -56,7 +56,7 @@ func (p *AddHttpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadTypeHttp,
+					LoadType:    dao.LoadType_HTTP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 				}
@@ -66,14 +66,14 @@ func (p *AddHttpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 				}
 				//insert http rule
 				serviceHTTPRule := &dao.ServiceHTTPRule{
-					ServiceID:      serviceInfo.ID,
-					RuleType:       p.RuleType,
-					Rule:           p.Rule,
-					NeedHTTPs:      p.NeedHttps,
-					NeedStripURI:   p.NeedStripUri,
-					NeedWebsocket:  p.NeedWebSocket,
-					URLRewrite:     p.UrlRewrite,
-					HeaderTransfor: p.HeaderTransfor,
+					ServiceID:       serviceInfo.ID,
+					RuleType:        p.RuleType,
+					Rule:            p.Rule,
+					NeedHTTPs:       p.NeedHttps,
+					NeedStripURI:    p.NeedStripUri,
+					NeedWebsocket:   p.NeedWebSocket,
+					URLRewrite:      p.UrlRewrite,
+					HeaderTransform: p.HeaderTransform,
 				}
 				err = serviceHTTPRule.InsertAfterCheck(c, tx, true)
 				if err != nil {
@@ -154,7 +154,7 @@ func (p *UpdateHttpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalH
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadTypeHttp,
+					LoadType:    dao.LoadType_HTTP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 					ID:          p.ServiceID,
@@ -165,14 +165,14 @@ func (p *UpdateHttpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalH
 				}
 				//insert http rule
 				serviceHTTPRule := &dao.ServiceHTTPRule{
-					ServiceID:      serviceInfo.ID,
-					RuleType:       p.RuleType,
-					Rule:           p.Rule,
-					NeedHTTPs:      p.NeedHttps,
-					NeedStripURI:   p.NeedStripUri,
-					NeedWebsocket:  p.NeedWebSocket,
-					URLRewrite:     p.UrlRewrite,
-					HeaderTransfor: p.HeaderTransfor,
+					ServiceID:       serviceInfo.ID,
+					RuleType:        p.RuleType,
+					Rule:            p.Rule,
+					NeedHTTPs:       p.NeedHttps,
+					NeedStripURI:    p.NeedStripUri,
+					NeedWebsocket:   p.NeedWebSocket,
+					URLRewrite:      p.UrlRewrite,
+					HeaderTransform: p.HeaderTransform,
 				}
 				err = serviceHTTPRule.UpdateAllByServiceID(c, tx)
 				if err != nil {

@@ -52,7 +52,7 @@ func (p *AddGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadTypeHttp,
+					LoadType:    dao.LoadType_HTTP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 				}
@@ -62,9 +62,9 @@ func (p *AddGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 				}
 				//insert http rule
 				serviceGRPCRule := &dao.ServiceGrpcRule{
-					ServiceID:      serviceInfo.ID,
-					Port:           p.Port,
-					HeaderTransfor: p.HeaderTransfor,
+					ServiceID:       serviceInfo.ID,
+					Port:            p.Port,
+					HeaderTransform: p.HeaderTransform,
 				}
 				err = serviceGRPCRule.InsertAfterCheck(c, tx, true)
 				if err != nil {
@@ -145,7 +145,7 @@ func (p *UpdateGrpcServiceInput) Exec(params interface{}, cIn *gin.Context, errI
 		func(tx *gorm.DB) (err error) {
 			// insert service info
 			serviceInfo := &dao.ServiceInfo{
-				LoadType:    dao.LoadTypeHttp,
+				LoadType:    dao.LoadType_HTTP,
 				ServiceName: p.ServiceName,
 				ServiceDesc: p.ServiceDesc,
 				ID:          p.ServiceID,
@@ -156,9 +156,9 @@ func (p *UpdateGrpcServiceInput) Exec(params interface{}, cIn *gin.Context, errI
 			}
 			//insert http rule
 			serviceHTTPRule := &dao.ServiceGrpcRule{
-				ServiceID:      serviceInfo.ID,
-				Port:           p.Port,
-				HeaderTransfor: p.HeaderTransfor,
+				ServiceID:       serviceInfo.ID,
+				Port:            p.Port,
+				HeaderTransform: p.HeaderTransform,
 			}
 			err = serviceHTTPRule.UpdateAllByServiceID(cIn, tx)
 			if err != nil {

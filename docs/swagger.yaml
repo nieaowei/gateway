@@ -1,10 +1,162 @@
 basePath: /
 definitions:
+  dto.AddGrpcServiceInput:
+    properties:
+      black_list:
+        type: string
+      check_interval:
+        type: integer
+      check_method:
+        type: integer
+      check_timeout:
+        type: integer
+      clientip_flow_limit:
+        type: integer
+      forbid_l_ist:
+        type: string
+      header_transform:
+        type: string
+      ip_list:
+        type: string
+      open_auth:
+        type: integer
+      port:
+        type: integer
+      round_type:
+        type: integer
+      service_desc:
+        type: string
+      service_flow_limit:
+        type: integer
+      service_name:
+        type: string
+      upstream_connect_timeout:
+        type: integer
+      upstream_header_timeout:
+        type: integer
+      upstream_idle_timeout:
+        type: integer
+      upstream_max_idle:
+        type: integer
+      weight_list:
+        type: string
+      white_host_name:
+        type: string
+      white_list:
+        type: string
+    required:
+    - service_desc
+    - service_name
+    type: object
+  dto.AddHttpServiceInput:
+    properties:
+      black_list:
+        type: string
+      check_interval:
+        type: integer
+      check_method:
+        type: integer
+      check_timeout:
+        type: integer
+      clientip_flow_limit:
+        type: integer
+      forbid_l_ist:
+        type: string
+      header_transform:
+        type: string
+      ip_list:
+        type: string
+      need_https:
+        type: integer
+      need_strip_uri:
+        type: integer
+      need_web_socket:
+        type: integer
+      open_auth:
+        type: integer
+      round_type:
+        type: integer
+      rule:
+        type: string
+      rule_type:
+        type: integer
+      service_desc:
+        type: string
+      service_flow_limit:
+        type: integer
+      service_name:
+        type: string
+      upstream_connect_timeout:
+        type: integer
+      upstream_header_timeout:
+        type: integer
+      upstream_idle_timeout:
+        type: integer
+      upstream_max_idle:
+        type: integer
+      url_rewrite:
+        type: string
+      weight_list:
+        type: string
+      white_host_name:
+        type: string
+      white_list:
+        type: string
+    required:
+    - service_desc
+    - service_name
+    type: object
+  dto.AddTcpServiceInput:
+    properties:
+      black_list:
+        type: string
+      check_interval:
+        type: integer
+      check_method:
+        type: integer
+      check_timeout:
+        type: integer
+      clientip_flow_limit:
+        type: integer
+      forbid_l_ist:
+        type: string
+      ip_list:
+        type: string
+      open_auth:
+        type: integer
+      port:
+        type: integer
+      round_type:
+        type: integer
+      service_desc:
+        type: string
+      service_flow_limit:
+        type: integer
+      service_name:
+        type: string
+      upstream_connect_timeout:
+        type: integer
+      upstream_header_timeout:
+        type: integer
+      upstream_idle_timeout:
+        type: integer
+      upstream_max_idle:
+        type: integer
+      weight_list:
+        type: string
+      white_host_name:
+        type: string
+      white_list:
+        type: string
+    required:
+    - service_desc
+    - service_name
+    type: object
   dto.AdminLoginInput:
     properties:
       password:
         description: 密码
-        example: "12345"
+        example: nieaowei123
         type: string
       username:
         description: 用户名
@@ -20,6 +172,117 @@ definitions:
         example: token
         type: string
     type: object
+  dto.DeleteServiceInput:
+    properties:
+      id:
+        example: 96
+        type: integer
+    required:
+    - id
+    type: object
+  dto.GetAvatarInput:
+    properties:
+      username:
+        type: string
+    required:
+    - username
+    type: object
+  dto.GetAvatarOutput:
+    properties:
+      avatar:
+        type: string
+    type: object
+  dto.GetServiceDetailForHttpOutput:
+    properties:
+      black_list:
+        type: string
+      check_interval:
+        type: integer
+      check_method:
+        type: integer
+      check_timeout:
+        type: integer
+      clientip_flow_limit:
+        type: integer
+      forbid_l_ist:
+        type: string
+      header_transform:
+        type: string
+      ip_list:
+        type: string
+      need_https:
+        type: integer
+      need_strip_uri:
+        type: integer
+      need_web_socket:
+        type: integer
+      open_auth:
+        type: integer
+      round_type:
+        type: integer
+      rule:
+        type: string
+      rule_type:
+        type: integer
+      service_desc:
+        type: string
+      service_flow_limit:
+        type: integer
+      service_id:
+        type: integer
+      service_name:
+        type: string
+      upstream_connect_timeout:
+        type: integer
+      upstream_header_timeout:
+        type: integer
+      upstream_idle_timeout:
+        type: integer
+      upstream_max_idle:
+        type: integer
+      url_rewrite:
+        type: string
+      weight_list:
+        type: string
+      white_host_name:
+        type: string
+      white_list:
+        type: string
+    required:
+    - service_desc
+    - service_name
+    type: object
+  dto.GetServiceDetailInput:
+    properties:
+      service_id:
+        example: 133
+        type: integer
+    required:
+    - service_id
+    type: object
+  dto.GetServiceListInput:
+    properties:
+      info:
+        type: string
+      page_no:
+        example: 2
+        type: integer
+      page_size:
+        example: 10
+        type: integer
+    required:
+    - page_no
+    - page_size
+    type: object
+  dto.GetServiceListOutput:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/dto.ServiceListItem'
+        type: array
+      total:
+        type: integer
+    type: object
   dto.Response:
     properties:
       data:
@@ -32,6 +295,183 @@ definitions:
         type: object
       trace_id:
         type: object
+    type: object
+  dto.ServiceListItem:
+    properties:
+      address:
+        type: string
+      id:
+        type: integer
+      load_type:
+        type: string
+      qpd:
+        type: integer
+      qps:
+        type: integer
+      service_desc:
+        type: string
+      service_name:
+        type: string
+      total_node:
+        type: integer
+    type: object
+  dto.UpdateGrpcServiceInput:
+    properties:
+      black_list:
+        type: string
+      check_interval:
+        type: integer
+      check_method:
+        type: integer
+      check_timeout:
+        type: integer
+      clientip_flow_limit:
+        type: integer
+      forbid_l_ist:
+        type: string
+      header_transform:
+        type: string
+      ip_list:
+        type: string
+      open_auth:
+        type: integer
+      port:
+        type: integer
+      round_type:
+        type: integer
+      service_desc:
+        type: string
+      service_flow_limit:
+        type: integer
+      service_id:
+        type: integer
+      service_name:
+        type: string
+      upstream_connect_timeout:
+        type: integer
+      upstream_header_timeout:
+        type: integer
+      upstream_idle_timeout:
+        type: integer
+      upstream_max_idle:
+        type: integer
+      weight_list:
+        type: string
+      white_host_name:
+        type: string
+      white_list:
+        type: string
+    required:
+    - service_desc
+    - service_name
+    type: object
+  dto.UpdateHttpServiceInput:
+    properties:
+      black_list:
+        type: string
+      check_interval:
+        type: integer
+      check_method:
+        type: integer
+      check_timeout:
+        type: integer
+      clientip_flow_limit:
+        type: integer
+      forbid_l_ist:
+        type: string
+      header_transform:
+        type: string
+      ip_list:
+        type: string
+      need_https:
+        type: integer
+      need_strip_uri:
+        type: integer
+      need_web_socket:
+        type: integer
+      open_auth:
+        type: integer
+      round_type:
+        type: integer
+      rule:
+        type: string
+      rule_type:
+        type: integer
+      service_desc:
+        type: string
+      service_flow_limit:
+        type: integer
+      service_id:
+        type: integer
+      service_name:
+        type: string
+      upstream_connect_timeout:
+        type: integer
+      upstream_header_timeout:
+        type: integer
+      upstream_idle_timeout:
+        type: integer
+      upstream_max_idle:
+        type: integer
+      url_rewrite:
+        type: string
+      weight_list:
+        type: string
+      white_host_name:
+        type: string
+      white_list:
+        type: string
+    required:
+    - service_desc
+    - service_name
+    type: object
+  dto.UpdateTcpServiceInput:
+    properties:
+      black_list:
+        type: string
+      check_interval:
+        type: integer
+      check_method:
+        type: integer
+      check_timeout:
+        type: integer
+      clientip_flow_limit:
+        type: integer
+      forbid_l_ist:
+        type: string
+      ip_list:
+        type: string
+      open_auth:
+        type: integer
+      port:
+        type: integer
+      round_type:
+        type: integer
+      service_desc:
+        type: string
+      service_flow_limit:
+        type: integer
+      service_id:
+        type: integer
+      service_name:
+        type: string
+      upstream_connect_timeout:
+        type: integer
+      upstream_header_timeout:
+        type: integer
+      upstream_idle_timeout:
+        type: integer
+      upstream_max_idle:
+        type: integer
+      weight_list:
+        type: string
+      white_host_name:
+        type: string
+      white_list:
+        type: string
+    required:
+    - service_desc
+    - service_name
     type: object
 host: localhost:8880
 info:
@@ -91,6 +531,254 @@ paths:
       summary: 管理员登出
       tags:
       - 管理员接口
+  /public/get/avatar:
+    get:
+      consumes:
+      - application/json
+      description: 获取头像
+      operationId: /public/get/avatar
+      parameters:
+      - in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetAvatarOutput'
+              type: object
+      summary: 获取头像
+      tags:
+      - 公共接口
+  /service/del:
+    get:
+      consumes:
+      - application/json
+      description: 删除服务
+      operationId: /service/del
+      parameters:
+      - example: 96
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: 删除服务
+      tags:
+      - 服务接口
+  /service/detail:
+    get:
+      consumes:
+      - application/json
+      description: 获取单个服务想起
+      operationId: /service/detail
+      parameters:
+      - example: 133
+        in: query
+        name: service_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetServiceDetailForHttpOutput'
+              type: object
+      summary: 获服务详情
+      tags:
+      - 服务接口
+  /service/grpc/add:
+    post:
+      consumes:
+      - application/json
+      description: 增加grpc服务
+      operationId: /service/grpc/add
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddGrpcServiceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: 增加grpc服务
+      tags:
+      - 服务接口
+  /service/grpc/update:
+    post:
+      consumes:
+      - application/json
+      description: 更新grpc服务
+      operationId: /service/grpc/update
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateGrpcServiceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: 更新grpc服务
+      tags:
+      - 服务接口
+  /service/http/add:
+    post:
+      consumes:
+      - application/json
+      description: 增加http服务
+      operationId: /service/http/add
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddHttpServiceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: 增加http服务
+      tags:
+      - 服务接口
+  /service/http/update:
+    post:
+      consumes:
+      - application/json
+      description: 更新http服务
+      operationId: /service/http/update
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateHttpServiceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: 更新http服务
+      tags:
+      - 服务接口
+  /service/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取服务列表
+      operationId: /service/list
+      parameters:
+      - in: query
+        name: info
+        type: string
+      - example: 2
+        in: query
+        name: page_no
+        required: true
+        type: integer
+      - example: 10
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetServiceListOutput'
+              type: object
+      summary: 获取服务列表
+      tags:
+      - 服务接口
+  /service/tcp/add:
+    post:
+      consumes:
+      - application/json
+      description: 增加tcp服务
+      operationId: /service/tcp/add
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddTcpServiceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: 增加tcp服务
+      tags:
+      - 服务接口
+  /service/tcp/update:
+    post:
+      consumes:
+      - application/json
+      description: 更新tcp服务
+      operationId: /service/tcp/update
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateTcpServiceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/dto.Response'
+      summary: 更新tcp服务
+      tags:
+      - 服务接口
 securityDefinitions:
   ApiKeyAuth:
     in: header

@@ -95,7 +95,7 @@ func TranslationMiddleware() gin.HandlerFunc {
 				return t
 			})
 
-			val.RegisterValidation("valid_header_transfor", func(fl validator.FieldLevel) bool {
+			val.RegisterValidation("valid_header_transform", func(fl validator.FieldLevel) bool {
 				data := strings.Split(fl.Field().String(), "\n")
 				for _, datum := range data {
 					if len(strings.Split(datum, " ")) != 3 {
@@ -107,10 +107,10 @@ func TranslationMiddleware() gin.HandlerFunc {
 
 			//自定义翻译器
 			//https://github.com/go-playground/validator/blob/v9/_examples/translations/main.go
-			val.RegisterTranslation("valid_header_transfor", trans, func(ut ut.Translator) error {
-				return ut.Add("valid_header_transfor", "{0} 输入格式错误", true)
+			val.RegisterTranslation("valid_header_transform", trans, func(ut ut.Translator) error {
+				return ut.Add("valid_header_transform", "{0} 输入格式错误", true)
 			}, func(ut ut.Translator, fe validator.FieldError) string {
-				t, _ := ut.T("valid_header_transfor", fe.Field())
+				t, _ := ut.T("valid_header_transform", fe.Field())
 				return t
 			})
 

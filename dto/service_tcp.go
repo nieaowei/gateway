@@ -52,7 +52,7 @@ func (p *AddTcpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadTypeHttp,
+					LoadType:    dao.LoadType_HTTP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 				}
@@ -144,7 +144,7 @@ func (p *UpdateTcpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHa
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadTypeHttp,
+					LoadType:    dao.LoadType_HTTP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 					ID:          p.ServiceID,

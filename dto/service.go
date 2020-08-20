@@ -11,8 +11,8 @@ import (
 
 type GetServiceListInput struct {
 	Info     string `json:"info" form:"info"`
-	PageNo   int    `json:"page_no" form:"page_no" validate:"required"`
-	PageSize int    `json:"page_size" form:"page_size" validate:"required"`
+	PageNo   int    `json:"page_no" form:"page_no" example:"2" validate:"required,min=1"`
+	PageSize int    `json:"page_size" form:"page_size" example:"10" validate:"required,min=1"`
 }
 
 type ServiceListItem struct {
@@ -88,23 +88,23 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			serviceAddr := ""
 			loadType := ""
 			switch serviceDetail.LoadType {
-			case dao.LoadTypeHttp:
+			case dao.LoadType_HTTP:
 				{
 					loadType = "HTTP"
 					service := serviceDetail.ServiceHTTPRuleExceptModel
-					if service.RuleType == dao.HttpRuleTypePrefixURL && service.NeedHTTPs == 0 {
+					if service.RuleType == dao.HttpRuleType_PrefixURL && service.NeedHTTPs == 0 {
 						serviceAddr = clusterIP + ":" + clusterPort + service.Rule
 
 					}
-					if service.RuleType == dao.HttpRuleTypePrefixURL && service.NeedHTTPs == 1 {
+					if service.RuleType == dao.HttpRuleType_PrefixURL && service.NeedHTTPs == 1 {
 						serviceAddr = clusterIP + ":" + clusterSSLPort + service.Rule
 					}
-					if service.RuleType == dao.HttpRuleTypeDomain {
+					if service.RuleType == dao.HttpRuleType_Domain {
 						serviceAddr = service.Rule
 					}
 					break
 				}
-			case dao.LoadTypeTcp:
+			case dao.LoadType_TCP:
 				{
 					loadType = "TCP"
 					service := serviceDetail.ServiceTCPRuleExceptModel
@@ -112,7 +112,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 					serviceAddr = clusterIP + ":" + strconv.Itoa(service.Port)
 					break
 				}
-			case dao.LoadTypeGrpc:
+			case dao.LoadType_GRPC:
 				{
 					loadType = "GRPC"
 					service := serviceDetail.ServiceGrpcRuleExceptModel
@@ -142,7 +142,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 }
 
 type DeleteServiceInput struct {
-	ID uint `json:"id" form:"id" validate:"required"`
+	ID uint `json:"id" form:"id" example:"96" validate:"required"`
 }
 
 func (p *DeleteServiceInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
@@ -189,7 +189,7 @@ func (p *DeleteServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 				}
 
 				switch serviceInfo.LoadType {
-				case dao.LoadTypeHttp:
+				case dao.LoadType_HTTP:
 					{
 						http := dao.ServiceHTTPRule{
 							ServiceID: serviceInfo.ID,
@@ -197,7 +197,7 @@ func (p *DeleteServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 						err = http.DeleteByID(c, tx)
 						break
 					}
-				case dao.LoadTypeGrpc:
+				case dao.LoadType_GRPC:
 					{
 						grpc := dao.ServiceGrpcRule{
 							ServiceID: serviceInfo.ID,
@@ -205,7 +205,7 @@ func (p *DeleteServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 						err = grpc.DeleteByID(c, tx)
 						break
 					}
-				case dao.LoadTypeTcp:
+				case dao.LoadType_TCP:
 					{
 						tcp := dao.ServiceTCPRule{
 							ServiceID: serviceInfo.ID,
@@ -245,7 +245,7 @@ func (p *DeleteServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 }
 
 type GetServiceDetailInput struct {
-	ServiceID uint `json:"service_id" form:"service_id"`
+	ServiceID uint `json:"service_id" form:"service_id" example:"133" validate:"required"`
 }
 
 type GetServiceDetailForHttpOutput struct {
@@ -307,7 +307,7 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 	//		UpstreamMaxIdle:        o.UpstreamMaxIDle,
 	//	}
 	//	switch o.LoadType {
-	//	case dao.LoadTypeHttp:
+	//	case dao.LoadType_HTTP:
 	//		{
 	//			eh := EditServiceHTTPRule{
 	//				RuleType:       o.RuleType,
@@ -316,7 +316,7 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 	//				NeedStripUri:   o.NeedStripURI,
 	//				NeedWebSocket:  o.NeedWebsocket,
 	//				UrlRewrite:     o.URLRewrite,
-	//				HeaderTransfor: o.ServiceHTTPRuleExceptModel.HeaderTransfor,
+	//				HeaderTransform: o.ServiceHTTPRuleExceptModel.HeaderTransform,
 	//			}
 	//			return GetServiceDetailForHttpOutput{
 	//				UpdateHttpServiceInput{
@@ -330,7 +330,7 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 	//				},
 	//			}
 	//		}
-	//	case dao.LoadTypeTcp:
+	//	case dao.LoadType_TCP:
 	//		{
 	//			et := EditServiceTCPRule{
 	//				Port: o.ServiceTCPRuleExceptModel.Port,
@@ -347,11 +347,11 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 	//				},
 	//			}
 	//		}
-	//	case dao.LoadTypeGrpc:
+	//	case dao.LoadType_GRPC:
 	//		{
 	//			eg := EditServiceGRPCRule{
 	//				Port:           o.ServiceGrpcRuleExceptModel.Port,
-	//				HeaderTransfor: o.ServiceGrpcRuleExceptModel.HeaderTransfor,
+	//				HeaderTransform: o.ServiceGrpcRuleExceptModel.HeaderTransform,
 	//			}
 	//			return GetServiceDetailForGrpcOutput{
 	//				UpdateGrpcServiceInput{

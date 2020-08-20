@@ -16,7 +16,7 @@ type AdminInfoOutput struct {
 }
 
 type AdminChangePwdInput struct {
-	Password string `json:"password" form:"password" validate:"required"`
+	Password string `json:"password" form:"password" example:"newpassword" validate:"required"`
 }
 
 func (p *AdminChangePwdInput) BindValidParam(cIn *gin.Context) (params interface{}, err error) {
