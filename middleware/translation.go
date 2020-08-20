@@ -77,8 +77,14 @@ func TranslationMiddleware() gin.HandlerFunc {
 			})
 
 			val.RegisterValidation("valid_url_rewrite", func(fl validator.FieldLevel) bool {
+				if fl.Field().String() == "" {
+					return true
+				}
 				data := strings.Split(fl.Field().String(), "\n")
 				for _, datum := range data {
+					if datum == "" {
+						continue
+					}
 					if len(strings.Split(datum, " ")) != 2 {
 						return false
 					}
@@ -96,9 +102,15 @@ func TranslationMiddleware() gin.HandlerFunc {
 			})
 
 			val.RegisterValidation("valid_header_transform", func(fl validator.FieldLevel) bool {
+				if fl.Field().String() == "" {
+					return true
+				}
 				data := strings.Split(fl.Field().String(), "\n")
-				for _, datum := range data {
-					if len(strings.Split(datum, " ")) != 3 {
+				for _, datam := range data {
+					if datam == "" {
+						continue
+					}
+					if len(strings.Split(datam, " ")) != 3 {
 						return false
 					}
 				}
@@ -115,8 +127,14 @@ func TranslationMiddleware() gin.HandlerFunc {
 			})
 
 			val.RegisterValidation("valid_ip_list", func(fl validator.FieldLevel) bool {
+				if fl.Field().String() == "" {
+					return true
+				}
 				data := strings.Split(fl.Field().String(), "\n")
 				for _, datum := range data {
+					if datum == "" {
+						continue
+					}
 					matched, _ := regexp.Match("^\\S+:\\d+$", []byte(datum))
 					if !matched {
 						return false
@@ -135,8 +153,14 @@ func TranslationMiddleware() gin.HandlerFunc {
 			})
 
 			val.RegisterValidation("valid_weight_list", func(fl validator.FieldLevel) bool {
+				if fl.Field().String() == "" {
+					return true
+				}
 				data := strings.Split(fl.Field().String(), "\n")
 				for _, datum := range data {
+					if datum == "" {
+						continue
+					}
 					matched, _ := regexp.Match("^\\d+$", []byte(datum))
 					if !matched {
 						return false

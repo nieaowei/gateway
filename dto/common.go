@@ -36,12 +36,9 @@ type EditServiceAccessControlRule struct {
 }
 
 type EditServiceLoadBalance struct {
-	CheckMethod            int8   `json:"check_method" example:"0" validate:"oneof=0 1"`
-	CheckTimeout           int    `json:"check_timeout" example:"23" validate:"min=0"`
-	CheckInterval          int    `json:"check_interval" example:"123" validate:"min=0"`
 	RoundType              int8   `json:"round_type" example:"1" validate:"oneof=0 1 2 3"`
-	IpList                 string `json:"ip_list" example:"172.1.1.1:80\n172.11.1.2:87" validate:"min=0,max=2000,valid_ip_list"`
-	WeightList             string `json:"weight_list" example:"1\n2" validate:"min=0,max=2000,valid_weight_list"`
+	IpList                 string `json:"ip_list" example:"172.1.1.1:80\n172.11.1.2:87" validate:"required,min=0,max=2000,valid_ip_list"`
+	WeightList             string `json:"weight_list" example:"1\n2" validate:"required,min=0,max=2000,valid_weight_list"`
 	ForbidLIst             string `json:"forbid_l_ist" validate:"min=0,max=2000"`
 	UpstreamConnectTimeout int    `json:"upstream_connect_timeout" example:"122" validate:"min=0"`
 	UpstreamHeaderTimeout  int    `json:"upstream_header_timeout" example:"322" validate:"min=0"`
@@ -51,11 +48,11 @@ type EditServiceLoadBalance struct {
 
 type EditServiceHTTPRule struct {
 	RuleType        int8   `json:"rule_type" example:"1" validate:"oneof=0 1"`
-	Rule            string `json:"rule" example:"/dsads" validate:"min=0,max=255"`
+	Rule            string `json:"rule" example:"/dsads" validate:"required,min=0,max=255"`
 	NeedHttps       int8   `json:"need_https"  example:"1" validate:"oneof=0 1"`
 	NeedStripUri    int8   `json:"need_strip_uri" example:"1" validate:"oneof=0 1"`
 	NeedWebSocket   int8   `json:"need_web_socket" example:"1" validate:"oneof=0 1"`
-	UrlRewrite      string `json:"url_rewrite" example:"add w\ndel 1" validate:"min=0,max=5000"`
+	UrlRewrite      string `json:"url_rewrite" example:"add w\ndel 1" validate:"valid_url_rewrite,min=0,max=5000"`
 	HeaderTransform string `json:"header_transform" example:"add a 12\nadd b 13" validate:"min=0,max=5000,valid_header_transform" `
 }
 
