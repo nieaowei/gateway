@@ -86,9 +86,6 @@ func (p *AddTcpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 				// insert loadbalance
 				serviceLoadBalance := &dao.ServiceLoadBalance{
 					ServiceID:              serviceInfo.ID,
-					CheckMethod:            p.CheckMethod,
-					CheckTimeout:           p.CheckTimeout,
-					CheckInterval:          p.CheckInterval,
 					RoundType:              p.RoundType,
 					IPList:                 p.IpList,
 					WeightList:             p.WeightList,
@@ -179,9 +176,6 @@ func (p *UpdateTcpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHa
 				// insert loadbalance
 				serviceLoadBalance := &dao.ServiceLoadBalance{
 					ServiceID:              serviceInfo.ID,
-					CheckMethod:            p.CheckMethod,
-					CheckTimeout:           p.CheckTimeout,
-					CheckInterval:          p.CheckInterval,
 					RoundType:              p.RoundType,
 					IPList:                 p.IpList,
 					WeightList:             p.WeightList,

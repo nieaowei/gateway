@@ -498,25 +498,15 @@ var doc = `{
         "dto.AddGrpcServiceInput": {
             "type": "object",
             "required": [
+                "ip_list",
                 "service_desc",
-                "service_name"
+                "service_name",
+                "weight_list"
             ],
             "properties": {
                 "black_list": {
                     "type": "string",
                     "example": "192.168.1.0\n122.12.12.3"
-                },
-                "check_interval": {
-                    "type": "integer",
-                    "example": 123
-                },
-                "check_method": {
-                    "type": "integer",
-                    "example": 0
-                },
-                "check_timeout": {
-                    "type": "integer",
-                    "example": 23
                 },
                 "clientip_flow_limit": {
                     "type": "integer",
@@ -589,25 +579,16 @@ var doc = `{
         "dto.AddHttpServiceInput": {
             "type": "object",
             "required": [
+                "ip_list",
+                "rule",
                 "service_desc",
-                "service_name"
+                "service_name",
+                "weight_list"
             ],
             "properties": {
                 "black_list": {
                     "type": "string",
                     "example": "192.168.1.0\n122.12.12.3"
-                },
-                "check_interval": {
-                    "type": "integer",
-                    "example": 123
-                },
-                "check_method": {
-                    "type": "integer",
-                    "example": 0
-                },
-                "check_timeout": {
-                    "type": "integer",
-                    "example": 23
                 },
                 "clientip_flow_limit": {
                     "type": "integer",
@@ -700,25 +681,15 @@ var doc = `{
         "dto.AddTcpServiceInput": {
             "type": "object",
             "required": [
+                "ip_list",
                 "service_desc",
-                "service_name"
+                "service_name",
+                "weight_list"
             ],
             "properties": {
                 "black_list": {
                     "type": "string",
                     "example": "192.168.1.0\n122.12.12.3"
-                },
-                "check_interval": {
-                    "type": "integer",
-                    "example": 123
-                },
-                "check_method": {
-                    "type": "integer",
-                    "example": 0
-                },
-                "check_timeout": {
-                    "type": "integer",
-                    "example": 23
                 },
                 "clientip_flow_limit": {
                     "type": "integer",
@@ -846,25 +817,16 @@ var doc = `{
         "dto.GetServiceDetailForHttpOutput": {
             "type": "object",
             "required": [
+                "ip_list",
+                "rule",
                 "service_desc",
-                "service_name"
+                "service_name",
+                "weight_list"
             ],
             "properties": {
                 "black_list": {
                     "type": "string",
                     "example": "192.168.1.0\n122.12.12.3"
-                },
-                "check_interval": {
-                    "type": "integer",
-                    "example": 123
-                },
-                "check_method": {
-                    "type": "integer",
-                    "example": 0
-                },
-                "check_timeout": {
-                    "type": "integer",
-                    "example": 23
                 },
                 "clientip_flow_limit": {
                     "type": "integer",
@@ -1055,25 +1017,15 @@ var doc = `{
         "dto.UpdateGrpcServiceInput": {
             "type": "object",
             "required": [
+                "ip_list",
                 "service_desc",
-                "service_name"
+                "service_name",
+                "weight_list"
             ],
             "properties": {
                 "black_list": {
                     "type": "string",
                     "example": "192.168.1.0\n122.12.12.3"
-                },
-                "check_interval": {
-                    "type": "integer",
-                    "example": 123
-                },
-                "check_method": {
-                    "type": "integer",
-                    "example": 0
-                },
-                "check_timeout": {
-                    "type": "integer",
-                    "example": 23
                 },
                 "clientip_flow_limit": {
                     "type": "integer",
@@ -1149,25 +1101,16 @@ var doc = `{
         "dto.UpdateHttpServiceInput": {
             "type": "object",
             "required": [
+                "ip_list",
+                "rule",
                 "service_desc",
-                "service_name"
+                "service_name",
+                "weight_list"
             ],
             "properties": {
                 "black_list": {
                     "type": "string",
                     "example": "192.168.1.0\n122.12.12.3"
-                },
-                "check_interval": {
-                    "type": "integer",
-                    "example": 123
-                },
-                "check_method": {
-                    "type": "integer",
-                    "example": 0
-                },
-                "check_timeout": {
-                    "type": "integer",
-                    "example": 23
                 },
                 "clientip_flow_limit": {
                     "type": "integer",
@@ -1263,25 +1206,15 @@ var doc = `{
         "dto.UpdateTcpServiceInput": {
             "type": "object",
             "required": [
+                "ip_list",
                 "service_desc",
-                "service_name"
+                "service_name",
+                "weight_list"
             ],
             "properties": {
                 "black_list": {
                     "type": "string",
                     "example": "192.168.1.0\n122.12.12.3"
-                },
-                "check_interval": {
-                    "type": "integer",
-                    "example": 123
-                },
-                "check_method": {
-                    "type": "integer",
-                    "example": 0
-                },
-                "check_timeout": {
-                    "type": "integer",
-                    "example": 23
                 },
                 "clientip_flow_limit": {
                     "type": "integer",

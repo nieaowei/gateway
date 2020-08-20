@@ -7,15 +7,6 @@ definitions:
           192.168.1.0
           122.12.12.3
         type: string
-      check_interval:
-        example: 123
-        type: integer
-      check_method:
-        example: 0
-        type: integer
-      check_timeout:
-        example: 23
-        type: integer
       clientip_flow_limit:
         example: 23
         type: integer
@@ -70,8 +61,10 @@ definitions:
         example: 172.17.12.1
         type: string
     required:
+    - ip_list
     - service_desc
     - service_name
+    - weight_list
     type: object
   dto.AddHttpServiceInput:
     properties:
@@ -80,15 +73,6 @@ definitions:
           192.168.1.0
           122.12.12.3
         type: string
-      check_interval:
-        example: 123
-        type: integer
-      check_method:
-        example: 0
-        type: integer
-      check_timeout:
-        example: 23
-        type: integer
       clientip_flow_limit:
         example: 23
         type: integer
@@ -162,8 +146,11 @@ definitions:
         example: 172.17.12.1
         type: string
     required:
+    - ip_list
+    - rule
     - service_desc
     - service_name
+    - weight_list
     type: object
   dto.AddTcpServiceInput:
     properties:
@@ -172,15 +159,6 @@ definitions:
           192.168.1.0
           122.12.12.3
         type: string
-      check_interval:
-        example: 123
-        type: integer
-      check_method:
-        example: 0
-        type: integer
-      check_timeout:
-        example: 23
-        type: integer
       clientip_flow_limit:
         example: 23
         type: integer
@@ -232,8 +210,10 @@ definitions:
         example: 172.17.12.1
         type: string
     required:
+    - ip_list
     - service_desc
     - service_name
+    - weight_list
     type: object
   dto.AdminLoginInput:
     properties:
@@ -282,15 +262,6 @@ definitions:
           192.168.1.0
           122.12.12.3
         type: string
-      check_interval:
-        example: 123
-        type: integer
-      check_method:
-        example: 0
-        type: integer
-      check_timeout:
-        example: 23
-        type: integer
       clientip_flow_limit:
         example: 23
         type: integer
@@ -366,8 +337,11 @@ definitions:
         example: 172.17.12.1
         type: string
     required:
+    - ip_list
+    - rule
     - service_desc
     - service_name
+    - weight_list
     type: object
   dto.GetServiceDetailInput:
     properties:
@@ -439,15 +413,6 @@ definitions:
           192.168.1.0
           122.12.12.3
         type: string
-      check_interval:
-        example: 123
-        type: integer
-      check_method:
-        example: 0
-        type: integer
-      check_timeout:
-        example: 23
-        type: integer
       clientip_flow_limit:
         example: 23
         type: integer
@@ -504,8 +469,10 @@ definitions:
         example: 172.17.12.1
         type: string
     required:
+    - ip_list
     - service_desc
     - service_name
+    - weight_list
     type: object
   dto.UpdateHttpServiceInput:
     properties:
@@ -514,15 +481,6 @@ definitions:
           192.168.1.0
           122.12.12.3
         type: string
-      check_interval:
-        example: 123
-        type: integer
-      check_method:
-        example: 0
-        type: integer
-      check_timeout:
-        example: 23
-        type: integer
       clientip_flow_limit:
         example: 23
         type: integer
@@ -598,8 +556,11 @@ definitions:
         example: 172.17.12.1
         type: string
     required:
+    - ip_list
+    - rule
     - service_desc
     - service_name
+    - weight_list
     type: object
   dto.UpdateTcpServiceInput:
     properties:
@@ -608,15 +569,6 @@ definitions:
           192.168.1.0
           122.12.12.3
         type: string
-      check_interval:
-        example: 123
-        type: integer
-      check_method:
-        example: 0
-        type: integer
-      check_timeout:
-        example: 23
-        type: integer
       clientip_flow_limit:
         example: 23
         type: integer
@@ -670,8 +622,10 @@ definitions:
         example: 172.17.12.1
         type: string
     required:
+    - ip_list
     - service_desc
     - service_name
+    - weight_list
     type: object
 host: localhost:8880
 info:
