@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"errors"
 	"gateway/dao"
 	"gateway/lib"
 	"gateway/public"
@@ -279,96 +280,98 @@ func (p *GetServiceDetailInput) ErrorHandle(handle FunctionalHandle) func(c *gin
 }
 
 func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
-	//o, ok := outIn.(*dao.ServiceDetail)
-	//if ok {
-	//	esi := EditServiceInfo{
-	//		ServiceName: o.ServiceName,
-	//		ServiceDesc: o.ServiceDesc,
-	//	}
-	//	eac := EditServiceAccessControlRule{
-	//		OpenAuth:          o.OpenAuth,
-	//		BlackList:         o.BlackList,
-	//		WhiteList:         o.WhiteList,
-	//		WhiteHostName:     o.WhiteHostName,
-	//		ClientipFlowLimit: o.ClientipFlowLimit,
-	//		ServiceFlowLimit:  o.ServiceFlowLimit,
-	//	}
-	//	elb := EditServiceLoadBalance{
-	//		CheckMethod:            o.CheckMethod,
-	//		CheckTimeout:           o.CheckTimeout,
-	//		CheckInterval:          o.CheckInterval,
-	//		RoundType:              o.RoundType,
-	//		IpList:                 o.IPList,
-	//		WeightList:             o.WeightList,
-	//		ForbidLIst:             o.ForbidList,
-	//		UpstreamConnectTimeout: o.UpstreamConnectTimeout,
-	//		UpstreamHeaderTimeout:  o.UpstreamHeaderTimeout,
-	//		UpstreamIdleTimeout:    o.UpstreamIDleTimeout,
-	//		UpstreamMaxIdle:        o.UpstreamMaxIDle,
-	//	}
-	//	switch o.LoadType {
-	//	case dao.LoadType_HTTP:
-	//		{
-	//			eh := EditServiceHTTPRule{
-	//				RuleType:       o.RuleType,
-	//				Rule:           o.Rule,
-	//				NeedHttps:      o.NeedHTTPs,
-	//				NeedStripUri:   o.NeedStripURI,
-	//				NeedWebSocket:  o.NeedWebsocket,
-	//				UrlRewrite:     o.URLRewrite,
-	//				HeaderTransform: o.ServiceHTTPRuleExceptModel.HeaderTransform,
-	//			}
-	//			return GetServiceDetailForHttpOutput{
-	//				UpdateHttpServiceInput{
-	//					ServiceID: o.ID,
-	//					AddHttpServiceInput: AddHttpServiceInput{
-	//						EditServiceInfo:              esi,
-	//						EditServiceHTTPRule:          eh,
-	//						EditServiceAccessControlRule: eac,
-	//						EditServiceLoadBalance:       elb,
-	//					},
-	//				},
-	//			}
-	//		}
-	//	case dao.LoadType_TCP:
-	//		{
-	//			et := EditServiceTCPRule{
-	//				Port: o.ServiceTCPRuleExceptModel.Port,
-	//			}
-	//			return GetServiceDetailForHttpOutput{
-	//				UpdateHttpServiceInput{
-	//					ServiceID: o.ID,
-	//					AddHttpServiceInput: AddHttpServiceInput{
-	//						EditServiceInfo:              esi,
-	//						EditServiceHTTPRule:          eh,
-	//						EditServiceAccessControlRule: eac,
-	//						EditServiceLoadBalance:       elb,
-	//					},
-	//				},
-	//			}
-	//		}
-	//	case dao.LoadType_GRPC:
-	//		{
-	//			eg := EditServiceGRPCRule{
-	//				Port:           o.ServiceGrpcRuleExceptModel.Port,
-	//				HeaderTransform: o.ServiceGrpcRuleExceptModel.HeaderTransform,
-	//			}
-	//			return GetServiceDetailForGrpcOutput{
-	//				UpdateGrpcServiceInput{
-	//					ServiceID: o.ID,
-	//					AddHttpServiceInput: AddHttpServiceInput{
-	//						EditServiceInfo:              esi,
-	//						EditServiceHTTPRule:          eh,
-	//						EditServiceAccessControlRule: eac,
-	//						EditServiceLoadBalance:       elb,
-	//					},
-	//				},
-	//			}
-	//		}
-	//	}
-	//}
+
 	return func(c *gin.Context) (out interface{}, err error) {
-		return handle(c)
+		data, err := handle(c)
+		if err != nil {
+			return nil, err
+		}
+		o, ok := data.(*dao.ServiceDetail)
+		if ok {
+			esi := EditServiceInfo{
+				ServiceName: o.ServiceName,
+				ServiceDesc: o.ServiceDesc,
+			}
+			eac := EditServiceAccessControlRule{
+				OpenAuth:          o.OpenAuth,
+				BlackList:         o.BlackList,
+				WhiteList:         o.WhiteList,
+				WhiteHostName:     o.WhiteHostName,
+				ClientipFlowLimit: o.ClientipFlowLimit,
+				ServiceFlowLimit:  o.ServiceFlowLimit,
+			}
+			elb := EditServiceLoadBalance{
+				RoundType:              o.RoundType,
+				IpList:                 o.IPList,
+				WeightList:             o.WeightList,
+				ForbidList:             o.ForbidList,
+				UpstreamConnectTimeout: o.UpstreamConnectTimeout,
+				UpstreamHeaderTimeout:  o.UpstreamHeaderTimeout,
+				UpstreamIdleTimeout:    o.UpstreamIDleTimeout,
+				UpstreamMaxIdle:        o.UpstreamMaxIDle,
+			}
+			switch o.LoadType {
+			case dao.LoadType_HTTP:
+				{
+					eh := EditServiceHTTPRule{
+						RuleType:        o.RuleType,
+						Rule:            o.Rule,
+						NeedHttps:       o.NeedHTTPs,
+						NeedStripUri:    o.NeedStripURI,
+						NeedWebsocket:   o.NeedWebsocket,
+						UrlRewrite:      o.URLRewrite,
+						HeaderTransform: o.ServiceHTTPRuleExceptModel.HeaderTransform,
+					}
+					return GetServiceDetailForHttpOutput{
+						UpdateHttpServiceInput{
+							ServiceID: o.ID,
+							AddHttpServiceInput: AddHttpServiceInput{
+								EditServiceInfo:              esi,
+								EditServiceHTTPRule:          eh,
+								EditServiceAccessControlRule: eac,
+								EditServiceLoadBalance:       elb,
+							},
+						},
+					}, nil
+				}
+			case dao.LoadType_TCP:
+				{
+					et := EditServiceTCPRule{
+						Port: o.ServiceTCPRuleExceptModel.Port,
+					}
+					return GetServiceDetailForTcpOutput{
+						UpdateTcpServiceInput{
+							ServiceID: o.ID,
+							AddTcpServiceInput: AddTcpServiceInput{
+								EditServiceInfo:              esi,
+								EditServiceTCPRule:           et,
+								EditServiceAccessControlRule: eac,
+								EditServiceLoadBalance:       elb,
+							},
+						},
+					}, nil
+				}
+			case dao.LoadType_GRPC:
+				{
+					eg := EditServiceGRPCRule{
+						Port:            o.ServiceGrpcRuleExceptModel.Port,
+						HeaderTransform: o.ServiceGrpcRuleExceptModel.HeaderTransform,
+					}
+					return GetServiceDetailForGrpcOutput{
+						UpdateGrpcServiceInput{
+							ServiceID: o.ID,
+							AddGrpcServiceInput: AddGrpcServiceInput{
+								EditServiceInfo:              esi,
+								EditServiceGRPCRule:          eg,
+								EditServiceAccessControlRule: eac,
+								EditServiceLoadBalance:       elb,
+							},
+						},
+					}, nil
+				}
+			}
+		}
+		return nil, errors.New("data handle error")
 	}
 }
 

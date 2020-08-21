@@ -39,7 +39,7 @@ type EditServiceLoadBalance struct {
 	RoundType              int8   `json:"round_type" example:"1" validate:"oneof=0 1 2 3"`
 	IpList                 string `json:"ip_list" example:"172.1.1.1:80\n172.11.1.2:87" validate:"required,min=0,max=2000,valid_ip_list"`
 	WeightList             string `json:"weight_list" example:"1\n2" validate:"required,min=0,max=2000,valid_weight_list"`
-	ForbidLIst             string `json:"forbid_l_ist" validate:"min=0,max=2000"`
+	ForbidList             string `json:"forbid_list" validate:"min=0,max=2000"`
 	UpstreamConnectTimeout int    `json:"upstream_connect_timeout" example:"122" validate:"min=0"`
 	UpstreamHeaderTimeout  int    `json:"upstream_header_timeout" example:"322" validate:"min=0"`
 	UpstreamIdleTimeout    int    `json:"upstream_idle_timeout" example:"321" validate:"min=0"`
@@ -51,7 +51,7 @@ type EditServiceHTTPRule struct {
 	Rule            string `json:"rule" example:"/dsads" validate:"required,min=0,max=255"`
 	NeedHttps       int8   `json:"need_https"  example:"1" validate:"oneof=0 1"`
 	NeedStripUri    int8   `json:"need_strip_uri" example:"1" validate:"oneof=0 1"`
-	NeedWebSocket   int8   `json:"need_web_socket" example:"1" validate:"oneof=0 1"`
+	NeedWebsocket   int8   `json:"need_websocket" example:"1" validate:"oneof=0 1"`
 	UrlRewrite      string `json:"url_rewrite" example:"add w\ndel 1" validate:"valid_url_rewrite,min=0,max=5000"`
 	HeaderTransform string `json:"header_transform" example:"add a 12\nadd b 13" validate:"min=0,max=5000,valid_header_transform" `
 }

@@ -512,7 +512,7 @@ var doc = `{
                     "type": "integer",
                     "example": 23
                 },
-                "forbid_l_ist": {
+                "forbid_list": {
                     "type": "string"
                 },
                 "header_transform": {
@@ -594,7 +594,7 @@ var doc = `{
                     "type": "integer",
                     "example": 23
                 },
-                "forbid_l_ist": {
+                "forbid_list": {
                     "type": "string"
                 },
                 "header_transform": {
@@ -613,7 +613,7 @@ var doc = `{
                     "type": "integer",
                     "example": 1
                 },
-                "need_web_socket": {
+                "need_websocket": {
                     "type": "integer",
                     "example": 1
                 },
@@ -695,7 +695,7 @@ var doc = `{
                     "type": "integer",
                     "example": 23
                 },
-                "forbid_l_ist": {
+                "forbid_list": {
                     "type": "string"
                 },
                 "ip_list": {
@@ -832,7 +832,7 @@ var doc = `{
                     "type": "integer",
                     "example": 23
                 },
-                "forbid_l_ist": {
+                "forbid_list": {
                     "type": "string"
                 },
                 "header_transform": {
@@ -851,7 +851,7 @@ var doc = `{
                     "type": "integer",
                     "example": 1
                 },
-                "need_web_socket": {
+                "need_websocket": {
                     "type": "integer",
                     "example": 1
                 },
@@ -1031,7 +1031,7 @@ var doc = `{
                     "type": "integer",
                     "example": 23
                 },
-                "forbid_l_ist": {
+                "forbid_list": {
                     "type": "string"
                 },
                 "header_transform": {
@@ -1116,7 +1116,7 @@ var doc = `{
                     "type": "integer",
                     "example": 23
                 },
-                "forbid_l_ist": {
+                "forbid_list": {
                     "type": "string"
                 },
                 "header_transform": {
@@ -1135,7 +1135,7 @@ var doc = `{
                     "type": "integer",
                     "example": 1
                 },
-                "need_web_socket": {
+                "need_websocket": {
                     "type": "integer",
                     "example": 1
                 },
@@ -1220,7 +1220,7 @@ var doc = `{
                     "type": "integer",
                     "example": 23
                 },
-                "forbid_l_ist": {
+                "forbid_list": {
                     "type": "string"
                 },
                 "ip_list": {

@@ -10,7 +10,7 @@ definitions:
       clientip_flow_limit:
         example: 23
         type: integer
-      forbid_l_ist:
+      forbid_list:
         type: string
       header_transform:
         example: add a 32
@@ -76,7 +76,7 @@ definitions:
       clientip_flow_limit:
         example: 23
         type: integer
-      forbid_l_ist:
+      forbid_list:
         type: string
       header_transform:
         example: |-
@@ -94,7 +94,7 @@ definitions:
       need_strip_uri:
         example: 1
         type: integer
-      need_web_socket:
+      need_websocket:
         example: 1
         type: integer
       open_auth:
@@ -162,7 +162,7 @@ definitions:
       clientip_flow_limit:
         example: 23
         type: integer
-      forbid_l_ist:
+      forbid_list:
         type: string
       ip_list:
         example: |-
@@ -265,7 +265,7 @@ definitions:
       clientip_flow_limit:
         example: 23
         type: integer
-      forbid_l_ist:
+      forbid_list:
         type: string
       header_transform:
         example: |-
@@ -283,7 +283,7 @@ definitions:
       need_strip_uri:
         example: 1
         type: integer
-      need_web_socket:
+      need_websocket:
         example: 1
         type: integer
       open_auth:
@@ -416,7 +416,7 @@ definitions:
       clientip_flow_limit:
         example: 23
         type: integer
-      forbid_l_ist:
+      forbid_list:
         type: string
       header_transform:
         example: add a 32
@@ -484,7 +484,7 @@ definitions:
       clientip_flow_limit:
         example: 23
         type: integer
-      forbid_l_ist:
+      forbid_list:
         type: string
       header_transform:
         example: |-
@@ -502,7 +502,7 @@ definitions:
       need_strip_uri:
         example: 1
         type: integer
-      need_web_socket:
+      need_websocket:
         example: 1
         type: integer
       open_auth:
@@ -572,7 +572,7 @@ definitions:
       clientip_flow_limit:
         example: 23
         type: integer
-      forbid_l_ist:
+      forbid_list:
         type: string
       ip_list:
         example: |-

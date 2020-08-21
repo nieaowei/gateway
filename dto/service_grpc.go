@@ -90,7 +90,7 @@ func (p *AddGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 					RoundType:              p.RoundType,
 					IPList:                 p.IpList,
 					WeightList:             p.WeightList,
-					ForbidList:             p.ForbidLIst,
+					ForbidList:             p.ForbidList,
 					UpstreamConnectTimeout: p.UpstreamConnectTimeout,
 					UpstreamHeaderTimeout:  p.UpstreamHeaderTimeout,
 					UpstreamIDleTimeout:    p.UpstreamIdleTimeout,
@@ -130,70 +130,72 @@ func (p *UpdateGrpcServiceInput) ErrorHandle(handle FunctionalHandle) func(c *gi
 	}
 }
 
-func (p *UpdateGrpcServiceInput) Exec(params interface{}, cIn *gin.Context, errIn error) (out interface{},
-	cOut *gin.Context, err error) {
-	if errIn != nil {
-		return nil, cIn, errIn
+func (p *UpdateGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
+	return func(c *gin.Context) (out interface{}, err error) {
+		data, err := handle(c)
+		if err != nil {
+			return nil, err
+		}
+		params := data.(*UpdateGrpcServiceInput)
+		db := lib.GetDefaultDB()
+		err = db.Transaction(
+			func(tx *gorm.DB) (err error) {
+				// insert service info
+				serviceInfo := &dao.ServiceInfo{
+					LoadType:    dao.LoadType_GRPC,
+					ServiceName: params.ServiceName,
+					ServiceDesc: params.ServiceDesc,
+					ID:          params.ServiceID,
+				}
+				err = serviceInfo.UpdateAllByID(c, tx)
+				if err != nil {
+					return
+				}
+				//insert http rule
+				serviceHTTPRule := &dao.ServiceGrpcRule{
+					ServiceID:       serviceInfo.ID,
+					Port:            params.Port,
+					HeaderTransform: params.HeaderTransform,
+				}
+				err = serviceHTTPRule.UpdateAllByServiceID(c, tx)
+				if err != nil {
+					return
+				}
+				// insert accesscontrol
+				serviceAccessControl := &dao.ServiceAccessControl{
+					ServiceID:         serviceInfo.ID,
+					OpenAuth:          params.OpenAuth,
+					BlackList:         params.BlackList,
+					WhiteList:         params.WhiteList,
+					WhiteHostName:     params.WhiteHostName,
+					ClientipFlowLimit: params.ClientipFlowLimit,
+					ServiceFlowLimit:  params.ServiceFlowLimit,
+				}
+				err = serviceAccessControl.UpdateAllByServiceID(c, tx)
+				if err != nil {
+					return
+				}
+				// insert loadbalance
+				serviceLoadBalance := &dao.ServiceLoadBalance{
+					ServiceID:              serviceInfo.ID,
+					RoundType:              params.RoundType,
+					IPList:                 params.IpList,
+					WeightList:             params.WeightList,
+					ForbidList:             params.ForbidList,
+					UpstreamConnectTimeout: params.UpstreamConnectTimeout,
+					UpstreamHeaderTimeout:  params.UpstreamHeaderTimeout,
+					UpstreamIDleTimeout:    params.UpstreamIdleTimeout,
+					UpstreamMaxIDle:        params.UpstreamMaxIdle,
+				}
+				err = serviceLoadBalance.UpdateAllByServiceID(c, tx)
+				if err != nil {
+					return
+				}
+				return
+			})
+		return
 	}
-	p = params.(*UpdateGrpcServiceInput)
-	cOut = cIn
-	db := lib.GetDefaultDB()
-	err = db.Transaction(
-		func(tx *gorm.DB) (err error) {
-			// insert service info
-			serviceInfo := &dao.ServiceInfo{
-				LoadType:    dao.LoadType_GRPC,
-				ServiceName: p.ServiceName,
-				ServiceDesc: p.ServiceDesc,
-				ID:          p.ServiceID,
-			}
-			err = serviceInfo.UpdateAllByID(cIn, tx)
-			if err != nil {
-				return
-			}
-			//insert http rule
-			serviceHTTPRule := &dao.ServiceGrpcRule{
-				ServiceID:       serviceInfo.ID,
-				Port:            p.Port,
-				HeaderTransform: p.HeaderTransform,
-			}
-			err = serviceHTTPRule.UpdateAllByServiceID(cIn, tx)
-			if err != nil {
-				return
-			}
-			// insert accesscontrol
-			serviceAccessControl := &dao.ServiceAccessControl{
-				ServiceID:         serviceInfo.ID,
-				OpenAuth:          p.OpenAuth,
-				BlackList:         p.BlackList,
-				WhiteList:         p.WhiteList,
-				WhiteHostName:     p.WhiteHostName,
-				ClientipFlowLimit: p.ClientipFlowLimit,
-				ServiceFlowLimit:  p.ServiceFlowLimit,
-			}
-			err = serviceAccessControl.UpdateAllByServiceID(cIn, tx)
-			if err != nil {
-				return
-			}
-			// insert loadbalance
-			serviceLoadBalance := &dao.ServiceLoadBalance{
-				ServiceID:              serviceInfo.ID,
-				RoundType:              p.RoundType,
-				IPList:                 p.IpList,
-				WeightList:             p.WeightList,
-				ForbidList:             p.ForbidLIst,
-				UpstreamConnectTimeout: p.UpstreamConnectTimeout,
-				UpstreamHeaderTimeout:  p.UpstreamHeaderTimeout,
-				UpstreamIDleTimeout:    p.UpstreamIdleTimeout,
-				UpstreamMaxIDle:        p.UpstreamMaxIdle,
-			}
-			err = serviceLoadBalance.UpdateAllByServiceID(cIn, tx)
-			if err != nil {
-				return
-			}
-			return
-		})
-	return
+
 }
 
 func (p *UpdateGrpcServiceInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
