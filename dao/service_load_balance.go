@@ -51,11 +51,11 @@ func (p *ServiceLoadBalance) FindOneScan(c *gin.Context, db *gorm.DB, out interf
 }
 
 func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
-	return Split(p.IPList, ",")
+	return Split(p.IPList, "\n")
 }
 
 func (p *ServiceLoadBalanceExceptModel) GetIPListByModel() (list []string) {
-	return Split(p.IPList, ",")
+	return Split(p.IPList, "\n")
 }
 
 func (p *ServiceLoadBalance) UpdateAllByServiceID(c *gin.Context, db *gorm.DB) (err error) {
