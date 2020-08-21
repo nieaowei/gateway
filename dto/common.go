@@ -2,8 +2,11 @@ package dto
 
 import (
 	"encoding/gob"
+	"errors"
 	"gateway/dao"
 	"github.com/gin-gonic/gin"
+	"reflect"
+	"strings"
 )
 
 func init() {
@@ -63,4 +66,16 @@ type EditServiceGRPCRule struct {
 
 type EditServiceTCPRule struct {
 	Port int `json:"port" example:"9999" validate:"min=0,max=65535"`
+}
+
+func IpListAndWeightListNumValid(handle FunctionalHandle) FunctionalHandle {
+	return func(c *gin.Context) (out interface{}, err error) {
+		data, err := handle(c)
+		ips := reflect.ValueOf(data).Elem().FieldByName("IpList").String()
+		weight := reflect.ValueOf(data).Elem().FieldByName("WeightList").String()
+		if len(strings.Split(ips, "\n")) != len(strings.Split(weight, "\n")) {
+			return nil, errors.New("IP列表数量和权重数量不匹配")
+		}
+		return data, nil
+	}
 }

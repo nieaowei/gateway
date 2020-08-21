@@ -77,7 +77,7 @@ func (p *ServiceController) GetServiceDetail(c *gin.Context) {
 // @Router /service/http/add [post]
 func (p *ServiceController) AddHttpService(c *gin.Context) {
 	exec := &dto.AddHttpServiceInput{}
-	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(dto.IpListAndWeightListNumValid(exec.BindValidParam))))(c)
 	return
 }
 
@@ -93,7 +93,7 @@ func (p *ServiceController) AddHttpService(c *gin.Context) {
 // @Router /service/http/update [post]
 func (p *ServiceController) UpdateHttpService(c *gin.Context) {
 	exec := &dto.UpdateHttpServiceInput{}
-	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(dto.IpListAndWeightListNumValid(exec.BindValidParam))))(c)
 	return
 }
 
@@ -141,7 +141,7 @@ func (p *ServiceController) DeleteService(c *gin.Context) {
 // @Router /service/tcp/add [post]
 func (p *ServiceController) AddTcpService(c *gin.Context) {
 	exec := &dto.AddTcpServiceInput{}
-	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(dto.IpListAndWeightListNumValid(exec.BindValidParam))))(c)
 	return
 }
 
@@ -157,7 +157,7 @@ func (p *ServiceController) AddTcpService(c *gin.Context) {
 // @Router /service/tcp/update [post]
 func (p *ServiceController) UpdateTcpService(c *gin.Context) {
 	exec := &dto.UpdateTcpServiceInput{}
-	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(dto.IpListAndWeightListNumValid(exec.BindValidParam))))(c)
 	return
 }
 
@@ -173,7 +173,7 @@ func (p *ServiceController) UpdateTcpService(c *gin.Context) {
 // @Router /service/grpc/add [post]
 func (p *ServiceController) AddGrpcService(c *gin.Context) {
 	exec := &dto.AddGrpcServiceInput{}
-	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(dto.IpListAndWeightListNumValid(exec.BindValidParam))))(c)
 	return
 }
 
@@ -189,6 +189,6 @@ func (p *ServiceController) AddGrpcService(c *gin.Context) {
 // @Router /service/grpc/update [post]
 func (p *ServiceController) UpdateGrpcService(c *gin.Context) {
 	exec := &dto.UpdateGrpcServiceInput{}
-	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(dto.IpListAndWeightListNumValid(exec.BindValidParam))))(c)
 	return
 }
