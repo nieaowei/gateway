@@ -183,7 +183,7 @@ var doc = `{
         },
         "/service/detail": {
             "get": {
-                "description": "获取单个服务想起",
+                "description": "获取单个服务详情",
                 "consumes": [
                     "application/json"
                 ],
@@ -423,6 +423,50 @@ var doc = `{
                 }
             }
         },
+        "/service/stat": {
+            "get": {
+                "description": "获服务状态",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "服务接口"
+                ],
+                "summary": "获服务状态",
+                "operationId": "/service/stat",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 156,
+                        "name": "service_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetServiceStatOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/service/tcp/add": {
             "post": {
                 "description": "增加tcp服务",
@@ -488,6 +532,42 @@ var doc = `{
                         "description": "success",
                         "schema": {
                             "$ref": "#/definitions/dto.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/service/total": {
+            "get": {
+                "description": "获服务统计",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "服务接口"
+                ],
+                "summary": "获服务统计",
+                "operationId": "/service/total",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetServiceStatisticalOutput"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -961,6 +1041,49 @@ var doc = `{
                     }
                 },
                 "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.GetServiceStatInput": {
+            "type": "object",
+            "properties": {
+                "service_id": {
+                    "type": "integer",
+                    "example": 156
+                }
+            }
+        },
+        "dto.GetServiceStatOutput": {
+            "type": "object",
+            "properties": {
+                "today_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "yesterday_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "dto.GetServiceStatisticalInput": {
+            "type": "object"
+        },
+        "dto.GetServiceStatisticalOutput": {
+            "type": "object",
+            "properties": {
+                "GRPC": {
+                    "type": "integer"
+                },
+                "HTTP": {
+                    "type": "integer"
+                },
+                "TCP": {
                     "type": "integer"
                 }
             }

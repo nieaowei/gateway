@@ -374,6 +374,34 @@ definitions:
       total:
         type: integer
     type: object
+  dto.GetServiceStatInput:
+    properties:
+      service_id:
+        example: 156
+        type: integer
+    type: object
+  dto.GetServiceStatOutput:
+    properties:
+      today_list:
+        items:
+          type: integer
+        type: array
+      yesterday_list:
+        items:
+          type: integer
+        type: array
+    type: object
+  dto.GetServiceStatisticalInput:
+    type: object
+  dto.GetServiceStatisticalOutput:
+    properties:
+      GRPC:
+        type: integer
+      HTTP:
+        type: integer
+      TCP:
+        type: integer
+    type: object
   dto.Response:
     properties:
       data:
@@ -737,7 +765,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: 获取单个服务想起
+      description: 获取单个服务详情
       operationId: /service/detail
       parameters:
       - example: 133
@@ -887,6 +915,32 @@ paths:
       summary: 获取服务列表
       tags:
       - 服务接口
+  /service/stat:
+    get:
+      consumes:
+      - application/json
+      description: 获服务状态
+      operationId: /service/stat
+      parameters:
+      - example: 156
+        in: query
+        name: service_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetServiceStatOutput'
+              type: object
+      summary: 获服务状态
+      tags:
+      - 服务接口
   /service/tcp/add:
     post:
       consumes:
@@ -931,6 +985,27 @@ paths:
           schema:
             $ref: '#/definitions/dto.Response'
       summary: 更新tcp服务
+      tags:
+      - 服务接口
+  /service/total:
+    get:
+      consumes:
+      - application/json
+      description: 获服务统计
+      operationId: /service/total
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetServiceStatisticalOutput'
+              type: object
+      summary: 获服务统计
       tags:
       - 服务接口
 securityDefinitions:

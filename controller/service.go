@@ -22,6 +22,8 @@ func (p *ServiceController) RouterRegister(group *gin.RouterGroup) {
 	group.POST("/tcp/update", p.UpdateTcpService)
 	group.POST("/grpc/add", p.AddGrpcService)
 	group.POST("/grpc/update", p.UpdateGrpcService)
+	group.GET("/stat", p.GetServiceStat)
+	group.GET("/statistical", p.GetServiceStatistical)
 }
 
 func (p *ServiceController) RouterGroupName() string {
@@ -50,8 +52,40 @@ func (p *ServiceController) Middlewares() (middlewares []gin.HandlerFunc) {
 }
 
 // GetServiceDetail godoc
+// @Summary 获服务统计
+// @Description 获服务统计
+// @Tags 服务接口
+// @ID /service/total
+// @Accept  json
+// @Produce  json
+// @Param query query dto.GetServiceStatisticalInput true "query"
+// @Success 200 {object} dto.Response{data=dto.GetServiceStatisticalOutput} "success"
+// @Router /service/total [get]
+func (p *ServiceController) GetServiceStatistical(c *gin.Context) {
+	exec := &dto.GetServiceStatisticalInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	return
+}
+
+// GetServiceDetail godoc
+// @Summary 获服务状态
+// @Description 获服务状态
+// @Tags 服务接口
+// @ID /service/stat
+// @Accept  json
+// @Produce  json
+// @Param query query dto.GetServiceStatInput true "query"
+// @Success 200 {object} dto.Response{data=dto.GetServiceStatOutput} "success"
+// @Router /service/stat [get]
+func (p *ServiceController) GetServiceStat(c *gin.Context) {
+	exec := &dto.GetServiceStatInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	return
+}
+
+// GetServiceDetail godoc
 // @Summary 获服务详情
-// @Description 获取单个服务想起
+// @Description 获取单个服务详情
 // @Tags 服务接口
 // @ID /service/detail
 // @Accept  json

@@ -390,3 +390,101 @@ func (p *GetServiceDetailInput) ExecHandle(handle FunctionalHandle) FunctionalHa
 		return
 	}
 }
+
+type GetServiceStatInput struct {
+	ServiceID int `json:"service_id" form:"service_id" example:"156"`
+}
+
+type GetServiceStatOutput struct {
+	TodayList     []int `json:"today_list"`
+	YesterdayList []int `json:"yesterday_list"`
+}
+
+func (g *GetServiceStatInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
+	err = public.DefaultGetValidParams(c, g)
+	params = g
+	return
+}
+
+func (g *GetServiceStatInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
+	return func(c *gin.Context) (out interface{}, err error) {
+		data := &GetServiceStatOutput{}
+		data.TodayList = append(data.TodayList, []int{1, 32, 54, 212, 432, 453, 123, 312}...)
+		data.YesterdayList = append(data.YesterdayList, []int{32, 3, 23, 43, 43, 123, 121, 44}...)
+		out = data
+		return
+	}
+}
+
+func (g *GetServiceStatInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
+	return func(c *gin.Context) (out interface{}, err error) {
+		return handle(c)
+	}
+}
+
+func (g *GetServiceStatInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		data, err := handle(c)
+		if err == nil {
+			ResponseSuccess(c, data)
+			return
+		}
+		ResponseError(c, 1001, err)
+		return
+	}
+}
+
+type GetServiceStatisticalInput struct {
+}
+
+type GetServiceStatisticalOutput struct {
+	TCP  int64 `json:"TCP"`
+	HTTP int64 `json:"HTTP"`
+	GRPC int64 `json:"GRPC"`
+}
+
+func (g *GetServiceStatisticalInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
+	return
+}
+
+func (g *GetServiceStatisticalInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
+	return func(c *gin.Context) (out interface{}, err error) {
+		_, err = handle(c)
+		if err != nil {
+			return
+		}
+		db := lib.GetDefaultDB()
+		data := &GetServiceStatisticalOutput{}
+		err = db.Model(&dao.ServiceHTTPRule{}).Count(&data.HTTP).Error
+		if err != nil {
+			return nil, err
+		}
+		err = db.Model(&dao.ServiceTCPRule{}).Count(&data.TCP).Error
+		if err != nil {
+			return nil, err
+		}
+		err = db.Model(&dao.ServiceGrpcRule{}).Count(&data.GRPC).Error
+		if err != nil {
+			return nil, err
+		}
+		return data, err
+	}
+}
+
+func (g *GetServiceStatisticalInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
+	return func(c *gin.Context) (out interface{}, err error) {
+		return handle(c)
+	}
+}
+
+func (g *GetServiceStatisticalInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		data, err := handle(c)
+		if err == nil {
+			ResponseSuccess(c, data)
+			return
+		}
+		ResponseError(c, 2002, err)
+		return
+	}
+}
