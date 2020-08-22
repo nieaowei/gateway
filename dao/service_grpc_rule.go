@@ -10,7 +10,7 @@ import (
 //	gorm.Model
 //	ServiceID      uint   `json:"service_id"`
 //	Port           uint16 `json:"port"`
-//	HeaderTransform string `json:"header_transfor"`
+//	MetadataTransform string `json:"header_transfor"`
 //}
 func (p *ServiceGrpcRule) BeforeUpdate(tx *gorm.DB) error {
 	tx = tx.Statement.Where("deleted_at IS NULL").Omit("created_at", "service_id", "deleted_at", "id")

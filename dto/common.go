@@ -51,7 +51,7 @@ type EditServiceLoadBalance struct {
 
 type EditServiceHTTPRule struct {
 	RuleType        int8   `json:"rule_type" example:"1" validate:"oneof=0 1"`
-	Rule            string `json:"rule" example:"/dsads" validate:"required,min=0,max=255"`
+	Rule            string `json:"rule" example:"/dsads" validate:"required,max=255"`
 	NeedHttps       int8   `json:"need_https"  example:"1" validate:"oneof=0 1"`
 	NeedStripUri    int8   `json:"need_strip_uri" example:"1" validate:"oneof=0 1"`
 	NeedWebsocket   int8   `json:"need_websocket" example:"1" validate:"oneof=0 1"`
@@ -60,8 +60,8 @@ type EditServiceHTTPRule struct {
 }
 
 type EditServiceGRPCRule struct {
-	Port            int    `json:"port"  example:"7777" validate:"min=0,max=65535"`
-	HeaderTransform string `json:"header_transform" example:"add a 32" validate:"min=0,max=5000,valid_header_transform"`
+	Port              int    `json:"port"  example:"7777" validate:"min=0,max=65535"`
+	MetadataTransform string `json:"metadata_transform" example:"add a 32" validate:"min=0,max=5000,valid_header_transform"`
 }
 
 type EditServiceTCPRule struct {

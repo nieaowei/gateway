@@ -12,13 +12,13 @@ definitions:
         type: integer
       forbid_list:
         type: string
-      header_transform:
-        example: add a 32
-        type: string
       ip_list:
         example: |-
           172.1.1.1:80
           172.11.1.2:87
+        type: string
+      metadata_transform:
+        example: add a 32
         type: string
       open_auth:
         type: integer
@@ -446,13 +446,13 @@ definitions:
         type: integer
       forbid_list:
         type: string
-      header_transform:
-        example: add a 32
-        type: string
       ip_list:
         example: |-
           172.1.1.1:80
           172.11.1.2:87
+        type: string
+      metadata_transform:
+        example: add a 32
         type: string
       open_auth:
         type: integer

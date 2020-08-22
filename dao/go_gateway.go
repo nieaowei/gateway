@@ -110,9 +110,9 @@ CREATE TABLE `service_grpc_rule` (
 // ServiceGrpcRule 网关路由匹配表
 type ServiceGrpcRule struct {
 	gorm.Model
-	ServiceID       uint   `gorm:"column:service_id;type:bigint(20);not null" json:"service_id"`               // 服务id
-	Port            int    `gorm:"column:port;type:int(5);not null" json:"port"`                               // 端口
-	HeaderTransform string `gorm:"column:header_transform;type:varchar(5000);not null" json:"header_transfor"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
+	ServiceID         uint   `gorm:"column:service_id;type:bigint(20);not null" json:"service_id"`                    // 服务id
+	Port              int    `gorm:"column:port;type:int(5);not null" json:"port"`                                    // 端口
+	MetadataTransform string `gorm:"column:metadata_transform;type:varchar(5000);not null" json:"metadata_transform"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
 }
 
 // TableName get sql table name.获取数据库表名
@@ -147,7 +147,7 @@ type ServiceHTTPRule struct {
 	NeedStripURI    int8   `gorm:"column:need_strip_uri;type:tinyint(4);not null" json:"need_strip_uri" validate:"oneof=0 1"` // 启用strip_uri 1=启用
 	NeedWebsocket   int8   `gorm:"column:need_websocket;type:tinyint(4);not null" json:"need_websocket" validate:"oneof=0 1"` // 是否支持websocket 1=支持
 	URLRewrite      string `gorm:"column:url_rewrite;type:varchar(5000);not null" json:"url_rewrite"`                         // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
-	HeaderTransform string `gorm:"column:header_transform;type:varchar(5000);not null" json:"header_transfor"`                // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
+	HeaderTransform string `gorm:"column:header_transform;type:varchar(5000);not null" json:"header_transform"`               // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
 }
 
 // TableName get sql table name.获取数据库表名

@@ -354,8 +354,8 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 			case dao.LoadType_GRPC:
 				{
 					eg := EditServiceGRPCRule{
-						Port:            o.ServiceGrpcRuleExceptModel.Port,
-						HeaderTransform: o.ServiceGrpcRuleExceptModel.HeaderTransform,
+						Port:              o.ServiceGrpcRuleExceptModel.Port,
+						MetadataTransform: o.ServiceGrpcRuleExceptModel.MetadataTransform,
 					}
 					return GetServiceDetailForGrpcOutput{
 						UpdateGrpcServiceInput{

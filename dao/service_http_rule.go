@@ -15,7 +15,7 @@ import (
 //	NeedStripUri   uint8  `json:"need_strip_uri" validate:"oneof=0 1"`
 //	NeedWebsocket  uint8  `json:"need_websocket" validate:"oneof=0 1"`
 //	UrlRewrite     string `json:"url_rewrite" validate:"valid_url_rewrite"`
-//	HeaderTransform string `json:"header_transfor"`
+//	MetadataTransform string `json:"header_transfor"`
 //}
 
 func (p *ServiceHTTPRule) BeforeUpdate(tx *gorm.DB) error {

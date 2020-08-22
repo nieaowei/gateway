@@ -62,9 +62,9 @@ func (p *AddGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 				}
 				//insert http rule
 				serviceGRPCRule := &dao.ServiceGrpcRule{
-					ServiceID:       serviceInfo.ID,
-					Port:            p.Port,
-					HeaderTransform: p.HeaderTransform,
+					ServiceID:         serviceInfo.ID,
+					Port:              p.Port,
+					MetadataTransform: p.MetadataTransform,
 				}
 				err = serviceGRPCRule.InsertAfterCheck(c, tx, true)
 				if err != nil {
@@ -153,9 +153,9 @@ func (p *UpdateGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalH
 				}
 				//insert http rule
 				serviceHTTPRule := &dao.ServiceGrpcRule{
-					ServiceID:       serviceInfo.ID,
-					Port:            params.Port,
-					HeaderTransform: params.HeaderTransform,
+					ServiceID:         serviceInfo.ID,
+					Port:              params.Port,
+					MetadataTransform: params.MetadataTransform,
 				}
 				err = serviceHTTPRule.UpdateAllByServiceID(c, tx)
 				if err != nil {

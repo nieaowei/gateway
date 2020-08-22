@@ -595,13 +595,13 @@ var doc = `{
                 "forbid_list": {
                     "type": "string"
                 },
-                "header_transform": {
-                    "type": "string",
-                    "example": "add a 32"
-                },
                 "ip_list": {
                     "type": "string",
                     "example": "172.1.1.1:80\n172.11.1.2:87"
+                },
+                "metadata_transform": {
+                    "type": "string",
+                    "example": "add a 32"
                 },
                 "open_auth": {
                     "type": "integer"
@@ -1157,13 +1157,13 @@ var doc = `{
                 "forbid_list": {
                     "type": "string"
                 },
-                "header_transform": {
-                    "type": "string",
-                    "example": "add a 32"
-                },
                 "ip_list": {
                     "type": "string",
                     "example": "172.1.1.1:80\n172.11.1.2:87"
+                },
+                "metadata_transform": {
+                    "type": "string",
+                    "example": "add a 32"
                 },
                 "open_auth": {
                     "type": "integer"
