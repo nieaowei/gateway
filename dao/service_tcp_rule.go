@@ -55,12 +55,12 @@ func (p *ServiceTCPRule) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 
 func (p *ServiceTCPRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
 	if check {
-		//check integrity
+		//check integrity 在其他表不存在
 		ServiceHTTPRule := &ServiceHTTPRule{
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(ServiceHTTPRule, ServiceHTTPRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
@@ -68,26 +68,29 @@ func (p *ServiceTCPRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check boo
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(serviceGrpcRule, serviceGrpcRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
-		//check foregin
+		//check foregin 在信息表中存在
 		serviceInfo := &ServiceInfo{
 			ID: p.ServiceID,
 		}
 		err = db.First(serviceInfo, serviceInfo).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != gorm.ErrRecordNotFound {
 			return errors.New("In violation of the foreign key constraints")
 		}
 
-		// check unique ServiceID
-		ServiceTCPRule := &ServiceTCPRule{
+		// check unique ServiceID 检查在自身表中 不存在id 和 端口 ，对于tcp端口的检测 去业务逻辑检查
+		serviceTCPRule := &ServiceTCPRule{
 			ServiceID: p.ServiceID,
 		}
-		err = db.First(ServiceTCPRule, ServiceTCPRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
-			return errors.New("Violation of the uniqueness constraint")
+		orServiceTcpRule := ServiceTCPRule{
+			Port: p.Port,
+		}
+		res := db.Where(serviceTCPRule).Or(orServiceTcpRule).Limit(1).Find(serviceTCPRule)
+		if (res.Error != nil && res.Error != gorm.ErrRecordNotFound) || res.RowsAffected != 0 {
+			return errors.New("Violation of the uniqueness constraint #Port or #ServiceID")
 		}
 	}
 	// make sure insert

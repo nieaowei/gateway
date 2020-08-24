@@ -66,32 +66,35 @@ func (p *ServiceHTTPRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bo
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(serviceGrpcRule, serviceGrpcRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 		ServiceTCPRule := &ServiceTCPRule{
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(ServiceTCPRule, ServiceTCPRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
-		//check foregin
+		//check foreign
 		serviceInfo := &ServiceInfo{
 			ID: p.ServiceID,
 		}
 		err = db.First(serviceInfo, serviceInfo).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != nil {
 			return errors.New("In violation of the foreign key constraints")
 		}
-		ServiceHTTPRule := &ServiceHTTPRule{
+		// check unique ServiceName and suffix
+		serviceHTTPRule := &ServiceHTTPRule{
 			ServiceID: p.ServiceID,
 		}
-		// check unique ServiceName
-		err = db.First(ServiceHTTPRule, ServiceHTTPRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
-			return errors.New("Violation of the uniqueness constraint")
+		orServiceHTTPRule := &ServiceHTTPRule{
+			Rule: p.Rule,
+		}
+		res := db.Where(serviceHTTPRule).Or(orServiceHTTPRule).Limit(1).Find(serviceHTTPRule)
+		if (res.Error != nil && res.Error != gorm.ErrRecordNotFound) || res.RowsAffected != 0 {
+			return errors.New("Violation of the uniqueness constraint #Rule or #ServiceID")
 		}
 	}
 	// make sure insert

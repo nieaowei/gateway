@@ -8,5 +8,5 @@
 - [ ] Add avatar upload interface. - 2020.8.18
 - [x] Organize validator and swag documents.
 - [x] The part of DTO is wait to be completed. - 2020。8.19
-- [ ] Some uniqueness checks in the DAO module.
+- [x] Some uniqueness checks in the DAO module.
 - [ ] Fix data validation(ex. MetaDataHeader.).

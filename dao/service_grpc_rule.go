@@ -60,7 +60,7 @@ func (p *ServiceGrpcRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bo
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(ServiceHTTPRule, ServiceHTTPRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
@@ -68,7 +68,7 @@ func (p *ServiceGrpcRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bo
 			ServiceID: p.ServiceID,
 		}
 		err = db.First(ServiceTCPRule, ServiceTCPRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != gorm.ErrRecordNotFound {
 			return errors.New("Integrity violation constraint")
 		}
 
@@ -77,7 +77,7 @@ func (p *ServiceGrpcRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bo
 			ID: p.ServiceID,
 		}
 		err = db.First(serviceInfo, serviceInfo).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
+		if err != nil {
 			return errors.New("In violation of the foreign key constraints")
 		}
 
@@ -85,9 +85,12 @@ func (p *ServiceGrpcRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bo
 		serviceGrpcRule := &ServiceGrpcRule{
 			ServiceID: p.ServiceID,
 		}
-		err = db.First(serviceGrpcRule, serviceGrpcRule).Error
-		if err != nil && err != gorm.ErrRecordNotFound {
-			return errors.New("Violation of the uniqueness constraint")
+		orServiceGrpcRule := &ServiceGrpcRule{
+			Port: p.Port,
+		}
+		res := db.Where(serviceGrpcRule).Or(orServiceGrpcRule).Limit(1).Find(serviceGrpcRule)
+		if (res.Error != nil && res.Error != gorm.ErrRecordNotFound) || res.RowsAffected != 0 {
+			return errors.New("Violation of the uniqueness constraint #Port or #ServiceID")
 		}
 	}
 	// make sure insert
