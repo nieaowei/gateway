@@ -10,3 +10,4 @@
 - [x] The part of DTO is wait to be completed. - 2020。8.19
 - [x] Some uniqueness checks in the DAO module.
 - [ ] Fix data validation(ex. MetaDataHeader.).
+- [ ] Complete the interfaces related to tenant management.- 2020.8.24
