@@ -1,7 +1,0 @@
-# this is redis config file
-[list]
-    [list.default]
-        proxy_list = ["47.106.251.178:6379"]
-        max_active = 100
-        max_idle = 100
-        down_grade = false
