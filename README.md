@@ -11,3 +11,4 @@
 - [x] Some uniqueness checks in the DAO module.
 - [ ] Fix data validation(ex. MetaDataHeader.).
 - [ ] Complete the interfaces related to tenant management.- 2020.8.24
+- [ ] Refactor the GetServiceStatistical and add GetServiceAmount.
