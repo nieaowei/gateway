@@ -71,6 +71,9 @@ type EditServiceTCPRule struct {
 func IpListAndWeightListNumValid(handle FunctionalHandle) FunctionalHandle {
 	return func(c *gin.Context) (out interface{}, err error) {
 		data, err := handle(c)
+		if err != nil {
+			return
+		}
 		ips := reflect.ValueOf(data).Elem().FieldByName("IpList").String()
 		weight := reflect.ValueOf(data).Elem().FieldByName("WeightList").String()
 		if len(strings.Split(ips, "\n")) != len(strings.Split(weight, "\n")) {
