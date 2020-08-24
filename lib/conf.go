@@ -94,7 +94,7 @@ func InitConf(path string, config Config) (err error) {
 	v := viper.New()
 	v.SetConfigName(config.ConfName())
 	if path == "" {
-		v.AddConfigPath("../conf/dev")
+		v.AddConfigPath("../conf/pro")
 	}
 	v.AddConfigPath(path)
 	err = v.ReadInConfig()
