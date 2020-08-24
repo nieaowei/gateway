@@ -77,7 +77,7 @@ func (p *ServiceTCPRule) InsertAfterCheck(c *gin.Context, db *gorm.DB, check boo
 			ID: p.ServiceID,
 		}
 		err = db.First(serviceInfo, serviceInfo).Error
-		if err != gorm.ErrRecordNotFound {
+		if err != nil {
 			return errors.New("In violation of the foreign key constraints")
 		}
 
