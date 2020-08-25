@@ -255,6 +255,17 @@ definitions:
       avatar:
         type: string
     type: object
+  dto.GetServiceAmountInput:
+    type: object
+  dto.GetServiceAmountOutput:
+    properties:
+      GRPC:
+        type: integer
+      HTTP:
+        type: integer
+      TCP:
+        type: integer
+    type: object
   dto.GetServiceDetailForHttpOutput:
     properties:
       black_list:
@@ -391,15 +402,17 @@ definitions:
           type: integer
         type: array
     type: object
-  dto.GetServiceStatisticalInput:
+  dto.GetTotalInput:
     type: object
-  dto.GetServiceStatisticalOutput:
+  dto.GetTotalOutput:
     properties:
-      GRPC:
+      qpd:
         type: integer
-      HTTP:
+      qps:
         type: integer
-      TCP:
+      service_amount:
+        type: integer
+      tenant_amount:
         type: integer
     type: object
   dto.Response:
@@ -987,12 +1000,12 @@ paths:
       summary: 更新tcp服务
       tags:
       - 服务接口
-  /service/total:
+  /statistics/service/amount:
     get:
       consumes:
       - application/json
       description: 获服务统计
-      operationId: /service/total
+      operationId: /statistics/service/amount
       produces:
       - application/json
       responses:
@@ -1003,11 +1016,32 @@ paths:
             - $ref: '#/definitions/dto.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/dto.GetServiceStatisticalOutput'
+                  $ref: '#/definitions/dto.GetServiceAmountOutput'
               type: object
       summary: 获服务统计
       tags:
-      - 服务接口
+      - 统计接口
+  /statistics/total:
+    get:
+      consumes:
+      - application/json
+      description: 获取仪表盘统计数据
+      operationId: /statistics/total
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetTotalOutput'
+              type: object
+      summary: 获取仪表盘统计数据
+      tags:
+      - 统计接口
 securityDefinitions:
   ApiKeyAuth:
     in: header

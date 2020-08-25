@@ -537,7 +537,7 @@ var doc = `{
                 }
             }
         },
-        "/service/total": {
+        "/statistics/service/amount": {
             "get": {
                 "description": "获服务统计",
                 "consumes": [
@@ -547,10 +547,10 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "服务接口"
+                    "统计接口"
                 ],
                 "summary": "获服务统计",
-                "operationId": "/service/total",
+                "operationId": "/statistics/service/amount",
                 "responses": {
                     "200": {
                         "description": "success",
@@ -563,7 +563,43 @@ var doc = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.GetServiceStatisticalOutput"
+                                            "$ref": "#/definitions/dto.GetServiceAmountOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/statistics/total": {
+            "get": {
+                "description": "获取仪表盘统计数据",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "统计接口"
+                ],
+                "summary": "获取仪表盘统计数据",
+                "operationId": "/statistics/total",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetTotalOutput"
                                         }
                                     }
                                 }
@@ -894,6 +930,23 @@ var doc = `{
                 }
             }
         },
+        "dto.GetServiceAmountInput": {
+            "type": "object"
+        },
+        "dto.GetServiceAmountOutput": {
+            "type": "object",
+            "properties": {
+                "GRPC": {
+                    "type": "integer"
+                },
+                "HTTP": {
+                    "type": "integer"
+                },
+                "TCP": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.GetServiceDetailForHttpOutput": {
             "type": "object",
             "required": [
@@ -1071,19 +1124,22 @@ var doc = `{
                 }
             }
         },
-        "dto.GetServiceStatisticalInput": {
+        "dto.GetTotalInput": {
             "type": "object"
         },
-        "dto.GetServiceStatisticalOutput": {
+        "dto.GetTotalOutput": {
             "type": "object",
             "properties": {
-                "GRPC": {
+                "qpd": {
                     "type": "integer"
                 },
-                "HTTP": {
+                "qps": {
                     "type": "integer"
                 },
-                "TCP": {
+                "service_amount": {
+                    "type": "integer"
+                },
+                "tenant_amount": {
                     "type": "integer"
                 }
             }

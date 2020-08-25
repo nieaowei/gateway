@@ -33,5 +33,7 @@ func InitRouter(swag bool) *gin.Engine {
 
 	Register(router, &controller.PublicController{})
 
+	Register(router, &controller.StatisticsController{})
+
 	return router
 }
