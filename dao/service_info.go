@@ -57,13 +57,13 @@ func (p *ServiceInfo) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	return
 }
 
-func (p *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, params *PageSize) (list []ServiceInfo, count int64, err error) {
+func (p *ServiceInfo) PageListIdDesc(c *gin.Context, tx *gorm.DB, params *PageSize) (list []ServiceInfo, count int64, err error) {
 	offset := (params.No - 1) * params.Size
-	query := tx.Model(p)
+	query := tx
 	if params.Info != "" {
 		query = query.Where("service_name like ? or service_desc like ?", "%"+params.Info+"%", "%"+params.Info+"%")
 	}
-	query.Count(&count)
+	query.Model(p).Count(&count)
 
 	err = query.Limit(params.Size).Offset(offset).Order("id desc").Find(&list).Error
 

@@ -104,6 +104,99 @@ var doc = `{
                 }
             }
         },
+        "/app/detail": {
+            "get": {
+                "description": "获取租户详细信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "租户接口"
+                ],
+                "summary": "获取租户详细信息",
+                "operationId": "/app/detail",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAppDetailOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/app/list": {
+            "get": {
+                "description": "获取租户列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "租户接口"
+                ],
+                "summary": "获取租户列表",
+                "operationId": "/app/list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "info",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 2,
+                        "name": "page_no",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "example": 10,
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAppListOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/public/get/avatar": {
             "get": {
                 "description": "获取头像",
@@ -899,6 +992,33 @@ var doc = `{
                 }
             }
         },
+        "dto.AppListItem": {
+            "type": "object",
+            "properties": {
+                "app_id": {
+                    "description": "\u0008租户id",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "租户名称",
+                    "type": "string"
+                },
+                "qpd": {
+                    "description": "WhiteIPs string ` + "`" + `json:\"white_ips\"` + "`" + ` // ip白名单，支持前缀匹配",
+                    "type": "integer"
+                },
+                "qps": {
+                    "type": "integer"
+                },
+                "secret": {
+                    "description": "密钥",
+                    "type": "string"
+                }
+            }
+        },
         "dto.DeleteServiceInput": {
             "type": "object",
             "required": [
@@ -908,6 +1028,46 @@ var doc = `{
                 "id": {
                     "type": "integer",
                     "example": 96
+                }
+            }
+        },
+        "dto.GetAppDetailInput": {
+            "type": "object"
+        },
+        "dto.GetAppDetailOutput": {
+            "type": "object"
+        },
+        "dto.GetAppListInput": {
+            "type": "object",
+            "required": [
+                "page_no",
+                "page_size"
+            ],
+            "properties": {
+                "info": {
+                    "type": "string"
+                },
+                "page_no": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "page_size": {
+                    "type": "integer",
+                    "example": 10
+                }
+            }
+        },
+        "dto.GetAppListOutput": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.AppListItem"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

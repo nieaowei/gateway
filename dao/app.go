@@ -23,7 +23,6 @@ func (p *App) FindOne(c *gin.Context, tx *gorm.DB) (out *App, err error) {
 }
 
 func (p *App) FindOneScan(c *gin.Context, tx *gorm.DB, out interface{}) (err error) {
-	//out = &ServiceInfo{}
 	result := tx.Model(p).Where(p).Limit(1).Scan(out)
 	err = ErrorHandleForDB(result)
 	return
@@ -38,5 +37,38 @@ func (p *App) Save(c *gin.Context, tx *gorm.DB) (err error) {
 func (p *App) DeleteByID(c *gin.Context, tx *gorm.DB) (err error) {
 	result := tx.Delete(p)
 	err = ErrorHandleForDB(result)
+	return
+}
+
+func (p *App) PageListIdDesc(c *gin.Context, tx *gorm.DB, params *PageSize) (list []App, count int64, err error) {
+	offset := (params.No - 1) * params.Size
+	query := tx
+	if params.Info != "" {
+		query = query.Where("name like ?", "%"+params.Info+"%")
+	}
+	query.Model(p).Count(&count)
+
+	err = query.Limit(params.Size).Offset(offset).Order("id desc").Find(&list).Error
+
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (p *App) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
+	if check {
+		//serviceInfo := &ServiceInfo{
+		//	ServiceName: p.ServiceName,
+		//}
+		//// check unique ServiceName
+		//err = db.First(serviceInfo, serviceInfo).Error
+		//if err != gorm.ErrRecordNotFound {
+		//	return errors.New("Violation of the uniqueness constraint #ServiceInfo.ServiceName")
+		//}
+	}
+	// make sure insert
+	res := db.Create(p)
+	err = ErrorHandleForDB(res)
 	return
 }

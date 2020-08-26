@@ -235,6 +235,25 @@ definitions:
         example: token
         type: string
     type: object
+  dto.AppListItem:
+    properties:
+      app_id:
+        description: "\b租户id"
+        type: string
+      id:
+        type: integer
+      name:
+        description: 租户名称
+        type: string
+      qpd:
+        description: WhiteIPs string `json:"white_ips"` // ip白名单，支持前缀匹配
+        type: integer
+      qps:
+        type: integer
+      secret:
+        description: 密钥
+        type: string
+    type: object
   dto.DeleteServiceInput:
     properties:
       id:
@@ -242,6 +261,33 @@ definitions:
         type: integer
     required:
     - id
+    type: object
+  dto.GetAppDetailInput:
+    type: object
+  dto.GetAppDetailOutput:
+    type: object
+  dto.GetAppListInput:
+    properties:
+      info:
+        type: string
+      page_no:
+        example: 2
+        type: integer
+      page_size:
+        example: 10
+        type: integer
+    required:
+    - page_no
+    - page_size
+    type: object
+  dto.GetAppListOutput:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/dto.AppListItem'
+        type: array
+      total:
+        type: integer
     type: object
   dto.GetAvatarInput:
     properties:
@@ -726,6 +772,62 @@ paths:
       summary: 管理员登出
       tags:
       - 管理员接口
+  /app/detail:
+    get:
+      consumes:
+      - application/json
+      description: 获取租户详细信息
+      operationId: /app/detail
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetAppDetailOutput'
+              type: object
+      summary: 获取租户详细信息
+      tags:
+      - 租户接口
+  /app/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取租户列表
+      operationId: /app/list
+      parameters:
+      - in: query
+        name: info
+        type: string
+      - example: 2
+        in: query
+        name: page_no
+        required: true
+        type: integer
+      - example: 10
+        in: query
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetAppListOutput'
+              type: object
+      summary: 获取租户列表
+      tags:
+      - 租户接口
   /public/get/avatar:
     get:
       consumes:

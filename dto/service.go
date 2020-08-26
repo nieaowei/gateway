@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
+	"strings"
 )
 
 type GetServiceListInput struct {
@@ -65,7 +66,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 		p = params.(*GetServiceListInput)
 		serviceInfo := &dao.ServiceInfo{}
 		db := lib.GetDefaultDB()
-		serviceInfos, count, err := serviceInfo.PageList(c, db, &dao.PageSize{
+		serviceInfos, count, err := serviceInfo.PageListIdDesc(c, db, &dao.PageSize{
 			Size: p.PageSize,
 			No:   p.PageNo,
 			Info: p.Info,
@@ -82,25 +83,44 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 		clusterPort := conf.Cluster.Port
 		clusterSSLPort := conf.Cluster.SslPort
 		for _, info := range serviceInfos {
-			serviceDetail, err := info.FindOneServiceDetail(c, db)
-			if err != nil {
-				return nil, err
-			}
+			//serviceDetail, err := info.FindOneServiceDetail(c, db)
+			//if err != nil {
+			//	return nil, err
+			//}
 			serviceAddr := ""
 			loadType := ""
-			switch serviceDetail.LoadType {
+
+			type Port struct {
+				Port int
+			}
+
+			type ServiceTypeInfo struct {
+				RuleType  int8
+				Rule      string
+				NeedHTTPs int8
+			}
+
+			switch info.LoadType {
 			case dao.LoadType_HTTP:
 				{
 					loadType = "HTTP"
-					service := serviceDetail.ServiceHTTPRuleExceptModel
-					if service.RuleType == dao.HttpRuleType_PrefixURL && service.NeedHTTPs == 0 {
-						serviceAddr = clusterIP + ":" + clusterPort + service.Rule
+					service := &dao.ServiceHTTPRule{
+						ServiceID: info.ID,
+					}
+					res := &ServiceTypeInfo{}
+					err = service.FindOneScan(c, db, res)
+					if err != nil {
+						return nil, err
+					}
+					//service := serviceDetail.ServiceHTTPRuleExceptModel
+					if res.RuleType == dao.HttpRuleType_PrefixURL && res.NeedHTTPs == 0 {
+						serviceAddr = clusterIP + ":" + clusterPort + res.Rule
 
 					}
-					if service.RuleType == dao.HttpRuleType_PrefixURL && service.NeedHTTPs == 1 {
-						serviceAddr = clusterIP + ":" + clusterSSLPort + service.Rule
+					if res.RuleType == dao.HttpRuleType_PrefixURL && res.NeedHTTPs == 1 {
+						serviceAddr = clusterIP + ":" + clusterSSLPort + res.Rule
 					}
-					if service.RuleType == dao.HttpRuleType_Domain {
+					if res.RuleType == dao.HttpRuleType_Domain {
 						serviceAddr = service.Rule
 					}
 					break
@@ -108,22 +128,47 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			case dao.LoadType_TCP:
 				{
 					loadType = "TCP"
-					service := serviceDetail.ServiceTCPRuleExceptModel
-
-					serviceAddr = clusterIP + ":" + strconv.Itoa(service.Port)
+					//service := serviceDetail.ServiceTCPRuleExceptModel
+					service := &dao.ServiceTCPRule{
+						ServiceID: info.ID,
+					}
+					res := &Port{}
+					err = service.FindOneScan(c, db, res)
+					if err != nil {
+						return nil, err
+					}
+					serviceAddr = clusterIP + ":" + strconv.Itoa(res.Port)
 					break
 				}
 			case dao.LoadType_GRPC:
 				{
-					loadType = "GRPC"
-					service := serviceDetail.ServiceGrpcRuleExceptModel
 
-					serviceAddr = clusterIP + ":" + strconv.Itoa(service.Port)
+					loadType = "GRPC"
+					//service := serviceDetail.ServiceGrpcRuleExceptModel
+					service := &dao.ServiceGrpcRule{
+						ServiceID: info.ID,
+					}
+					res := &Port{}
+					err = service.FindOneScan(c, db, res)
+					if err != nil {
+						return nil, err
+					}
+					serviceAddr = clusterIP + ":" + strconv.Itoa(res.Port)
 					break
 				}
 			}
-			ipList := serviceDetail.ServiceLoadBalanceExceptModel.GetIPListByModel()
-
+			type IpListRes struct {
+				IpList string
+			}
+			//ipList := serviceDetail.ServiceLoadBalanceExceptModel.GetIPListByModel()
+			res := &IpListRes{}
+			serviceLoadBalance := &dao.ServiceLoadBalance{
+				ServiceID: info.ID,
+			}
+			err := serviceLoadBalance.FindOneScan(c, db, res)
+			if err != nil {
+				return nil, err
+			}
 			item := ServiceListItem{
 				ID:          info.ID,
 				ServiceName: info.ServiceName,
@@ -132,7 +177,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 				Address:     serviceAddr,
 				Qps:         0,
 				Qpd:         0,
-				TotalNode:   uint(len(ipList)),
+				TotalNode:   uint(len(strings.Split(res.IpList, "\n"))),
 			}
 			outE.List = append(outE.List, item)
 		}
