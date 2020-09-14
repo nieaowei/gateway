@@ -2,6 +2,7 @@ package dao
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -58,14 +59,14 @@ func (p *App) PageListIdDesc(c *gin.Context, tx *gorm.DB, params *PageSize) (lis
 
 func (p *App) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err error) {
 	if check {
-		//serviceInfo := &ServiceInfo{
-		//	ServiceName: p.ServiceName,
-		//}
-		//// check unique ServiceName
-		//err = db.First(serviceInfo, serviceInfo).Error
-		//if err != gorm.ErrRecordNotFound {
-		//	return errors.New("Violation of the uniqueness constraint #ServiceInfo.ServiceName")
-		//}
+		app := &App{
+			AppID: p.AppID,
+		}
+		// check unique AppID
+		err = db.First(app, app).Error
+		if err != gorm.ErrRecordNotFound {
+			return errors.New("Violation of the uniqueness constraint #App.AppID")
+		}
 	}
 	// make sure insert
 	res := db.Create(p)

@@ -88,7 +88,7 @@ func (g *GetAppListInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Conte
 }
 
 type GetAppDetailInput struct {
-	id uint
+	ID uint `json:"id" form:"id" validate:"required"`
 }
 
 type GetAppDetailOutput struct {
@@ -111,17 +111,40 @@ func (g *GetAppDetailInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Con
 }
 
 type AddAppInput struct {
+	AppID string `json:"app_id"`
+	Name  string `json:"name"`
+	Qps   int64  `json:"qps"`
+	Qpd   int64  `json:"qpd"`
 }
 
 type AddAppOutput struct {
 }
 
 func (a *AddAppInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
-	panic("implement me")
+	err = public.DefaultGetValidParams(c, a)
+	params = a
+	return
 }
 
 func (a *AddAppInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
-	panic("implement me")
+	return func(c *gin.Context) (out interface{}, err error) {
+		var data interface{}
+		data, err = handle(c)
+		if err != nil {
+			return
+		}
+		db := lib.GetDefaultDB()
+		params := data.(*AddAppInput)
+		app := &dao.App{
+			AppID:  params.AppID,
+			Name:   params.Name,
+			Secret: public.Md5(params.AppID),
+			Qpd:    params.Qpd,
+			QPS:    params.Qps,
+		}
+		err = app.InsertAfterCheck(c, db, true)
+		return
+	}
 }
 
 func (a *AddAppInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
@@ -151,5 +174,27 @@ func (u *UpdateAppInput) OutputHandle(handle FunctionalHandle) FunctionalHandle 
 }
 
 func (u *UpdateAppInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
+	panic("implement me")
+}
+
+type DeleteAppInput struct {
+}
+
+type DeleteAppOutput struct {
+}
+
+func (d *DeleteAppInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
+	panic("implement me")
+}
+
+func (d *DeleteAppInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
+	panic("implement me")
+}
+
+func (d *DeleteAppInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
+	panic("implement me")
+}
+
+func (d *DeleteAppInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
 	panic("implement me")
 }

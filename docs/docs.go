@@ -104,6 +104,53 @@ var doc = `{
                 }
             }
         },
+        "/app/add": {
+            "post": {
+                "description": "获取租户详细信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "租户接口"
+                ],
+                "summary": "获取租户详细信息",
+                "operationId": "/app/add",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AddAppInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.AddAppOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/app/detail": {
             "get": {
                 "description": "获取租户详细信息",
@@ -118,6 +165,14 @@ var doc = `{
                 ],
                 "summary": "获取租户详细信息",
                 "operationId": "/app/detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "success",
@@ -188,6 +243,53 @@ var doc = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/dto.GetAppListOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/app/update": {
+            "post": {
+                "description": "删除租户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "租户接口"
+                ],
+                "summary": "删除租户",
+                "operationId": "/app/update",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeleteAppInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.DeleteAppOutput"
                                         }
                                     }
                                 }
@@ -704,6 +806,26 @@ var doc = `{
         }
     },
     "definitions": {
+        "dto.AddAppInput": {
+            "type": "object",
+            "properties": {
+                "app_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "qpd": {
+                    "type": "integer"
+                },
+                "qps": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.AddAppOutput": {
+            "type": "object"
+        },
         "dto.AddGrpcServiceInput": {
             "type": "object",
             "required": [
@@ -1019,6 +1141,12 @@ var doc = `{
                 }
             }
         },
+        "dto.DeleteAppInput": {
+            "type": "object"
+        },
+        "dto.DeleteAppOutput": {
+            "type": "object"
+        },
         "dto.DeleteServiceInput": {
             "type": "object",
             "required": [
@@ -1032,7 +1160,15 @@ var doc = `{
             }
         },
         "dto.GetAppDetailInput": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
         },
         "dto.GetAppDetailOutput": {
             "type": "object"
@@ -1352,6 +1488,12 @@ var doc = `{
                     "type": "integer"
                 }
             }
+        },
+        "dto.UpdateAppInput": {
+            "type": "object"
+        },
+        "dto.UpdateAppOutput": {
+            "type": "object"
         },
         "dto.UpdateGrpcServiceInput": {
             "type": "object",

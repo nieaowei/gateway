@@ -1,5 +1,18 @@
 basePath: /
 definitions:
+  dto.AddAppInput:
+    properties:
+      app_id:
+        type: string
+      name:
+        type: string
+      qpd:
+        type: integer
+      qps:
+        type: integer
+    type: object
+  dto.AddAppOutput:
+    type: object
   dto.AddGrpcServiceInput:
     properties:
       black_list:
@@ -254,6 +267,10 @@ definitions:
         description: 密钥
         type: string
     type: object
+  dto.DeleteAppInput:
+    type: object
+  dto.DeleteAppOutput:
+    type: object
   dto.DeleteServiceInput:
     properties:
       id:
@@ -263,6 +280,11 @@ definitions:
     - id
     type: object
   dto.GetAppDetailInput:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
     type: object
   dto.GetAppDetailOutput:
     type: object
@@ -492,6 +514,10 @@ definitions:
         type: string
       total_node:
         type: integer
+    type: object
+  dto.UpdateAppInput:
+    type: object
+  dto.UpdateAppOutput:
     type: object
   dto.UpdateGrpcServiceInput:
     properties:
@@ -772,12 +798,45 @@ paths:
       summary: 管理员登出
       tags:
       - 管理员接口
+  /app/add:
+    post:
+      consumes:
+      - application/json
+      description: 获取租户详细信息
+      operationId: /app/add
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddAppInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AddAppOutput'
+              type: object
+      summary: 获取租户详细信息
+      tags:
+      - 租户接口
   /app/detail:
     get:
       consumes:
       - application/json
       description: 获取租户详细信息
       operationId: /app/detail
+      parameters:
+      - in: query
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -826,6 +885,34 @@ paths:
                   $ref: '#/definitions/dto.GetAppListOutput'
               type: object
       summary: 获取租户列表
+      tags:
+      - 租户接口
+  /app/update:
+    post:
+      consumes:
+      - application/json
+      description: 删除租户
+      operationId: /app/update
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteAppInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.DeleteAppOutput'
+              type: object
+      summary: 删除租户
       tags:
       - 租户接口
   /public/get/avatar:

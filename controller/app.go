@@ -15,8 +15,9 @@ type AppController struct {
 func (a *AppController) RouterRegister(group *gin.RouterGroup) {
 	group.GET("/list", a.GetAppList)
 	group.GET("/add", a.AddApp)
-	group.GET("/update", a.GetAppDetail)
+	group.GET("/update", a.UpdateApp)
 	group.GET("/detail", a.GetAppDetail)
+	group.GET("/del", a.DeleteApp)
 }
 
 func (a *AppController) RouterGroupName() (name string) {
@@ -104,6 +105,22 @@ func (a *AppController) AddApp(c *gin.Context) {
 // @Router /app/update [post]
 func (a *AppController) UpdateApp(c *gin.Context) {
 	exec := &dto.UpdateAppInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	return
+}
+
+// DeleteApp godoc
+// @Summary 删除租户
+// @Description 删除租户
+// @Tags 租户接口
+// @ID /app/update
+// @Accept  json
+// @Produce  json
+// @Param body body dto.DeleteAppInput true "body"
+// @Success 200 {object} dto.Response{data=dto.DeleteAppOutput} "success"
+// @Router /app/update [post]
+func (a *AppController) DeleteApp(c *gin.Context) {
+	exec := &dto.DeleteAppInput{}
 	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }
