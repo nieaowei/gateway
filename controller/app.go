@@ -78,8 +78,8 @@ func (a *AppController) GetAppDetail(c *gin.Context) {
 }
 
 // AddApp godoc
-// @Summary 获取租户详细信息
-// @Description 获取租户详细信息
+// @Summary 增加租户
+// @Description 增加租户
 // @Tags 租户接口
 // @ID /app/add
 // @Accept  json
@@ -94,8 +94,8 @@ func (a *AppController) AddApp(c *gin.Context) {
 }
 
 // UpdateApp godoc
-// @Summary 获取租户详细信息
-// @Description 获取租户详细信息
+// @Summary 更新租户
+// @Description 更新租户
 // @Tags 租户接口
 // @ID /app/update
 // @Accept  json

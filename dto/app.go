@@ -5,6 +5,7 @@ import (
 	"gateway/lib"
 	"gateway/public"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type GetAppListInput struct {
@@ -92,22 +93,52 @@ type GetAppDetailInput struct {
 }
 
 type GetAppDetailOutput struct {
+	AppID string `json:"app_id"`
+	Name  string `json:"name"`
+	Qps   int64  `json:"qps"`
+	Qpd   int64  `json:"qpd"`
 }
 
 func (g *GetAppDetailInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
-	panic("implement me")
+	err = public.DefaultGetValidParams(c, g)
+	params = g
+	return
 }
 
 func (g *GetAppDetailInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
-	panic("implement me")
+	return func(c *gin.Context) (out interface{}, err error) {
+		var data interface{}
+		data, err = handle(c)
+		params := data.(*GetAppDetailInput)
+		db := lib.GetDefaultDB()
+
+		app := &dao.App{
+			Model: gorm.Model{
+				ID: params.ID,
+			},
+		}
+		getAppDetailOutput := &GetAppListOutput{}
+		err = app.FindOneScan(c, db, getAppDetailOutput)
+		return
+	}
 }
 
 func (g *GetAppDetailInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
-	panic("implement me")
+	return func(c *gin.Context) (out interface{}, err error) {
+		return handle(c)
+	}
 }
 
 func (g *GetAppDetailInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
-	panic("implement me")
+	return func(c *gin.Context) {
+		out, err := handle(c)
+		if err == nil {
+			ResponseSuccess(c, out)
+			return
+		}
+		ResponseError(c, 2002, err)
+		return
+	}
 }
 
 type AddAppInput struct {
@@ -138,7 +169,7 @@ func (a *AddAppInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 		app := &dao.App{
 			AppID:  params.AppID,
 			Name:   params.Name,
-			Secret: public.Md5(params.AppID),
+			Secret: public.Md5(params.AppID), //todo 修改加密方式 sha256 app_id + name
 			Qpd:    params.Qpd,
 			QPS:    params.Qps,
 		}
@@ -148,11 +179,21 @@ func (a *AddAppInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 }
 
 func (a *AddAppInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
-	panic("implement me")
+	return func(c *gin.Context) (out interface{}, err error) {
+		return handle(c)
+	}
 }
 
 func (a *AddAppInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
-	panic("implement me")
+	return func(c *gin.Context) {
+		out, err := handle(c)
+		if err == nil {
+			ResponseSuccess(c, out)
+			return
+		}
+		ResponseError(c, 2002, err)
+		return
+	}
 }
 
 type UpdateAppInput struct {
