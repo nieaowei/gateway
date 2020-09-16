@@ -14,10 +14,11 @@ type AppController struct {
 
 func (a *AppController) RouterRegister(group *gin.RouterGroup) {
 	group.GET("/list", a.GetAppList)
-	group.GET("/add", a.AddApp)
-	group.GET("/update", a.UpdateApp)
+	group.POST("/add", a.AddApp)
+	group.POST("/update", a.UpdateApp)
 	group.GET("/detail", a.GetAppDetail)
 	group.GET("/del", a.DeleteApp)
+	group.GET("/stat", a.GetAppStat)
 }
 
 func (a *AppController) RouterGroupName() (name string) {
@@ -113,14 +114,30 @@ func (a *AppController) UpdateApp(c *gin.Context) {
 // @Summary 删除租户
 // @Description 删除租户
 // @Tags 租户接口
-// @ID /app/update
+// @ID /app/del
 // @Accept  json
 // @Produce  json
 // @Param body body dto.DeleteAppInput true "body"
 // @Success 200 {object} dto.Response{data=dto.DeleteAppOutput} "success"
-// @Router /app/update [post]
+// @Router /app/del [get]
 func (a *AppController) DeleteApp(c *gin.Context) {
 	exec := &dto.DeleteAppInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
+	return
+}
+
+// GetAppStat godoc
+// @Summary 获取租户流量统计
+// @Description 获取租户流量统计
+// @Tags 租户接口
+// @ID /app/stat
+// @Accept  json
+// @Produce  json
+// @Param query query dto.GetAppStatInput true "query"
+// @Success 200 {object} dto.Response{data=dto.GetAppStatOutput} "success"
+// @Router /app/stat [get]
+func (a *AppController) GetAppStat(c *gin.Context) {
+	exec := &dto.GetAppStatInput{}
 	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 	return
 }

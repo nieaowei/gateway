@@ -188,9 +188,6 @@ func (p *UpdateGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalH
 					UpstreamMaxIDle:        params.UpstreamMaxIdle,
 				}
 				err = serviceLoadBalance.UpdateAllByServiceID(c, tx)
-				if err != nil {
-					return
-				}
 				return
 			})
 		return

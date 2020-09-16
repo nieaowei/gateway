@@ -73,3 +73,9 @@ func (p *App) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err err
 	err = ErrorHandleForDB(res)
 	return
 }
+
+func (a *App) UpdateAllById(c *gin.Context, db *gorm.DB) (err error) {
+	result := db.Save(a)
+	err = ErrorHandleForDB(result)
+	return
+}

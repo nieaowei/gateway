@@ -89,7 +89,7 @@ func (g *GetAppListInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Conte
 }
 
 type GetAppDetailInput struct {
-	ID uint `json:"id" form:"id" validate:"required"`
+	ID uint `json:"id" form:"id" validate:"required" example:"4"`
 }
 
 type GetAppDetailOutput struct {
@@ -117,8 +117,9 @@ func (g *GetAppDetailInput) ExecHandle(handle FunctionalHandle) FunctionalHandle
 				ID: params.ID,
 			},
 		}
-		getAppDetailOutput := &GetAppListOutput{}
+		getAppDetailOutput := &GetAppDetailOutput{}
 		err = app.FindOneScan(c, db, getAppDetailOutput)
+		out = getAppDetailOutput
 		return
 	}
 }
@@ -142,8 +143,8 @@ func (g *GetAppDetailInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Con
 }
 
 type AddAppInput struct {
-	AppID string `json:"app_id"`
-	Name  string `json:"name"`
+	AppID string `json:"app_id" validate:"required"`
+	Name  string `json:"name" validate:"required"`
 	Qps   int64  `json:"qps"`
 	Qpd   int64  `json:"qpd"`
 }
@@ -169,7 +170,7 @@ func (a *AddAppInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 		app := &dao.App{
 			AppID:  params.AppID,
 			Name:   params.Name,
-			Secret: public.Md5(params.AppID), //todo 修改加密方式 sha256 app_id + name
+			Secret: public.Md5(params.AppID),
 			Qpd:    params.Qpd,
 			QPS:    params.Qps,
 		}
@@ -197,45 +198,151 @@ func (a *AddAppInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) 
 }
 
 type UpdateAppInput struct {
+	ID    uint   `json:"id" validate:"required"`
+	AppID string `json:"app_id" validate:"required"`
+	Name  string `json:"name" validate:"required"`
+	Qps   int64  `json:"qps"`
+	Qpd   int64  `json:"qpd"`
 }
 
 type UpdateAppOutput struct {
 }
 
 func (u *UpdateAppInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
-	panic("implement me")
+	err = public.DefaultGetValidParams(c, u)
+	params = u
+	return
 }
 
 func (u *UpdateAppInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
-	panic("implement me")
+	return func(c *gin.Context) (out interface{}, err error) {
+		data, err := handle(c)
+		if err != nil {
+			return
+		}
+		params := data.(*UpdateAppInput)
+		db := lib.GetDefaultDB()
+		app := &dao.App{
+			Model: gorm.Model{
+				ID: params.ID,
+			},
+			AppID:  params.AppID,
+			Name:   params.Name,
+			Secret: public.Md5(params.AppID),
+			Qpd:    params.Qpd,
+			QPS:    params.Qps,
+		}
+		err = app.UpdateAllById(c, db)
+		return
+	}
 }
 
 func (u *UpdateAppInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
-	panic("implement me")
+	return func(c *gin.Context) (out interface{}, err error) {
+		return handle(c)
+	}
 }
 
 func (u *UpdateAppInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
-	panic("implement me")
+	return func(c *gin.Context) {
+		data, err := handle(c)
+		if err == nil {
+			ResponseSuccess(c, data)
+			return
+		}
+		ResponseError(c, 2002, err)
+		return
+	}
 }
 
 type DeleteAppInput struct {
+	ID uint `json:"id" form:"id" validate:"required"`
 }
 
 type DeleteAppOutput struct {
 }
 
 func (d *DeleteAppInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
-	panic("implement me")
+	err = public.DefaultGetValidParams(c, d)
+	params = d
+	return
 }
 
 func (d *DeleteAppInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
-	panic("implement me")
+	return func(c *gin.Context) (out interface{}, err error) {
+		data, err := handle(c)
+		if err != nil {
+			return
+		}
+		db := lib.GetDefaultDB()
+		params := data.(*DeleteAppInput)
+		app := &dao.App{
+			Model: gorm.Model{
+				ID: params.ID,
+			},
+		}
+		err = app.DeleteByID(c, db)
+		return
+	}
 }
 
 func (d *DeleteAppInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
-	panic("implement me")
+	return func(c *gin.Context) (out interface{}, err error) {
+		return handle(c)
+	}
 }
 
 func (d *DeleteAppInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
-	panic("implement me")
+	return func(c *gin.Context) {
+		data, err := handle(c)
+		if err == nil {
+			ResponseSuccess(c, data)
+			return
+		}
+		ResponseError(c, 2002, err)
+		return
+	}
+}
+
+type GetAppStatInput struct {
+	ID int `json:"id" form:"id" example:"3" validate:"required"`
+}
+
+type GetAppStatOutput struct {
+	TodayList     []int `json:"today_list"`
+	YesterdayList []int `json:"yesterday_list"`
+}
+
+func (g *GetAppStatInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
+	err = public.DefaultGetValidParams(c, g)
+	params = g
+	return
+}
+
+func (g *GetAppStatInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
+	return func(c *gin.Context) (out interface{}, err error) {
+		data := &GetAppStatOutput{}
+		data.TodayList = append(data.TodayList, []int{1, 32, 54, 212, 432, 453, 123, 312}...)
+		data.YesterdayList = append(data.YesterdayList, []int{32, 3, 23, 43, 43, 123, 121, 44}...)
+		out = data
+		return
+	}
+}
+
+func (g *GetAppStatInput) OutputHandle(handle FunctionalHandle) FunctionalHandle {
+	return func(c *gin.Context) (out interface{}, err error) {
+		return handle(c)
+	}
+}
+
+func (g *GetAppStatInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		data, err := handle(c)
+		if err == nil {
+			ResponseSuccess(c, data)
+			return
+		}
+		ResponseError(c, 1001, err)
+		return
+	}
 }

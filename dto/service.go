@@ -329,7 +329,7 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 	return func(c *gin.Context) (out interface{}, err error) {
 		data, err := handle(c)
 		if err != nil {
-			return nil, err
+			return
 		}
 		o, ok := data.(*dao.ServiceDetail)
 		if ok {

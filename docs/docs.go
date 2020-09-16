@@ -106,7 +106,7 @@ var doc = `{
         },
         "/app/add": {
             "post": {
-                "description": "获取租户详细信息",
+                "description": "增加租户",
                 "consumes": [
                     "application/json"
                 ],
@@ -116,7 +116,7 @@ var doc = `{
                 "tags": [
                     "租户接口"
                 ],
-                "summary": "获取租户详细信息",
+                "summary": "增加租户",
                 "operationId": "/app/add",
                 "parameters": [
                     {
@@ -151,6 +151,53 @@ var doc = `{
                 }
             }
         },
+        "/app/del": {
+            "get": {
+                "description": "删除租户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "租户接口"
+                ],
+                "summary": "删除租户",
+                "operationId": "/app/del",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeleteAppInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.DeleteAppOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/app/detail": {
             "get": {
                 "description": "获取租户详细信息",
@@ -168,6 +215,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
+                        "example": 4,
                         "name": "id",
                         "in": "query",
                         "required": true
@@ -252,9 +300,9 @@ var doc = `{
                 }
             }
         },
-        "/app/update": {
-            "post": {
-                "description": "删除租户",
+        "/app/stat": {
+            "get": {
+                "description": "获取租户流量统计",
                 "consumes": [
                     "application/json"
                 ],
@@ -264,7 +312,52 @@ var doc = `{
                 "tags": [
                     "租户接口"
                 ],
-                "summary": "删除租户",
+                "summary": "获取租户流量统计",
+                "operationId": "/app/stat",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 3,
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAppStatOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/app/update": {
+            "post": {
+                "description": "更新租户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "租户接口"
+                ],
+                "summary": "更新租户",
                 "operationId": "/app/update",
                 "parameters": [
                     {
@@ -273,7 +366,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.DeleteAppInput"
+                            "$ref": "#/definitions/dto.UpdateAppInput"
                         }
                     }
                 ],
@@ -289,7 +382,7 @@ var doc = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.DeleteAppOutput"
+                                            "$ref": "#/definitions/dto.UpdateAppOutput"
                                         }
                                     }
                                 }
@@ -808,6 +901,10 @@ var doc = `{
     "definitions": {
         "dto.AddAppInput": {
             "type": "object",
+            "required": [
+                "app_id",
+                "name"
+            ],
             "properties": {
                 "app_id": {
                     "type": "string"
@@ -1142,7 +1239,15 @@ var doc = `{
             }
         },
         "dto.DeleteAppInput": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
         },
         "dto.DeleteAppOutput": {
             "type": "object"
@@ -1166,12 +1271,27 @@ var doc = `{
             ],
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 4
                 }
             }
         },
         "dto.GetAppDetailOutput": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "app_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "qpd": {
+                    "type": "integer"
+                },
+                "qps": {
+                    "type": "integer"
+                }
+            }
         },
         "dto.GetAppListInput": {
             "type": "object",
@@ -1204,6 +1324,35 @@ var doc = `{
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "dto.GetAppStatInput": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 3
+                }
+            }
+        },
+        "dto.GetAppStatOutput": {
+            "type": "object",
+            "properties": {
+                "today_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "yesterday_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -1490,7 +1639,29 @@ var doc = `{
             }
         },
         "dto.UpdateAppInput": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "app_id",
+                "id",
+                "name"
+            ],
+            "properties": {
+                "app_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "qpd": {
+                    "type": "integer"
+                },
+                "qps": {
+                    "type": "integer"
+                }
+            }
         },
         "dto.UpdateAppOutput": {
             "type": "object"
