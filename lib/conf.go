@@ -83,10 +83,36 @@ type RedisConf struct {
 	DownGrade bool     `mapstructure:"down_grade"`
 }
 
+type ProxyConf struct {
+	Base struct {
+		DebugMode    string `mapstructure:"debug_mode"`
+		TimeLocation string `mapstructure:"time_location"`
+		StaticPath   string `mapstructure:"static_path"`
+		Domain       string `mapstructure:"domain"`
+	} `mapstructure:"base"`
+	Http struct {
+		Addr           string `mapstructure:"addr"`
+		ReadTimeout    int    `mapstructure:"read_timeout"`
+		WriteTimeout   int    `mapstructure:"write_timeout"`
+		MaxHeaderBytes int    `mapstructure:"max_header_bytes"`
+	} `mapstructure:"http"`
+	Https struct {
+		Addr           string `mapstructure:"addr"`
+		ReadTimeout    int    `mapstructure:"read_timeout"`
+		WriteTimeout   int    `mapstructure:"write_timeout"`
+		MaxHeaderBytes int    `mapstructure:"max_header_bytes"`
+	} `mapstructure:"https"`
+}
+
+func (p *ProxyConf) ConfName() string {
+	return "proxy"
+}
+
 //全局变量
 var ConfBase *BaseConf
 var ConfRedis *RedisMapConf
 var ConfMysql *MysqlConf
+var ConfProxy *ProxyConf
 
 var ViperConfMap map[string]*viper.Viper = map[string]*viper.Viper{}
 
@@ -122,7 +148,7 @@ func InitRedisConf(path string) {
 	conf := &RedisMapConf{}
 	err := InitConf(path, conf)
 	if err != nil {
-		panic("init conf base")
+		panic("init conf redis")
 	}
 	ConfRedis = conf
 	return
@@ -132,9 +158,19 @@ func InitMysqlConf(path string) {
 	conf := &MysqlConf{}
 	err := InitConf(path, conf)
 	if err != nil {
-		panic("init conf base")
+		panic("init conf mysql")
 	}
 	ConfMysql = conf
+	return
+}
+
+func InitProxyConf(path string) {
+	conf := &ProxyConf{}
+	err := InitConf(path, conf)
+	if err != nil {
+		panic("init conf proxy " + err.Error())
+	}
+	ConfProxy = conf
 	return
 }
 
@@ -163,4 +199,11 @@ func GetDefaultConfBase() *BaseConf {
 		InitBaseConf("")
 	}
 	return ConfBase
+}
+
+func GetDefaultConfProxy() *ProxyConf {
+	if ConfProxy == nil {
+		InitProxyConf("")
+	}
+	return ConfProxy
 }

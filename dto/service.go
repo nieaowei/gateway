@@ -35,7 +35,7 @@ type GetServiceListOutput struct {
 
 func (p *GetServiceListInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
 	err = public.DefaultGetValidParams(c, p)
-	params = p
+	params = *p
 	return
 }
 
@@ -59,17 +59,17 @@ func (p *GetServiceListInput) OutputHandle(handle FunctionalHandle) FunctionalHa
 
 func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 	return func(c *gin.Context) (out interface{}, err error) {
-		params, err := handle(c)
+		data, err := handle(c)
 		if err != nil {
 			return
 		}
-		p = params.(*GetServiceListInput)
+		params := data.(GetServiceListInput)
 		serviceInfo := &dao.ServiceInfo{}
 		db := lib.GetDefaultDB()
 		serviceInfos, count, err := serviceInfo.PageListIdDesc(c, db, &dao.PageSize{
-			Size: p.PageSize,
-			No:   p.PageNo,
-			Info: p.Info,
+			Size: params.PageSize,
+			No:   params.PageNo,
+			Info: params.Info,
 		})
 		if err != nil {
 			return

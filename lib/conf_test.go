@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -79,5 +80,26 @@ func BenchmarkGetDefaultConfRedis(b *testing.B) {
 func BenchmarkGetDefaultConfMysql(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		GetDefaultConfMysql()
+	}
+}
+
+func TestGetDefaultConfProxy(t *testing.T) {
+	tests := []struct {
+		name string
+		want *ProxyConf
+	}{
+		// TODO: Add test cases.
+		{
+			name: "",
+			want: &ProxyConf{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := GetDefaultConfProxy(); !reflect.DeepEqual(got, tt.want) {
+				//t.Errorf("GetDefaultConfProxy() = %v, want %v", got, tt.want)
+				t.Log(got)
+			}
+		})
 	}
 }
