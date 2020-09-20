@@ -138,9 +138,10 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 
 type ServiceDetail struct {
 	*ServiceInfoExceptModel
-	*ServiceHTTPRuleExceptModel
-	*ServiceGrpcRuleExceptModel
-	*ServiceTCPRuleExceptModel
+	Rule interface{}
+	//*ServiceHTTPRuleExceptModel
+	//*ServiceGrpcRuleExceptModel
+	//*ServiceTCPRuleExceptModel
 	*ServiceLoadBalanceExceptModel
 	*ServiceAccessControlExceptModel
 }
@@ -164,7 +165,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 			if err != nil {
 				return
 			}
-			out.ServiceHTTPRuleExceptModel = httpOut
+			out.Rule = httpOut
 			break
 		}
 	case LoadType_TCP:
@@ -177,7 +178,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 			if err != nil {
 				return
 			}
-			out.ServiceTCPRuleExceptModel = tcpOut
+			out.Rule = tcpOut
 
 			break
 		}
@@ -192,7 +193,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 			if err != nil {
 				return
 			}
-			out.ServiceGrpcRuleExceptModel = grpcOut
+			out.Rule = grpcOut
 
 			break
 		}
