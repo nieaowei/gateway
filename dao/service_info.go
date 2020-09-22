@@ -140,7 +140,7 @@ type ServiceDetail struct {
 	*ServiceInfoExceptModel
 	Rule interface{}
 	//*ServiceHTTPRuleExceptModel
-	//*ServiceGrpcRuleExceptModel
+	//*ServiceGRPCRuleExceptModel
 	//*ServiceTCPRuleExceptModel
 	*ServiceLoadBalanceExceptModel
 	*ServiceAccessControlExceptModel
@@ -187,7 +187,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 			grpcRule := &ServiceGrpcRule{
 				ServiceID: p.ID,
 			}
-			grpcOut := &ServiceGrpcRuleExceptModel{}
+			grpcOut := &ServiceGRPCRuleExceptModel{}
 
 			err = grpcRule.FindOneScan(c, db, grpcOut)
 			if err != nil {

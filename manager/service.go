@@ -25,7 +25,7 @@ type HTTPService struct {
 
 type GRPCService struct {
 	dao.ServiceInfoExceptModel
-	dao.ServiceGrpcRuleExceptModel
+	dao.ServiceGRPCRuleExceptModel
 	dao.ServiceLoadBalanceExceptModel
 	dao.ServiceAccessControlExceptModel
 }
@@ -115,13 +115,13 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 					}
 					m.TCPServiceList = append(m.TCPServiceList, service)
 				}
-			case *dao.ServiceGrpcRuleExceptModel:
+			case *dao.ServiceGRPCRuleExceptModel:
 				{
 					service := GRPCService{
 						ServiceInfoExceptModel:          *serviceDetail.ServiceInfoExceptModel,
 						ServiceLoadBalanceExceptModel:   *serviceDetail.ServiceLoadBalanceExceptModel,
 						ServiceAccessControlExceptModel: *serviceDetail.ServiceAccessControlExceptModel,
-						ServiceGrpcRuleExceptModel:      *item,
+						ServiceGRPCRuleExceptModel:      *item,
 					}
 					m.GRPCServiceList = append(m.GRPCServiceList, service)
 				}

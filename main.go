@@ -4,6 +4,9 @@ import (
 	"flag"
 	_ "gateway/docs"
 	"gateway/lib"
+	proxy_gprc "gateway/proxy/grpc"
+	proxy_http "gateway/proxy/http"
+	proxy_tcp "gateway/proxy/tcp"
 	"gateway/router"
 	"os"
 	"os/signal"
@@ -59,25 +62,49 @@ func main() {
 	//defer lib.Destroy()
 	conf := flag.String("conf", "dev", "dev or pro")
 	swag := flag.Bool("swag", false, "true and false")
+	endpoint := flag.String("endpoint", "dashboard", "dashboard,http,tcp and grpc")
 	flag.Parse()
+
 	if *conf == "pro" {
 		lib.InitBaseConf("./conf/pro")
 		lib.InitMysqlConf("./conf/pro")
 		lib.InitRedisConf("./conf/pro")
+		lib.InitProxyConf("./conf/pro")
 		lib.InitDBPool()
 	} else {
 		lib.InitBaseConf("./conf/dev")
 		lib.InitMysqlConf("./conf/dev")
 		lib.InitRedisConf("./conf/dev")
+		lib.InitProxyConf("./conf/dev")
+		lib.InitRedis()
 		lib.InitDBPool()
 	}
 	//db,_:=lib.GetDefaultDB()
 	//db.Logger.LogMode(logger.Info)
-	router.HttpServerRun(*swag)
-
+	switch *endpoint {
+	case "dashboard":
+		{
+			router.HttpServerRun(*swag)
+			defer router.HttpServerStop()
+		}
+	case "http":
+		{
+			proxy_http.HttpServerRun()
+			defer proxy_http.HttpServerStop()
+		}
+	case "tcp":
+		{
+			proxy_tcp.TcpServerRun()
+			defer proxy_tcp.TcpServerStop()
+		}
+	case "grpc":
+		{
+			proxy_gprc.GrpcServerRun()
+			defer proxy_gprc.GrpcServerStop()
+		}
+	}
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGKILL, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	router.HttpServerStop()
 }

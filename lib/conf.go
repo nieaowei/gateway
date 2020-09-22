@@ -120,7 +120,7 @@ func InitConf(path string, config Config) (err error) {
 	v := viper.New()
 	v.SetConfigName(config.ConfName())
 	if path == "" {
-		v.AddConfigPath("../conf/pro")
+		v.AddConfigPath("./conf/pro")
 	}
 	v.AddConfigPath(path)
 	err = v.ReadInConfig()
@@ -148,7 +148,7 @@ func InitRedisConf(path string) {
 	conf := &RedisMapConf{}
 	err := InitConf(path, conf)
 	if err != nil {
-		panic("init conf redis")
+		panic("init conf redis" + err.Error())
 	}
 	ConfRedis = conf
 	return

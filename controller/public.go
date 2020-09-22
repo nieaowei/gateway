@@ -22,13 +22,15 @@ func (p *PublicController) RouterGroupName() (name string) {
 
 func (p *PublicController) Middlewares() (middlewares []gin.HandlerFunc) {
 	conf := lib.GetDefaultConfRedis()
-	store, err := sessions.NewRedisStore(
-		conf.MaxIdle,
-		"tcp",
-		conf.ProxyList[0],
-		"",
-		[]byte("secret"),
-	)
+	//store, err := sessions.NewRedisStore(
+	//	conf.MaxIdle,
+	//	"tcp",
+	//	conf.ProxyList[0],
+	//	"1234",
+	//	[]byte("secret"),
+	//)
+	store, err := lib.NewRedisStoreClusterCli(lib.NewRedisClusterCli(conf), []byte("secret"))
+
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
