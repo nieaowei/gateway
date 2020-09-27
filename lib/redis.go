@@ -9,6 +9,13 @@ var (
 	defaultRedisClu *redis.ClusterClient
 )
 
+type RedisService interface {
+	ServiceName() string
+	Start()
+	Stop()
+	Exec()
+}
+
 func InitRedis() {
 	defaultRedisClu = NewRedisClusterCli(GetDefaultConfRedis())
 }
