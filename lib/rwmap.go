@@ -36,3 +36,26 @@ func (m *RWMap) Get(key interface{}) (interface{}, bool) {
 	m.mu.RUnlock()
 	return data, ok
 }
+
+type GetHandler func(name interface{}) (interface{}, bool)
+type SetHandler func(name, value interface{})
+
+type ThreadMap struct {
+	get func(name interface{}) (interface{}, bool)
+	set func(name, value interface{})
+}
+
+func NewThreadMap(set SetHandler, get GetHandler) *ThreadMap {
+	return &ThreadMap{
+		get: get,
+		set: set,
+	}
+}
+
+func (t *ThreadMap) Set(key, val interface{}) {
+	t.set(key, val)
+}
+
+func (t *ThreadMap) Get(key interface{}) (interface{}, bool) {
+	return t.get(key)
+}
