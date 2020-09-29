@@ -1,40 +1,69 @@
 package lib
 
-import "sync"
+import (
+	"hash/crc32"
+	"sync"
+)
 
 type SafeMap interface {
 	Set(key, val interface{})
 	Get(key interface{}) (interface{}, bool)
-	Mutex() sync.Locker
+	Mutexs() []sync.RWMutex
+	GetByCondition(f func(key, val interface{}) bool) (interface{}, bool)
 }
 
-type RWMap struct {
-	data map[interface{}]interface{}
-	mu   *sync.RWMutex
+type ConcurrentHashMap struct {
+	data       []map[interface{}]interface{}
+	mus        []sync.RWMutex
+	size       uint32
+	hashFormat func(key interface{}) []byte
 }
 
-func NewRWMap() *RWMap {
-	return &RWMap{
-		data: map[interface{}]interface{}{},
-		mu:   &sync.RWMutex{},
+func NewConcurrentHashMap(bufSize uint32, hashFormat func(key interface{}) []byte) *ConcurrentHashMap {
+	d := make([]map[interface{}]interface{}, bufSize)
+
+	m := make([]sync.RWMutex, bufSize)
+	for i := uint32(0); i < bufSize; i++ {
+		d[i] = make(map[interface{}]interface{})
+		m[i] = sync.RWMutex{}
+	}
+
+	return &ConcurrentHashMap{
+		size:       bufSize,
+		data:       d,
+		mus:        m,
+		hashFormat: hashFormat,
 	}
 }
 
-func (m *RWMap) Set(key, val interface{}) {
-	m.mu.Lock()
-	m.data[key] = val
-	m.mu.Unlock()
+func (m *ConcurrentHashMap) Set(key, val interface{}) {
+	hashVal := crc32.ChecksumIEEE(m.hashFormat(key)) % m.size
+	m.mus[hashVal].Lock()
+	m.data[hashVal][key] = val
+	m.mus[hashVal].Unlock()
 }
 
-func (m *RWMap) Mutex() sync.Locker {
-	return m.mu
+func (m *ConcurrentHashMap) Mutexs() []sync.RWMutex {
+	return m.mus
 }
 
-func (m *RWMap) Get(key interface{}) (interface{}, bool) {
-	m.mu.RLock()
-	data, ok := m.data[key]
-	m.mu.RUnlock()
+func (m *ConcurrentHashMap) Get(key interface{}) (interface{}, bool) {
+	hashVal := crc32.ChecksumIEEE(m.hashFormat(key)) % m.size
+	m.mus[hashVal].RLock()
+	data, ok := m.data[hashVal][key]
+	m.mus[hashVal].RUnlock()
 	return data, ok
+}
+
+func (m *ConcurrentHashMap) GetByCondition(f func(key, value interface{}) bool) (interface{}, bool) {
+	for i := uint32(0); i < m.size; i++ {
+		for k, v := range m.data[i] {
+			if f(k, v) == true {
+				return v, true
+			}
+		}
+	}
+	return nil, false
 }
 
 type GetHandler func(name interface{}) (interface{}, bool)
