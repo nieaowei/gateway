@@ -1,6 +1,6 @@
 # This is base config
 [base]
-    debug_mode="debug"
+    debug_mode="debug" # debug 或 release
     time_location="Asia/Chongqing"
     static_path="/Users/nieaowei/Desktop/golang-getway/gateway/static"
     domain="127.0.0.1" # 外网ip或域名

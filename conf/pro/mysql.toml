@@ -1,4 +1,6 @@
 # this is mysql config
+[base]
+    mode = "release"
 [list]
     [list.default]
         driver_name = "mysql"

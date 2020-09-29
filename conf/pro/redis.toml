@@ -1,7 +1,14 @@
 # this is redis config file
 [list]
     [list.default]
-        proxy_list = ["47.106.251.178:6379"]
+        proxy_list = [
+            "127.0.0.1:9000",
+            "127.0.0.1:9001",
+            "127.0.0.1:9002",
+            "127.0.0.1:9003",
+            "127.0.0.1:9004",
+            "127.0.0.1:9005",
+        ]
         max_active = 100
         max_idle = 100
         down_grade = false

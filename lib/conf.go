@@ -53,6 +53,9 @@ type LogConfig struct {
 }
 
 type MysqlConf struct {
+	Base struct {
+		Mode string `mapstructure:"mode"`
+	} `mapstructure:"base"`
 	List map[string]*MySQLConf `mapstructure:"list"`
 }
 
@@ -185,6 +188,13 @@ func GetDefaultConfMysql() *MySQLConf {
 		InitMysqlConf("")
 	}
 	return ConfMysql.List["default"]
+}
+
+func GetDefaultBaseConfMysql() *MysqlConf {
+	if ConfMysql == nil {
+		InitMysqlConf("")
+	}
+	return ConfMysql
 }
 
 func GetDefaultConfRedis() *RedisConf {

@@ -15,10 +15,14 @@ func InitDBPool() {
 	//普通的db方式G
 	var err error
 	conf := GetDefaultConfMysql()
+	defualtLogLevel := logger.Error
+	if GetDefaultBaseConfMysql().Base.Mode == "debug" {
+		defualtLogLevel = logger.Info
+	}
 	DefaultDB, err = gorm.Open(mysql.Open(conf.DataSourceName), &gorm.Config{
 		Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
 			SlowThreshold: 100 * time.Millisecond,
-			LogLevel:      logger.Info,
+			LogLevel:      defualtLogLevel,
 			Colorful:      true,
 		}),
 	})
