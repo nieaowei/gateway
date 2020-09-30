@@ -8,7 +8,7 @@ import (
 )
 
 type GetAvatarInput struct {
-	Username string `json:"username" form:"username" validate:"required"`
+	Username string `json:"username" form:"username" validate:"required" example:"admin"`
 }
 
 type GetAvatarOutput struct {

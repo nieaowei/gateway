@@ -9,7 +9,7 @@ import (
 )
 
 type GetAppListInput struct {
-	Info     string `json:"info" form:"info"`
+	Info     string `json:"info" form:"info" example:"http"`
 	PageNo   int    `json:"page_no" form:"page_no" example:"2" validate:"required,min=1"`
 	PageSize int    `json:"page_size" form:"page_size" example:"10" validate:"required,min=1"`
 }
@@ -143,8 +143,8 @@ func (g *GetAppDetailInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Con
 }
 
 type AddAppInput struct {
-	AppID string `json:"app_id" validate:"required"`
-	Name  string `json:"name" validate:"required"`
+	AppID string `json:"app_id" validate:"required" example:"app_1234567"`
+	Name  string `json:"name" validate:"required" example:"sevice_1234567"`
 	Qps   int64  `json:"qps"`
 	Qpd   int64  `json:"qpd"`
 }
@@ -199,8 +199,8 @@ func (a *AddAppInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Context) 
 
 type UpdateAppInput struct {
 	ID    uint   `json:"id" validate:"required"`
-	AppID string `json:"app_id" validate:"required"`
-	Name  string `json:"name" validate:"required"`
+	AppID string `json:"app_id" validate:"required" example:"app_127"`
+	Name  string `json:"name" validate:"required" example:"sevice_1567"`
 	Qps   int64  `json:"qps"`
 	Qpd   int64  `json:"qpd"`
 }

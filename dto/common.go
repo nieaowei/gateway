@@ -25,12 +25,12 @@ type Functional interface {
 }
 
 type EditServiceInfo struct {
-	ServiceName string `json:"service_name" example:"service_test" validate:"required,min=6,max=255"`
-	ServiceDesc string `json:"service_desc" example:"service_test" validate:"required,max=255"`
+	ServiceName string `json:"service_name" example:"service_test" validate:"required,min=6,max=255" example:"servicename_1234567"`
+	ServiceDesc string `json:"service_desc" example:"service_test" validate:"required,max=255" example:"sevicedesc_1234567"`
 }
 
 type EditServiceAccessControlRule struct {
-	OpenAuth          int8   `json:"open_auth" validate:"oneof=0 1"`
+	OpenAuth          int8   `json:"open_auth" validate:"oneof=0 1" example:"0"`
 	BlackList         string `json:"black_list"  example:"192.168.1.0\n122.12.12.3" validate:"min=0,max=1000"`
 	WhiteList         string `json:"white_list"  example:"172.17.12.1" validate:"min=0,max=1000"`
 	WhiteHostName     string `json:"white_host_name" example:"nekilc.com" validate:"min=0,max=1000"`
