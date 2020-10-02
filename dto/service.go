@@ -4,11 +4,13 @@ import (
 	"errors"
 	"gateway/dao"
 	"gateway/lib"
+	"gateway/proxy/manager"
 	"gateway/public"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type GetServiceListInput struct {
@@ -23,8 +25,8 @@ type ServiceListItem struct {
 	ServiceDesc string `json:"service_desc" form:"service_desc"`
 	LoadType    string `json:"load_type" form:"load_type"`
 	Address     string `json:"address" form:"Address"`
-	Qps         uint   `json:"qps" form:"qps"`
-	Qpd         uint   `json:"qpd" form:"qpd"`
+	Qps         int64  `json:"qps" form:"qps"`
+	Qpd         int64  `json:"qpd" form:"qpd"`
 	TotalNode   uint   `json:"total_node" form:"total_node"`
 }
 
@@ -169,14 +171,17 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			if err != nil {
 				return nil, err
 			}
+			counter, _ := manager.Default().GetRedisService(manager.ServicePrefix + info.ServiceName)
+			impl := counter.(*manager.RedisFlowCountService)
+			qpd, _ := impl.GetDayData(time.Now())
 			item := ServiceListItem{
 				ID:          info.ID,
 				ServiceName: info.ServiceName,
 				ServiceDesc: info.ServiceDesc,
 				LoadType:    loadType,
 				Address:     serviceAddr,
-				Qps:         0,
-				Qpd:         0,
+				Qps:         impl.QPS,
+				Qpd:         qpd,
 				TotalNode:   uint(len(strings.Split(res.IpList, "\n"))),
 			}
 			outE.List = append(outE.List, item)
