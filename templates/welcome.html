@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.title}}</title>
+</head>
+<body>
+<div style="display: flex;flex-direction: column;justify-content: center;align-items: center;height: max-content;">
+    <h1 style="font-size: 3.2em;border-bottom: black solid 5px;">{{.service_name}}</h1>
+    <h1 style="font-size: 1.5em;">{{.welcome_msg}}</h1>
+    <div style="border: black solid 2px;padding: 8px;min-width: 50%;display: flex;flex-direction: column;align-items: center;">
+        {{range $k,$v := .items }}
+            <span style="font-size: 1.6em;">
+                {{$v.name}}：<a href="{{$v.link}}">{{$v.tag}}</a>
+            </span>
+        {{end}}
+    </div>
+    <div style="position: fixed;bottom: 3em;border-top: black solid;width: 100%; display: flex;flex-direction: column;align-items: center;">
+        <span style="font-size: 2em;padding-top: 1.5em;">Power by <a href="//www.nekilc.com">Nekilc</a></span>
+    </div>
+</div>
+
+</body>
+</html>

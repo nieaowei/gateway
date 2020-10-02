@@ -12,7 +12,22 @@ import (
 func InitRouter(swag bool) *gin.Engine {
 
 	router := gin.Default()
+	router.LoadHTMLGlob("./templates/*")
 	//router.Use(middlewares...)
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "welcome.html", gin.H{
+			"title":        "微服务仪表盘API接口",
+			"service_name": "Dashboard Service",
+			"welcome_msg":  "The service is started.",
+			"items": []gin.H{
+				{
+					"name": "API Document",
+					"link": "swagger/index.html",
+					"tag":  "Swagger",
+				},
+			},
+		})
+	})
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
