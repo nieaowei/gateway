@@ -74,10 +74,13 @@ func IpListAndWeightListNumValid(handle FunctionalHandle) FunctionalHandle {
 		if err != nil {
 			return
 		}
-		ips := reflect.ValueOf(data).Elem().FieldByName("IpList").String()
-		weight := reflect.ValueOf(data).Elem().FieldByName("WeightList").String()
-		if len(strings.Split(ips, "\n")) != len(strings.Split(weight, "\n")) {
-			return nil, errors.New("IP列表数量和权重数量不匹配")
+		e := reflect.ValueOf(data).Elem()
+		if e.FieldByName("RoundType").Int() == dao.RoundType_WeightRound {
+			ips := e.FieldByName("IpList").String()
+			weight := e.FieldByName("WeightList").String()
+			if len(strings.Split(ips, "\n")) != len(strings.Split(weight, "\n")) {
+				return nil, errors.New("IP列表数量和权重数量不匹配")
+			}
 		}
 		return data, nil
 	}

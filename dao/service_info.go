@@ -146,6 +146,39 @@ type ServiceDetail struct {
 	*ServiceAccessControlExceptModel
 }
 
+func (s *ServiceDetail) GetIpList() []string {
+	hosts := s.ServiceLoadBalanceExceptModel.GetIPListByModel()
+	newHosts := []string{}
+	switch item := s.Rule.(type) {
+	case *ServiceHTTPRuleExceptModel:
+		for _, host := range hosts {
+			if host == "" {
+				continue
+			}
+			if item.NeedHTTPs == 1 {
+				newHosts = append(newHosts, "https://"+host)
+				continue
+			}
+			newHosts = append(newHosts, "http://"+host)
+		}
+	case *ServiceTCPRuleExceptModel:
+		for _, host := range hosts {
+			if host == "" {
+				continue
+			}
+			newHosts = append(newHosts, "tcp://"+host)
+		}
+	case *ServiceGRPCRuleExceptModel:
+		for _, host := range hosts {
+			if host == "" {
+				continue
+			}
+			newHosts = append(newHosts, "grpc://"+host)
+		}
+	}
+	return newHosts
+}
+
 func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *ServiceDetail, err error) {
 
 	out = &ServiceDetail{}

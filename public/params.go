@@ -5,7 +5,18 @@ import (
 	"github.com/go-playground/universal-translator"
 	"github.com/pkg/errors"
 	"gopkg.in/go-playground/validator.v9"
+	"regexp"
 	"strings"
+)
+
+const (
+	Regexp_IP     = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))"
+	Regexp_weight = "\\d+"
+)
+
+var (
+	IpRegexp, _     = regexp.Compile(Regexp_IP)
+	WeightRegexp, _ = regexp.Compile(Regexp_weight)
 )
 
 func DefaultGetValidParams(c *gin.Context, params interface{}) error {

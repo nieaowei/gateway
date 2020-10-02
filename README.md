@@ -12,3 +12,4 @@
 - [ ] Fix data validation(ex. MetaDataHeader.).
 - [ ] Complete the interfaces related to tenant management.- 2020.8.24
 - [x] Refactor the GetServiceStatistical and add GetServiceAmount.
+- [ ] Integrated log.

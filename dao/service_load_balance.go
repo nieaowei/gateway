@@ -55,7 +55,19 @@ func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
 }
 
 func (p *ServiceLoadBalanceExceptModel) GetIPListByModel() (list []string) {
+	if p.RoundType == RoundType_WeightRound {
+		return p.getIPListWeightByModel()
+	}
 	return Split(p.IPList, "\n")
+}
+
+func (p *ServiceLoadBalanceExceptModel) getIPListWeightByModel() (list []string) {
+	hosts := Split(p.IPList, "\n")
+	weights := Split(p.WeightList, "\n")
+	for index, weight := range weights {
+		hosts[index] = hosts[index] + " " + weight
+	}
+	return hosts
 }
 
 func (p *ServiceLoadBalance) UpdateAllByServiceID(c *gin.Context, db *gorm.DB) (err error) {

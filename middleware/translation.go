@@ -130,16 +130,17 @@ func TranslationMiddleware() gin.HandlerFunc {
 				if fl.Field().String() == "" {
 					return true
 				}
-				data := strings.Split(fl.Field().String(), "\n")
+				data := strings.Split(strings.TrimPrefix(fl.Field().String(), "\n"), "\n")
 				for _, datum := range data {
 					if datum == "" {
 						continue
 					}
-					matched, _ := regexp.Match("^\\S+:\\d+$", []byte(datum))
+					matched := public.IpRegexp.Match([]byte(datum)) // regexp.Match("^\\S+:\\d+$", []byte(datum))
 					if !matched {
 						return false
 					}
 				}
+				fl.Field().SetString(strings.Trim(fl.Field().String(), "\n"))
 				return true
 			})
 
@@ -161,11 +162,12 @@ func TranslationMiddleware() gin.HandlerFunc {
 					if datum == "" {
 						continue
 					}
-					matched, _ := regexp.Match("^\\d+$", []byte(datum))
+					matched := public.WeightRegexp.Match([]byte(datum)) //regexp.Match("^\\d+$", []byte(datum))
 					if !matched {
 						return false
 					}
 				}
+				fl.Field().SetString(strings.Trim(fl.Field().String(), "\n"))
 				return true
 			})
 
