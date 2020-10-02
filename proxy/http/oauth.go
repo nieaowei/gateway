@@ -1,4 +1,4 @@
-package proxy
+package proxy_http
 
 import (
 	"gateway/middleware"

@@ -1,46 +1,42 @@
-package proxy
+package proxy_http
 
 import (
-	"context"
-	"gateway/lib"
 	"gateway/router"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
-	"time"
 )
-
-var (
-	HttpServer *http.Server
-)
-
-func HttpServerRun() {
-	gin.SetMode(lib.GetDefaultConfProxy().Base.DebugMode)
-
-}
-
-func HttpServerStop() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	err := HttpServer.Shutdown(ctx)
-	if err != nil {
-		log.Fatalf("[INFO] http proxy stop err:%v\n", err)
-	}
-	log.Printf("[INFO] http proxy %v stopped \n", lib.GetDefaultConfProxy().Http.Addr)
-}
 
 func InitHttpProxyRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
-	route := gin.New()
+	route := gin.Default()
+	route.LoadHTMLGlob("./templates/*")
 	route.Use(middlewares...)
 	route.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
+	route.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "welcome.html", gin.H{
+			"title":        "HTTP/HTTPS代理服务",
+			"service_name": "Http/Https Proxy Service",
+			"welcome_msg":  "The service is started.",
+			"items": []gin.H{
+				{
+					"name": "API Document",
+					"link": "swagger/index.html",
+					"tag":  "Swagger",
+				},
+			},
+		})
+	})
 
 	router.Register(route, &OauthController{})
 
-	route.Use()
+	route.Use(
+		HTTPAccessModeMiddleware(),
+		HTTPFlowStatisticMiddleware(),
+		HTTPReverseProxyMiddleware(),
+	)
 
 	return route
 }

@@ -260,6 +260,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "http",
                         "name": "info",
                         "in": "query"
                     },
@@ -409,6 +410,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "admin",
                         "name": "username",
                         "in": "query",
                         "required": true
@@ -907,10 +909,12 @@ var doc = `{
             ],
             "properties": {
                 "app_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "app_1234567"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sevice_1234567"
                 },
                 "qpd": {
                     "type": "integer"
@@ -952,7 +956,8 @@ var doc = `{
                     "example": "add a 32"
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "port": {
                     "type": "integer",
@@ -1046,7 +1051,8 @@ var doc = `{
                     "example": 1
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "round_type": {
                     "type": "integer",
@@ -1131,7 +1137,8 @@ var doc = `{
                     "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "port": {
                     "type": "integer",
@@ -1301,7 +1308,8 @@ var doc = `{
             ],
             "properties": {
                 "info": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "http"
                 },
                 "page_no": {
                     "type": "integer",
@@ -1363,7 +1371,8 @@ var doc = `{
             ],
             "properties": {
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "admin"
                 }
             }
         },
@@ -1434,7 +1443,8 @@ var doc = `{
                     "example": 1
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "round_type": {
                     "type": "integer",
@@ -1647,13 +1657,15 @@ var doc = `{
             ],
             "properties": {
                 "app_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "app_127"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sevice_1567"
                 },
                 "qpd": {
                     "type": "integer"
@@ -1695,7 +1707,8 @@ var doc = `{
                     "example": "add a 32"
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "port": {
                     "type": "integer",
@@ -1792,7 +1805,8 @@ var doc = `{
                     "example": 1
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "round_type": {
                     "type": "integer",
@@ -1880,7 +1894,8 @@ var doc = `{
                     "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "port": {
                     "type": "integer",
@@ -2003,7 +2018,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "localhost:8880",
 	BasePath:    "/",
 	Schemes:     []string{},
-	Title:       "Swagger Example API",
+	Title:       "微服务网关接口文档",
 	Description: "This is a sample server celler server.",
 }
 

@@ -5,3 +5,4 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags v1.0 -o bin/gateway-linux .
 cp -r conf ./bin
 cp run.sh ./bin
 cp -r docs ./bin
+cp -r templates ./bin

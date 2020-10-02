@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "This is a sample server celler server.",
-        "title": "Swagger Example API",
+        "title": "微服务网关接口文档",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
@@ -245,6 +245,7 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "http",
                         "name": "info",
                         "in": "query"
                     },
@@ -394,6 +395,7 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "admin",
                         "name": "username",
                         "in": "query",
                         "required": true
@@ -892,10 +894,12 @@
             ],
             "properties": {
                 "app_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "app_1234567"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sevice_1234567"
                 },
                 "qpd": {
                     "type": "integer"
@@ -937,7 +941,8 @@
                     "example": "add a 32"
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "port": {
                     "type": "integer",
@@ -1031,7 +1036,8 @@
                     "example": 1
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "round_type": {
                     "type": "integer",
@@ -1116,7 +1122,8 @@
                     "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "port": {
                     "type": "integer",
@@ -1286,7 +1293,8 @@
             ],
             "properties": {
                 "info": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "http"
                 },
                 "page_no": {
                     "type": "integer",
@@ -1348,7 +1356,8 @@
             ],
             "properties": {
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "admin"
                 }
             }
         },
@@ -1419,7 +1428,8 @@
                     "example": 1
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "round_type": {
                     "type": "integer",
@@ -1632,13 +1642,15 @@
             ],
             "properties": {
                 "app_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "app_127"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sevice_1567"
                 },
                 "qpd": {
                     "type": "integer"
@@ -1680,7 +1692,8 @@
                     "example": "add a 32"
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "port": {
                     "type": "integer",
@@ -1777,7 +1790,8 @@
                     "example": 1
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "round_type": {
                     "type": "integer",
@@ -1865,7 +1879,8 @@
                     "example": "172.1.1.1:80\n172.11.1.2:87"
                 },
                 "open_auth": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "port": {
                     "type": "integer",

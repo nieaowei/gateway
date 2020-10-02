@@ -11,8 +11,8 @@ import (
 )
 
 type RedisFlowCountService struct {
-	AppID string
-	//ticker      *time.Ticker
+	ticker      *time.Ticker
+	AppID       string
 	QPS         int64
 	Unix        int64
 	TickerCount int64
@@ -36,9 +36,11 @@ func (o *RedisFlowCountService) Exec() {
 			}
 		}()
 		atomic.AddInt64(&o.TickerCount, 1)
-		o.notify <- 1
+		if o.ticker == nil {
+			o.notify <- 1
+		}
+		//fmt.Println(o)
 		//data, _ := lib.DefaultRedisCluster().Get(context.Background(), o.GetDayKey(time.Now())).Int64()
-		log.Printf(" [INFO] Service: %v , Count: %v ,QPS: %v \n", o.AppID, o.TotalCount, o.QPS)
 	}()
 }
 
@@ -50,19 +52,23 @@ func (o *RedisFlowCountService) Start() {
 				fmt.Println(err)
 			}
 		}()
-		// 新建定时器
+		// New ticker
 		//ticker := time.NewTicker(o.Interval)
 		for true {
-			//等待定时器到期
+			// wait for ticker channel
 			//<-o.ticker.C
-			data := <-o.notify
-			if data == 2 {
-				break
+			if o.ticker != nil {
+				<-o.ticker.C
+			} else {
+				data := <-o.notify
+				if data == 2 {
+					break
+				}
 			}
-			// 开始统计
-			// 读取原数据
+			// start statistic
+			// read data
 			tickerCount := atomic.LoadInt64(&o.TickerCount)
-			// 数据清零
+			// reset data
 			atomic.StoreInt64(&o.TickerCount, 0)
 			currentTime := time.Now() // 当前时间
 
@@ -74,7 +80,7 @@ func (o *RedisFlowCountService) Start() {
 				if err != nil {
 					return err
 				}
-				_, err = p.Expire(context.Background(), dayKey, time.Duration(86400*2*time.Millisecond)).Result()
+				_, err = p.Expire(context.Background(), dayKey, 86400*2*time.Millisecond).Result()
 				if err != nil {
 					return err
 				}
@@ -82,7 +88,7 @@ func (o *RedisFlowCountService) Start() {
 				if err != nil {
 					return err
 				}
-				_, err = p.Expire(context.Background(), hourKey, time.Duration(86400*2*time.Millisecond)).Result()
+				_, err = p.Expire(context.Background(), hourKey, 86400*2*time.Millisecond).Result()
 				return err
 			})
 			if err != nil {
@@ -99,12 +105,14 @@ func (o *RedisFlowCountService) Start() {
 				o.Unix = time.Now().Unix()
 				continue
 			}
+			// Computing the qps
 			tickerCount = total - o.TotalCount
 			if nowUnix > o.Unix {
 				o.TotalCount = total
 				o.QPS = tickerCount / (nowUnix - o.Unix)
 				o.Unix = time.Now().Unix()
 			}
+			//log.Printf(" [INFO] Service: %v , Count: %v ,QPS: %v \n", o.AppID, o.TotalCount, o.QPS)
 		}
 	}()
 }
@@ -128,12 +136,12 @@ const (
 
 func (o *RedisFlowCountService) GetDayKey(t time.Time) string {
 	dayStr := t.In(TimeLocation).Format(DayFormat)
-	return fmt.Sprintf("%s_%s_%s", RedisFlowDayKey, dayStr, o.AppID)
+	return fmt.Sprintf("%s_%s_%s", RedisFlowDayKey, dayStr, o.ServiceName())
 }
 
 func (o *RedisFlowCountService) GetHourKey(t time.Time) string {
 	hourStr := t.In(TimeLocation).Format(HourFormat)
-	return fmt.Sprintf("%s_%s_%s", RedisFlowHourKey, hourStr, o.AppID)
+	return fmt.Sprintf("%s_%s_%s", RedisFlowHourKey, hourStr, o.ServiceName())
 }
 
 func (o *RedisFlowCountService) GetHourData(t time.Time) (int64, error) {
@@ -144,6 +152,9 @@ func (o *RedisFlowCountService) GetDayData(t time.Time) (int64, error) {
 	return lib.DefaultRedisCluster().Get(context.Background(), o.GetDayKey(t)).Int64()
 }
 
+// NewRedisFlowCountService is used by statistic.
+// If interval == 0 , used by computing query number per second.
+// Else it used by recording query number every day.
 func NewRedisFlowCountService(appID string, interval time.Duration) *RedisFlowCountService {
 	reqCounter := &RedisFlowCountService{
 		AppID: appID,
@@ -151,6 +162,9 @@ func NewRedisFlowCountService(appID string, interval time.Duration) *RedisFlowCo
 		QPS:    0,
 		Unix:   0,
 		notify: make(chan int64),
+	}
+	if interval != 0 {
+		reqCounter.ticker = time.NewTicker(interval)
 	}
 	return reqCounter
 }

@@ -6,6 +6,7 @@ import (
 	"gateway/lib"
 	proxy_gprc "gateway/proxy/grpc"
 	proxy_http "gateway/proxy/http"
+	"gateway/proxy/manager"
 	proxy_tcp "gateway/proxy/tcp"
 	"gateway/router"
 	"os"
@@ -13,7 +14,7 @@ import (
 	"syscall"
 )
 
-// @title Swagger Example API
+// @title 微服务网关接口文档
 // @version 1.0
 // @description This is a sample server celler server.
 // @termsOfService http://swagger.io/terms/
@@ -89,6 +90,7 @@ func main() {
 		}
 	case "http":
 		{
+			manager.InitManager()
 			proxy_http.HttpServerRun()
 			defer proxy_http.HttpServerStop()
 		}

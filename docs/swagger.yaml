@@ -3,8 +3,10 @@ definitions:
   dto.AddAppInput:
     properties:
       app_id:
+        example: app_1234567
         type: string
       name:
+        example: sevice_1234567
         type: string
       qpd:
         type: integer
@@ -37,6 +39,7 @@ definitions:
         example: add a 32
         type: string
       open_auth:
+        example: 0
         type: integer
       port:
         example: 7777
@@ -114,6 +117,7 @@ definitions:
         example: 1
         type: integer
       open_auth:
+        example: 0
         type: integer
       round_type:
         example: 1
@@ -186,6 +190,7 @@ definitions:
           172.11.1.2:87
         type: string
       open_auth:
+        example: 0
         type: integer
       port:
         example: 9999
@@ -309,6 +314,7 @@ definitions:
   dto.GetAppListInput:
     properties:
       info:
+        example: http
         type: string
       page_no:
         example: 2
@@ -351,6 +357,7 @@ definitions:
   dto.GetAvatarInput:
     properties:
       username:
+        example: admin
         type: string
     required:
     - username
@@ -403,6 +410,7 @@ definitions:
         example: 1
         type: integer
       open_auth:
+        example: 0
         type: integer
       round_type:
         example: 1
@@ -555,10 +563,12 @@ definitions:
   dto.UpdateAppInput:
     properties:
       app_id:
+        example: app_127
         type: string
       id:
         type: integer
       name:
+        example: sevice_1567
         type: string
       qpd:
         type: integer
@@ -592,6 +602,7 @@ definitions:
         example: add a 32
         type: string
       open_auth:
+        example: 0
         type: integer
       port:
         example: 7777
@@ -671,6 +682,7 @@ definitions:
         example: 1
         type: integer
       open_auth:
+        example: 0
         type: integer
       round_type:
         example: 1
@@ -745,6 +757,7 @@ definitions:
           172.11.1.2:87
         type: string
       open_auth:
+        example: 0
         type: integer
       port:
         example: 9999
@@ -803,7 +816,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
+  title: 微服务网关接口文档
   version: "1.0"
 paths:
   /admin/login:
@@ -940,7 +953,8 @@ paths:
       description: 获取租户列表
       operationId: /app/list
       parameters:
-      - in: query
+      - example: http
+        in: query
         name: info
         type: string
       - example: 2
@@ -1030,7 +1044,8 @@ paths:
       description: 获取头像
       operationId: /public/get/avatar
       parameters:
-      - in: query
+      - example: admin
+        in: query
         name: username
         required: true
         type: string

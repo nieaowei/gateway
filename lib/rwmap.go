@@ -13,16 +13,24 @@ type SafeMap interface {
 }
 
 type ConcurrentHashMap struct {
-	data       []map[interface{}]interface{}
-	mus        []sync.RWMutex
-	size       uint32
+	data []map[interface{}]interface{}
+	mus  []sync.RWMutex
+	// Partition size
+	size uint32
+	// Hash format function.
+	// Example: from int to []byte].
+	// func(key interface{}) []byte {
+	//		return []byte(strings.Itoa(key))
+	// }
 	hashFormat func(key interface{}) []byte
 }
 
 func NewConcurrentHashMap(bufSize uint32, hashFormat func(key interface{}) []byte) *ConcurrentHashMap {
+	// Allocate storage space for partition.
 	d := make([]map[interface{}]interface{}, bufSize)
-
+	// Allocate storage space for lock.
 	m := make([]sync.RWMutex, bufSize)
+	// Generate instance for partition and lock.
 	for i := uint32(0); i < bufSize; i++ {
 		d[i] = make(map[interface{}]interface{})
 		m[i] = sync.RWMutex{}
