@@ -4,9 +4,14 @@ import (
 	"net/url"
 )
 
+type HostUrl struct {
+	*url.URL
+	Weight int
+}
+
 type LoadBalancer interface {
-	Add(string, ...string) error
-	Get(key string) (*url.URL, error)
+	Add(*HostUrl, ...*HostUrl) error
+	Get(key string) (*HostUrl, error)
 	Update()
 }
 
@@ -22,7 +27,7 @@ func NewInst(t interface{}) LoadBalancer {
 	case RoundRobinLoadBalancer:
 		return &RoundRobinLoadBalancer{
 			currentIndex: 0,
-			hostList:     []*url.URL{},
+			hostList:     []*HostUrl{},
 		}
 	case WeightRobinLoadBalance:
 		return &WeightRobinLoadBalance{
@@ -32,12 +37,12 @@ func NewInst(t interface{}) LoadBalancer {
 	case RandomBalance:
 		return &RandomBalance{
 			index:    0,
-			hostList: []*url.URL{},
+			hostList: []*HostUrl{},
 			conf:     nil,
 		}
 	case ConsistentHashLoadBalancer:
 		return &ConsistentHashLoadBalancer{
-			hostList: []*url.URL{},
+			hostList: []*HostUrl{},
 		}
 	}
 	return nil

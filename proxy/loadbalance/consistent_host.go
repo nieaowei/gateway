@@ -2,31 +2,23 @@ package loadbalance
 
 import (
 	"hash/crc32"
-	"net/url"
 )
 
 type ConsistentHashLoadBalancer struct {
-	hostList []*url.URL
+	hostList []*HostUrl
 }
 
 // Format:  192.168.1.1:9999
-func (r *ConsistentHashLoadBalancer) Add(host string, hosts ...string) error {
-	addr, err := url.Parse(host)
-	if err != nil {
-		return err
-	}
-	r.hostList = append(r.hostList, addr)
+func (r *ConsistentHashLoadBalancer) Add(host *HostUrl, hosts ...*HostUrl) error {
+
+	r.hostList = append(r.hostList, host)
 	for _, h := range hosts {
-		a, err := url.Parse(h)
-		if err != nil {
-			continue
-		}
-		r.hostList = append(r.hostList, a)
+		r.hostList = append(r.hostList, h)
 	}
 	return nil
 }
 
-func (c *ConsistentHashLoadBalancer) Get(key string) (*url.URL, error) {
+func (c *ConsistentHashLoadBalancer) Get(key string) (*HostUrl, error) {
 	length := len(c.hostList)
 	if length == 0 {
 		return nil, Error_NoAvailableHost

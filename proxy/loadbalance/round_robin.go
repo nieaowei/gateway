@@ -1,30 +1,20 @@
 package loadbalance
 
-import "net/url"
-
 type RoundRobinLoadBalancer struct {
 	currentIndex int
-	hostList     []*url.URL
+	hostList     []*HostUrl
 }
 
 // Format:  192.168.1.1:9999
-func (r *RoundRobinLoadBalancer) Add(host string, hosts ...string) error {
-	addr, err := url.Parse(host)
-	if err != nil {
-		return err
-	}
-	r.hostList = append(r.hostList, addr)
+func (r *RoundRobinLoadBalancer) Add(host *HostUrl, hosts ...*HostUrl) error {
+	r.hostList = append(r.hostList, host)
 	for _, h := range hosts {
-		a, err := url.Parse(h)
-		if err != nil {
-			continue
-		}
-		r.hostList = append(r.hostList, a)
+		r.hostList = append(r.hostList, h)
 	}
 	return nil
 }
 
-func (r *RoundRobinLoadBalancer) Get(key string) (*url.URL, error) {
+func (r *RoundRobinLoadBalancer) Get(key string) (*HostUrl, error) {
 	length := len(r.hostList)
 
 	if length == 0 {

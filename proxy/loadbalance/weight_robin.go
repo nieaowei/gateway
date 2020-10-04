@@ -2,8 +2,6 @@ package loadbalance
 
 import (
 	"net/url"
-	"strconv"
-	"strings"
 )
 
 type WeightRobinLoadBalance struct {
@@ -18,38 +16,30 @@ type WeightNode struct {
 }
 
 // Format:  192.168.1.1:9999 60
-func (r *WeightRobinLoadBalance) Add(host string, hosts ...string) error {
-	params := strings.Split(host, " ")
-	addr, err := url.Parse(params[0])
-	if err != nil {
-		return err
-	}
-	weight, err := strconv.Atoi(params[1])
+func (r *WeightRobinLoadBalance) Add(host *HostUrl, hosts ...*HostUrl) error {
+	//params := strings.Split(host, " ")
+	//addr, err := url.Parse(params[0])
+	//if err != nil {
+	//	return err
+	//}
+	//weight, err := strconv.Atoi(params[1])
 
-	if err != nil {
-		return Error_AddNode
-	}
+	//if err != nil {
+	//	return Error_AddNode
+	//}
 	node := &WeightNode{
-		Weight:        weight,
+		Weight:        host.Weight,
 		CurrentWeight: 0,
-		Addr:          addr,
+		Addr:          host.URL,
 	}
 	r.hostList = append(r.hostList, node)
 	if len(hosts) != 0 {
 		for _, h := range hosts {
-			params := strings.Split(h, " ")
-			addr, err := url.Parse(params[0])
-			if err != nil {
-				continue
-			}
-			weight, err := strconv.Atoi(params[1])
-			if err != nil {
-				return Error_AddNode
-			}
+
 			node := &WeightNode{
-				Weight:        weight,
+				Weight:        h.Weight,
 				CurrentWeight: 0,
-				Addr:          addr,
+				Addr:          h.URL,
 			}
 			r.hostList = append(r.hostList, node)
 		}
@@ -58,7 +48,7 @@ func (r *WeightRobinLoadBalance) Add(host string, hosts ...string) error {
 	return nil
 }
 
-func (w *WeightRobinLoadBalance) Get(key string) (*url.URL, error) {
+func (w *WeightRobinLoadBalance) Get(key string) (*HostUrl, error) {
 	total := 0
 	var best *WeightNode
 	for _, node := range w.hostList {
@@ -70,7 +60,10 @@ func (w *WeightRobinLoadBalance) Get(key string) (*url.URL, error) {
 	}
 	if best != nil {
 		best.CurrentWeight -= total
-		return best.Addr, nil
+		return &HostUrl{
+			URL:    best.Addr,
+			Weight: best.Weight,
+		}, nil
 	}
 	return nil, Error_NoAvailableHost
 }
