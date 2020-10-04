@@ -3,7 +3,6 @@ package dao
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	. "strings"
 )
 
 //type ServiceLoadBalance struct {
@@ -50,25 +49,22 @@ func (p *ServiceLoadBalance) FindOneScan(c *gin.Context, db *gorm.DB, out interf
 	return
 }
 
-func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
-	return Split(p.IPList, "\n")
+//func (p *ServiceLoadBalance) GetIPListByModel() (list []string) {
+//	return Split(p.IPList, "\n")
+//}
+
+func (p *ServiceLoadBalanceExceptModel) GetIPListByModel() (list []IpListItem) {
+	return p.IPList.GetSlice()
 }
 
-func (p *ServiceLoadBalanceExceptModel) GetIPListByModel() (list []string) {
-	if p.RoundType == RoundType_WeightRound {
-		return p.getIPListWeightByModel()
-	}
-	return Split(p.IPList, "\n")
-}
-
-func (p *ServiceLoadBalanceExceptModel) getIPListWeightByModel() (list []string) {
-	hosts := Split(p.IPList, "\n")
-	weights := Split(p.WeightList, "\n")
-	for index, weight := range weights {
-		hosts[index] = hosts[index] + " " + weight
-	}
-	return hosts
-}
+//func (p *ServiceLoadBalanceExceptModel) getIPListWeightByModel() (list []IpListItem) {
+//	hosts := p.IPList.GetSlice()
+//	weights := Split(p.WeightList, "\n")
+//	for index, weight := range weights {
+//		hosts[index] = hosts[index] + " " + weight
+//	}
+//	return hosts
+//}
 
 func (p *ServiceLoadBalance) UpdateAllByServiceID(c *gin.Context, db *gorm.DB) (err error) {
 	result := db.Select(GetFields(p)).Where("service_id=?", p.ServiceID).Updates(p)

@@ -6,33 +6,31 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ResponseCode int
-
 //1000以下为通用码，1000以上为用户自定义码
 const (
-	SuccessCode ResponseCode = iota
+	SuccessCode = iota
 	UndefErrorCode
 	ValidErrorCode
 	InternalErrorCode
 
-	InvalidRequestErrorCode ResponseCode = 401
-	CustomizeCode           ResponseCode = 1000
+	InvalidRequestErrorCode = 401
+	CustomizeCode           = 1000
 
-	GROUPALL_SAVE_FLOWERROR ResponseCode = 2001
+	GROUPALL_SAVE_FLOWERROR = 2001
 )
 
 type Response struct {
-	ErrorCode ResponseCode `json:"errno"`
-	ErrorMsg  string       `json:"errmsg"`
-	Data      interface{}  `json:"data"`
-	TraceId   interface{}  `json:"trace_id"`
-	Stack     interface{}  `json:"stack"`
+	ErrorCode int         `json:"errno"`
+	ErrorMsg  string      `json:"errmsg"`
+	Data      interface{} `json:"data"`
+	TraceId   interface{} `json:"trace_id"`
+	Stack     interface{} `json:"stack"`
 }
 
 type NullObject struct {
 }
 
-func ResponseError(c *gin.Context, code ResponseCode, err error) {
+func ResponseError(c *gin.Context, code int, err error) {
 	trace, _ := c.Get("trace")
 	traceContext, _ := trace.(*lib.TraceContext)
 	traceId := ""

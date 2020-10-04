@@ -82,7 +82,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 			}
 
 			switch p.LoadType {
-			case LoadType_HTTP:
+			case Load_HTTP:
 				{
 					http := ServiceHTTPRule{
 						ServiceID: p.ID,
@@ -90,7 +90,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 					err = http.DeleteByID(c, tx)
 					break
 				}
-			case LoadType_GRPC:
+			case Load_GRPC:
 				{
 					grpc := ServiceGrpcRule{
 						ServiceID: p.ID,
@@ -98,7 +98,7 @@ func (p *ServiceInfo) DeleteOneIncludeChild(c *gin.Context, db *gorm.DB) (err er
 					err = grpc.DeleteByID(c, tx)
 					break
 				}
-			case LoadType_TCP:
+			case Load_TCP:
 				{
 					tcp := ServiceTCPRule{
 						ServiceID: p.ID,
@@ -146,37 +146,24 @@ type ServiceDetail struct {
 	*ServiceAccessControlExceptModel
 }
 
-func (s *ServiceDetail) GetIpList() []string {
-	hosts := s.ServiceLoadBalanceExceptModel.GetIPListByModel()
-	newHosts := []string{}
-	switch item := s.Rule.(type) {
-	case *ServiceHTTPRuleExceptModel:
-		for _, host := range hosts {
-			if host == "" {
-				continue
-			}
+func (s *ServiceDetail) GetHostsUrl() []IpListItem {
+	hosts := s.ServiceLoadBalanceExceptModel.IPList.GetSlice()
+	//newHosts := []string{}
+	for i, _ := range hosts {
+		switch item := s.Rule.(type) {
+		case *ServiceHTTPRuleExceptModel:
 			if item.NeedHTTPs == 1 {
-				newHosts = append(newHosts, "https://"+host)
+				hosts[i].Scheme = "https"
 				continue
 			}
-			newHosts = append(newHosts, "http://"+host)
-		}
-	case *ServiceTCPRuleExceptModel:
-		for _, host := range hosts {
-			if host == "" {
-				continue
-			}
-			newHosts = append(newHosts, "tcp://"+host)
-		}
-	case *ServiceGRPCRuleExceptModel:
-		for _, host := range hosts {
-			if host == "" {
-				continue
-			}
-			newHosts = append(newHosts, "grpc://"+host)
+			hosts[i].Scheme = "http"
+		case *ServiceTCPRuleExceptModel:
+			hosts[i].Scheme = "tcp"
+		case *ServiceGRPCRuleExceptModel:
+			hosts[i].Scheme = "grpc"
 		}
 	}
-	return newHosts
+	return hosts
 }
 
 func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *ServiceDetail, err error) {
@@ -188,7 +175,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 		return
 	}
 	switch out.ServiceInfoExceptModel.LoadType {
-	case LoadType_HTTP:
+	case Load_HTTP:
 		{
 			httpRule := &ServiceHTTPRule{
 				ServiceID: p.ID,
@@ -201,7 +188,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 			out.Rule = httpOut
 			break
 		}
-	case LoadType_TCP:
+	case Load_TCP:
 		{
 			tcpRule := &ServiceTCPRule{
 				ServiceID: p.ID,
@@ -215,7 +202,7 @@ func (p *ServiceInfo) FindOneServiceDetail(c *gin.Context, db *gorm.DB) (out *Se
 
 			break
 		}
-	case LoadType_GRPC:
+	case Load_GRPC:
 		{
 			grpcRule := &ServiceGrpcRule{
 				ServiceID: p.ID,

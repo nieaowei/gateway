@@ -56,7 +56,7 @@ func (p *AddHttpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadType_HTTP,
+					LoadType:    dao.Load_HTTP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 				}
@@ -151,7 +151,7 @@ func (p *UpdateHttpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalH
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadType_HTTP,
+					LoadType:    dao.Load_HTTP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 					ID:          p.ServiceID,
@@ -180,7 +180,7 @@ func (p *UpdateHttpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalH
 					ServiceID:         serviceInfo.ID,
 					OpenAuth:          p.OpenAuth,
 					BlackList:         p.BlackList,
-					WhiteList:         p.WeightList,
+					WhiteList:         p.WhiteList,
 					WhiteHostName:     p.WhiteHostName,
 					ClientipFlowLimit: p.ClientipFlowLimit,
 					ServiceFlowLimit:  p.ServiceFlowLimit,

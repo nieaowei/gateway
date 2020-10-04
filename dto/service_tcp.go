@@ -52,7 +52,7 @@ func (p *AddTcpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadType_TCP,
+					LoadType:    dao.Load_TCP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 				}
@@ -74,7 +74,7 @@ func (p *AddTcpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 					ServiceID:         serviceInfo.ID,
 					OpenAuth:          p.OpenAuth,
 					BlackList:         p.BlackList,
-					WhiteList:         p.WeightList,
+					WhiteList:         p.WhiteList,
 					WhiteHostName:     p.WhiteHostName,
 					ClientipFlowLimit: p.ClientipFlowLimit,
 					ServiceFlowLimit:  p.ServiceFlowLimit,
@@ -141,7 +141,7 @@ func (p *UpdateTcpServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHa
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadType_TCP,
+					LoadType:    dao.Load_TCP,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 					ID:          p.ServiceID,

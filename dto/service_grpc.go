@@ -52,7 +52,7 @@ func (p *AddGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadType_GRPC,
+					LoadType:    dao.Load_GRPC,
 					ServiceName: p.ServiceName,
 					ServiceDesc: p.ServiceDesc,
 				}
@@ -75,7 +75,7 @@ func (p *AddGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 					ServiceID:         serviceInfo.ID,
 					OpenAuth:          p.OpenAuth,
 					BlackList:         p.BlackList,
-					WhiteList:         p.WeightList,
+					WhiteList:         p.WhiteList,
 					WhiteHostName:     p.WhiteHostName,
 					ClientipFlowLimit: p.ClientipFlowLimit,
 					ServiceFlowLimit:  p.ServiceFlowLimit,
@@ -142,7 +142,7 @@ func (p *UpdateGrpcServiceInput) ExecHandle(handle FunctionalHandle) FunctionalH
 			func(tx *gorm.DB) (err error) {
 				// insert service info
 				serviceInfo := &dao.ServiceInfo{
-					LoadType:    dao.LoadType_GRPC,
+					LoadType:    dao.Load_GRPC,
 					ServiceName: params.ServiceName,
 					ServiceDesc: params.ServiceDesc,
 					ID:          params.ServiceID,

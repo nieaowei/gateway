@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -97,13 +96,13 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			}
 
 			type ServiceTypeInfo struct {
-				RuleType  int8
+				RuleType  dao.HttpRuleType
 				Rule      string
 				NeedHTTPs int8
 			}
 
 			switch info.LoadType {
-			case dao.LoadType_HTTP:
+			case dao.Load_HTTP:
 				{
 					loadType = "HTTP"
 					service := &dao.ServiceHTTPRule{
@@ -115,19 +114,19 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 						return nil, err
 					}
 					//service := serviceDetail.ServiceHTTPRuleExceptModel
-					if res.RuleType == dao.HttpRuleType_PrefixURL && res.NeedHTTPs == 0 {
+					if res.RuleType == dao.HttpRule_PrefixURL && res.NeedHTTPs == 0 {
 						serviceAddr = clusterIP + ":" + clusterPort + res.Rule
 
 					}
-					if res.RuleType == dao.HttpRuleType_PrefixURL && res.NeedHTTPs == 1 {
+					if res.RuleType == dao.HttpRule_PrefixURL && res.NeedHTTPs == 1 {
 						serviceAddr = clusterIP + ":" + clusterSSLPort + res.Rule
 					}
-					if res.RuleType == dao.HttpRuleType_Domain {
+					if res.RuleType == dao.HttpRule_Domain {
 						serviceAddr = service.Rule
 					}
 					break
 				}
-			case dao.LoadType_TCP:
+			case dao.Load_TCP:
 				{
 					loadType = "TCP"
 					//service := serviceDetail.ServiceTCPRuleExceptModel
@@ -142,7 +141,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 					serviceAddr = clusterIP + ":" + strconv.Itoa(res.Port)
 					break
 				}
-			case dao.LoadType_GRPC:
+			case dao.Load_GRPC:
 				{
 
 					loadType = "GRPC"
@@ -160,7 +159,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 				}
 			}
 			type IpListRes struct {
-				IpList string
+				IpList dao.IpListType
 			}
 			//ipList := serviceDetail.ServiceLoadBalanceExceptModel.GetIPListByModel()
 			res := &IpListRes{}
@@ -182,7 +181,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 				Address:     serviceAddr,
 				Qps:         impl.QPS,
 				Qpd:         qpd,
-				TotalNode:   uint(len(strings.Split(res.IpList, "\n"))),
+				TotalNode:   uint(len(res.IpList.GetSlice())),
 			}
 			outE.List = append(outE.List, item)
 		}
@@ -240,7 +239,7 @@ func (p *DeleteServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 				}
 
 				switch serviceInfo.LoadType {
-				case dao.LoadType_HTTP:
+				case dao.Load_HTTP:
 					{
 						http := dao.ServiceHTTPRule{
 							ServiceID: serviceInfo.ID,
@@ -248,7 +247,7 @@ func (p *DeleteServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 						err = http.DeleteByID(c, tx)
 						break
 					}
-				case dao.LoadType_GRPC:
+				case dao.Load_GRPC:
 					{
 						grpc := dao.ServiceGrpcRule{
 							ServiceID: serviceInfo.ID,
@@ -256,7 +255,7 @@ func (p *DeleteServiceInput) ExecHandle(handle FunctionalHandle) FunctionalHandl
 						err = grpc.DeleteByID(c, tx)
 						break
 					}
-				case dao.LoadType_TCP:
+				case dao.Load_TCP:
 					{
 						tcp := dao.ServiceTCPRule{
 							ServiceID: serviceInfo.ID,
@@ -422,7 +421,7 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 				}
 			}
 			//switch o.LoadType {
-			//case dao.LoadType_HTTP:
+			//case dao.Load_HTTP:
 			//	{
 			//		eh := EditServiceHTTPRule{
 			//			RuleType:        o.RuleType,
@@ -445,7 +444,7 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 			//			},
 			//		}, nil
 			//	}
-			//case dao.LoadType_TCP:
+			//case dao.Load_TCP:
 			//	{
 			//		et := EditServiceTCPRule{
 			//			Port: o.ServiceTCPRuleExceptModel.Port,
@@ -462,7 +461,7 @@ func (p *GetServiceDetailInput) OutputHandle(handle FunctionalHandle) Functional
 			//			},
 			//		}, nil
 			//	}
-			//case dao.LoadType_GRPC:
+			//case dao.Load_GRPC:
 			//	{
 			//		eg := EditServiceGRPCRule{
 			//			Port:              o.ServiceGRPCRuleExceptModel.Port,
