@@ -1,11 +1,11 @@
 package proxy_http
 
 import (
+	"gateway/dao"
 	"gateway/dto"
 	"gateway/proxy/manager"
 	"github.com/gin-gonic/gin"
 	"log"
-	"net/url"
 	"strings"
 )
 
@@ -15,7 +15,7 @@ func HTTPAccessModeMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		service, err := manager.Default().HTTPAccessMode(c)
 		if err != nil {
-			dto.ResponseError(c, 2000, err)
+			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
 			c.Abort()
 			return
 		}
@@ -107,6 +107,69 @@ func HTTPReverseProxyMiddleware() gin.HandlerFunc {
 		proxy := NewHttpProxy(target.URL, nil, nil)
 		proxy.ServeHTTP(c.Writer, c.Request)
 		c.Abort()
+		return
+	}
+}
+
+func HTTPHeaderTransferMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, ok := c.Get(Key_Http_Service)
+		if !ok {
+			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			c.Abort()
+			return
+		}
+		service := data.(manager.HTTPService)
+		hdList := service.HeaderTransform
+		for _, item := range hdList {
+			switch item.Op {
+			case dao.HeaderTransformOperation_Add, dao.HeaderTransformOperation_Edit:
+				c.Request.Header.Set(item.Key, item.Val)
+			case dao.HeaderTransformOperation_Del:
+				c.Request.Header.Del(item.Key)
+			}
+		}
+		c.Next()
+	}
+}
+
+func HTTPWhiteListMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, ok := c.Get(Key_Http_Service)
+		if !ok {
+			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			c.Abort()
+			return
+		}
+		service := data.(manager.HTTPService)
+		if service.OpenAuth {
+			for _, ip := range service.WhiteList {
+				if c.Request.URL.Host == ip.Host {
+					c.Next()
+					return
+				}
+			}
+			dto.ResponseError(c, Error_WhiteListLimit.Code, Error_WhiteListLimit)
+			c.Abort()
+		}
+		c.Next()
+		return
+	}
+}
+
+func HTTPStripUriMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, ok := c.Get(Key_Http_Service)
+		if !ok {
+			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			c.Abort()
+			return
+		}
+		service := data.(manager.HTTPService)
+		if service.RuleType == dao.HttpRule_PrefixURL && service.NeedStripURI {
+			c.Request.URL.Path = strings.TrimPrefix(c.Request.URL.Path, service.Rule)
+		}
+		c.Next()
 		return
 	}
 }

@@ -35,6 +35,10 @@ func InitHttpProxyRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	route.Use(
 		HTTPAccessModeMiddleware(),
 		HTTPFlowStatisticMiddleware(),
+		HTTPBlackListMiddleware(),
+		HTTPWhiteListMiddleware(),
+		HTTPHeaderTransferMiddleware(),
+		HTTPStripUriMiddleware(),
 		HTTPReverseProxyMiddleware(),
 	)
 
