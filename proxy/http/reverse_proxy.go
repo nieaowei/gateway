@@ -34,6 +34,7 @@ func NewHttpProxy(target *url.URL, trans *http.Transport, format UrlPathFormatHa
 			}
 		}
 		req.URL.Path = singleJoiningSlash(target.Path, format(req.URL))
+		req.Host = target.Host
 
 		if targetQuery == "" || req.URL.RawQuery == "" {
 			req.URL.RawQuery = targetQuery + req.URL.RawQuery
@@ -42,7 +43,7 @@ func NewHttpProxy(target *url.URL, trans *http.Transport, format UrlPathFormatHa
 		}
 		if _, ok := req.Header["User-Agent"]; !ok {
 			// explicitly disable User-Agent so it's not set to default value
-			req.Header.Set("User-Agent", "")
+			req.Header.Set("User-Agent", "nekilc")
 		}
 	}
 
@@ -54,5 +55,6 @@ func NewHttpProxy(target *url.URL, trans *http.Transport, format UrlPathFormatHa
 		ErrorLog:     nil,
 		BufferPool:   nil,
 		ErrorHandler: errHandler,
+		Transport:    trans,
 	}
 }

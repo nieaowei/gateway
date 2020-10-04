@@ -1,7 +1,9 @@
 package router
 
 import (
+	"errors"
 	"gateway/controller"
+	"gateway/dto"
 	"gateway/lib"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -14,6 +16,9 @@ func InitRouter(swag bool) *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("./templates/*")
 	//router.Use(middlewares...)
+	router.NoRoute(func(c *gin.Context) {
+		dto.ResponseError(c, 404, errors.New("Not found"))
+	})
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "welcome.html", gin.H{
 			"title":        "微服务仪表盘API接口",
