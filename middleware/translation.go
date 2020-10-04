@@ -105,15 +105,17 @@ func TranslationMiddleware() gin.HandlerFunc {
 				if fl.Field().String() == "" {
 					return true
 				}
-				data := strings.Split(fl.Field().String(), "\n")
-				for _, datam := range data {
-					if datam == "" {
-						continue
-					}
-					if len(strings.Split(datam, " ")) != 3 {
-						return false
-					}
+				//data := strings.Split(fl.Field().String(), "\n")
+				native := strings.Trim(fl.Field().String(), "\n")
+
+				validdata := public.HeaderRegexp.FindAllString(native, -1)
+
+				res := ""
+				for _, validdatum := range validdata {
+					res += validdatum + "\n"
 				}
+
+				fl.Field().SetString(strings.TrimSuffix(res, "\n"))
 				return true
 			})
 
@@ -130,18 +132,31 @@ func TranslationMiddleware() gin.HandlerFunc {
 				if fl.Field().String() == "" {
 					return true
 				}
-				data := strings.Split(strings.TrimPrefix(fl.Field().String(), "\n"), "\n")
-				for _, datum := range data {
-					if datum == "" {
-						continue
-					}
-					matched := public.IpRegexp.Match([]byte(datum)) // regexp.Match("^\\S+:\\d+$", []byte(datum))
-					if !matched {
-						return false
-					}
+				//data := strings.Split(fl.Field().String(), "\n")
+				native := strings.Trim(fl.Field().String(), "\n")
+
+				validdata := public.IpRegexp.FindAllString(native, -1)
+
+				res := ""
+				for _, validdatum := range validdata {
+					res += validdatum + "\n"
 				}
-				fl.Field().SetString(strings.Trim(fl.Field().String(), "\n"))
+
+				fl.Field().SetString(strings.TrimSuffix(res, "\n"))
 				return true
+
+				//data := strings.Split(strings.Trim(fl.Field().String(), "\n"), "\n")
+				//for _, datum := range data {
+				//	if datum == "" {
+				//		continue
+				//	}
+				//	matched := public.IpRegexp.Match([]byte(datum)) // regexp.Match("^\\S+:\\d+$", []byte(datum))
+				//	if !matched {
+				//		return false
+				//	}
+				//}
+				//fl.Field().SetString(strings.Trim(fl.Field().String(), "\n"))
+				//return true
 			})
 
 			//自定义翻译器
