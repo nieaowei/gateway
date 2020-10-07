@@ -5,7 +5,6 @@ import (
 	"gateway/dto"
 	"gateway/proxy/manager"
 	"github.com/gin-gonic/gin"
-	"log"
 	"strings"
 )
 
@@ -21,6 +20,7 @@ func HTTPAccessModeMiddleware() gin.HandlerFunc {
 		}
 		c.Set(Key_Http_Service, service)
 		c.Next()
+		return
 	}
 }
 
@@ -45,6 +45,7 @@ func HTTPBlackListMiddleware() gin.HandlerFunc {
 			}
 		}
 		c.Next()
+		return
 	}
 }
 
@@ -97,14 +98,21 @@ func HTTPReverseProxyMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		target, err := lb.Get(c.Request.Host)
+		target, err := lb.GetHost(c.Request.Host)
 		if err != nil {
 			dto.ResponseError(c, Error_NoAvailableHost.Code, Error_NoAvailableHost)
 			c.Abort()
 			return
 		}
-		log.Println("[LoadBalance] Proxy: " + target.String())
-		proxy := NewHttpProxy(target.URL, nil, nil)
+		//log.Println("[LoadBalance] Proxy: " + target.String())
+		trans, ok := manager.Default().GetTransport(service.ServiceName)
+		if !ok {
+			dto.ResponseError(c, Error_NoAvailableTransport.Code, Error_NoAvailableTransport)
+			c.Abort()
+			return
+		}
+		proxy := NewHttpProxy(target.URL, trans.Transport, nil)
+		//proxy := httputil.NewSingleHostReverseProxy(target.URL)
 		proxy.ServeHTTP(c.Writer, c.Request)
 		c.Abort()
 		return
@@ -130,6 +138,7 @@ func HTTPHeaderTransferMiddleware() gin.HandlerFunc {
 			}
 		}
 		c.Next()
+		return
 	}
 }
 
@@ -151,6 +160,7 @@ func HTTPWhiteListMiddleware() gin.HandlerFunc {
 			}
 			dto.ResponseError(c, Error_WhiteListLimit.Code, Error_WhiteListLimit)
 			c.Abort()
+			return
 		}
 		c.Next()
 		return

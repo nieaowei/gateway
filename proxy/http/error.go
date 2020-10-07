@@ -24,6 +24,7 @@ const (
 	Error_NoAvailableRedisService_Code
 	Error_BlackListLimit_Code
 	Error_WhiteListLimit_Code
+	Error_NoAvailableTransport_Code
 )
 
 var (
@@ -33,4 +34,5 @@ var (
 	Error_NoAvailableRedisService = NewError(Error_NoAvailableRedisService_Code, "No available RedisService.")
 	Error_BlackListLimit          = NewError(Error_BlackListLimit_Code, "Black list limit")
 	Error_WhiteListLimit          = NewError(Error_WhiteListLimit_Code, "White list limit")
+	Error_NoAvailableTransport    = NewError(Error_NoAvailableTransport_Code, "No available transport")
 )

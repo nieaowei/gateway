@@ -40,7 +40,7 @@ func (o *RedisFlowCountService) Exec() {
 			o.notify <- 1
 		}
 		//fmt.Println(o)
-		//data, _ := lib.DefaultRedisCluster().Get(context.Background(), o.GetDayKey(time.Now())).Int64()
+		//data, _ := lib.DefaultRedisCluster().GetHost(context.Background(), o.GetDayKey(time.Now())).Int64()
 	}()
 }
 

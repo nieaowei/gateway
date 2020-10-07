@@ -16,7 +16,7 @@ type WeightNode struct {
 }
 
 // Format:  192.168.1.1:9999 60
-func (r *WeightRobinLoadBalance) Add(host *HostUrl, hosts ...*HostUrl) error {
+func (r *WeightRobinLoadBalance) AddHost(host *HostUrl, hosts ...*HostUrl) error {
 	//params := strings.Split(host, " ")
 	//addr, err := url.Parse(params[0])
 	//if err != nil {
@@ -48,7 +48,7 @@ func (r *WeightRobinLoadBalance) Add(host *HostUrl, hosts ...*HostUrl) error {
 	return nil
 }
 
-func (w *WeightRobinLoadBalance) Get(key string) (*HostUrl, error) {
+func (w *WeightRobinLoadBalance) GetHost(key string) (*HostUrl, error) {
 	total := 0
 	var best *WeightNode
 	for _, node := range w.hostList {

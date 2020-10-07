@@ -18,5 +18,5 @@ func NewError(msg string) error {
 
 var (
 	Error_NoAvailableHost = NewError("No available host.")
-	Error_AddNode         = NewError("Add node error.")
+	Error_AddNode         = NewError("AddHost node error.")
 )

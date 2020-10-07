@@ -6,7 +6,7 @@ type RoundRobinLoadBalancer struct {
 }
 
 // Format:  192.168.1.1:9999
-func (r *RoundRobinLoadBalancer) Add(host *HostUrl, hosts ...*HostUrl) error {
+func (r *RoundRobinLoadBalancer) AddHost(host *HostUrl, hosts ...*HostUrl) error {
 	r.hostList = append(r.hostList, host)
 	for _, h := range hosts {
 		r.hostList = append(r.hostList, h)
@@ -14,7 +14,7 @@ func (r *RoundRobinLoadBalancer) Add(host *HostUrl, hosts ...*HostUrl) error {
 	return nil
 }
 
-func (r *RoundRobinLoadBalancer) Get(key string) (*HostUrl, error) {
+func (r *RoundRobinLoadBalancer) GetHost(key string) (*HostUrl, error) {
 	length := len(r.hostList)
 
 	if length == 0 {

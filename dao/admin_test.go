@@ -29,7 +29,7 @@ func TestAdmin_FindOneScan(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			fields: fields{
@@ -77,7 +77,7 @@ func TestAdmin_UpdateByID(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -122,7 +122,7 @@ func TestAdmin_UpdateAllByID(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			fields: fields{

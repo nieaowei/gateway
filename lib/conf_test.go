@@ -10,7 +10,7 @@ func TestGetDefaultConfBase(t *testing.T) {
 		name string
 		want *BaseConf
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			want: &BaseConf{},
@@ -30,7 +30,7 @@ func TestGetDefaultConfMysql(t *testing.T) {
 		name string
 		want *MySQLConf
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			want: &MySQLConf{},
@@ -50,7 +50,7 @@ func TestGetDefaultConfRedis(t *testing.T) {
 		name string
 		want *RedisConf
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			want: &RedisConf{},
@@ -88,7 +88,7 @@ func TestGetDefaultConfProxy(t *testing.T) {
 		name string
 		want *ProxyConf
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			want: &ProxyConf{},

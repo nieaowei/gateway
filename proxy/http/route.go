@@ -15,6 +15,16 @@ func InitHttpProxyRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 			"message": "pong",
 		})
 	})
+	route.NoRoute(func(c *gin.Context) {
+		c.JSON(404, gin.H{
+			"msg": "not found",
+		})
+	})
+	route.NoMethod(func(c *gin.Context) {
+		c.JSON(404, gin.H{
+			"msg": "Method not found",
+		})
+	})
 	route.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "welcome.html", gin.H{
 			"title":        "HTTP/HTTPS代理服务",

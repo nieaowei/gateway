@@ -11,7 +11,7 @@ type RandomBalance struct {
 }
 
 // Format:  192.168.1.1:9999
-func (r *RandomBalance) Add(host *HostUrl, hosts ...*HostUrl) error {
+func (r *RandomBalance) AddHost(host *HostUrl, hosts ...*HostUrl) error {
 	r.hostList = append(r.hostList, host)
 	for _, h := range hosts {
 		r.hostList = append(r.hostList, h)
@@ -19,7 +19,7 @@ func (r *RandomBalance) Add(host *HostUrl, hosts ...*HostUrl) error {
 	return nil
 }
 
-func (r *RandomBalance) Get(key string) (*HostUrl, error) {
+func (r *RandomBalance) GetHost(key string) (*HostUrl, error) {
 	length := len(r.hostList)
 	if length == 0 {
 		return nil, Error_NoAvailableHost

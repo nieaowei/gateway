@@ -8,8 +8,9 @@ import (
 type SafeMap interface {
 	Set(key, val interface{})
 	Get(key interface{}) (interface{}, bool)
-	Mutexs() []sync.RWMutex
+	mutex() []sync.RWMutex
 	GetByCondition(f func(key, val interface{}) bool) (interface{}, bool)
+	Delete(key interface{})
 }
 
 type ConcurrentHashMap struct {
@@ -51,7 +52,14 @@ func (m *ConcurrentHashMap) Set(key, val interface{}) {
 	m.mus[hashVal].Unlock()
 }
 
-func (m *ConcurrentHashMap) Mutexs() []sync.RWMutex {
+func (m *ConcurrentHashMap) Delete(key interface{}) {
+	hashVal := crc32.ChecksumIEEE(m.hashFormat(key)) % m.size
+	m.mus[hashVal].Lock()
+	delete(m.data[hashVal], key)
+	m.mus[hashVal].Unlock()
+}
+
+func (m *ConcurrentHashMap) mutex() []sync.RWMutex {
 	return m.mus
 }
 

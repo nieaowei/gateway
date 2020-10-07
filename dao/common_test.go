@@ -19,7 +19,7 @@ func TestGetFields(t *testing.T) {
 		args args
 		want []string
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			args: args{
@@ -46,7 +46,7 @@ func TestStructToMap(t *testing.T) {
 		args args
 		want map[string]interface{}
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			args: args{

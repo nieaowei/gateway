@@ -10,8 +10,8 @@ type HostUrl struct {
 }
 
 type LoadBalancer interface {
-	Add(*HostUrl, ...*HostUrl) error
-	Get(key string) (*HostUrl, error)
+	AddHost(*HostUrl, ...*HostUrl) error
+	GetHost(key string) (*HostUrl, error)
 	Update()
 }
 
@@ -67,7 +67,7 @@ func NewInst(t interface{}) LoadBalancer {
 //}
 //
 //func (m *Mgr) GetLoadBalancer(serviceName string) (LoadBalancer, bool) {
-//	lb, ok := m.LoadBalancerMap.Get(serviceName)
+//	lb, ok := m.LoadBalancerMap.GetHost(serviceName)
 //	if ok {
 //		return lb.(LoadBalancer), ok
 //	}

@@ -25,7 +25,7 @@ func TestWeightRobinLoadBalance_Get(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 			fields: fields{
@@ -72,14 +72,14 @@ func TestWeightRobinLoadBalance_Get(t *testing.T) {
 				currentWeight: tt.fields.currentWeight,
 			}
 			for i := 0; i < 10; i++ {
-				got, err := w.Get(tt.args.key)
+				got, err := w.GetHost(tt.args.key)
 				if (err != nil) != tt.wantErr {
-					t.Errorf("Get() error = %v, wantErr %v", err, tt.wantErr)
+					t.Errorf("GetHost() error = %v, wantErr %v", err, tt.wantErr)
 					return
 				}
 				//assert.NotEqual(t,got,"")
 				if got == nil {
-					t.Errorf("Get() got = %v, want %v", got, tt.want)
+					t.Errorf("GetHost() got = %v, want %v", got, tt.want)
 				}
 			}
 

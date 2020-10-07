@@ -217,7 +217,7 @@ func (s *RediStore) Close() error {
 
 // Get returns a session for the given name after adding it to the registry.
 //
-// See gorilla/sessions FilesystemStore.Get().
+// See gorilla/sessions FilesystemStore.GetHost().
 func (s *RediStore) Get(r *http.Request, name string) (*sessions.Session, error) {
 	return sessions.GetRegistry(r).Get(s, name)
 }

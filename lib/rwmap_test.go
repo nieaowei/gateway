@@ -74,7 +74,7 @@ func BenchmarkRWMap_Get_Write(b *testing.B) {
 	}
 	//for i := 0; i < b.N; i++ {
 	//	c := rand.Intn(10000)
-	//	go m.Get(c)
+	//	go m.GetHost(c)
 	//	//if i%100 == 0 {
 	//	//	m.GetByCondition(func(a interface{}) bool {
 	//	//		data := a.(int)

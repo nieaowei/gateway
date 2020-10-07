@@ -1,6 +1,7 @@
 package proxy_http
 
 import (
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -47,14 +48,14 @@ func NewHttpProxy(target *url.URL, trans *http.Transport, format UrlPathFormatHa
 		}
 	}
 
-	errHandler := func(http.ResponseWriter, *http.Request, error) {
-
+	errFunc := func(w http.ResponseWriter, r *http.Request, err error) {
+		w.Write([]byte(err.Error()))
+		log.Println(err)
+		return
 	}
 	return &httputil.ReverseProxy{
-		Director:     director,
-		ErrorLog:     nil,
-		BufferPool:   nil,
-		ErrorHandler: errHandler,
 		Transport:    trans,
+		ErrorHandler: errFunc,
+		Director:     director,
 	}
 }

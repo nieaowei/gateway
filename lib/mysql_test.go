@@ -10,7 +10,7 @@ func TestGetDefaultDB(t *testing.T) {
 		name   string
 		wantDb *gorm.DB
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name:   "",
 			wantDb: &gorm.DB{},
@@ -29,7 +29,7 @@ func TestInitDBPool(t *testing.T) {
 	tests := []struct {
 		name string
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			name: "",
 		},

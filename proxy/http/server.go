@@ -3,6 +3,7 @@ package proxy_http
 import (
 	"context"
 	"gateway/lib"
+	"gateway/middleware"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -15,7 +16,10 @@ var (
 
 func HttpServerRun() {
 	gin.SetMode(lib.GetDefaultConfProxy().Base.DebugMode)
-	r := InitHttpProxyRouter()
+	r := InitHttpProxyRouter(
+		middleware.RecoveryMiddleware(),
+		middleware.RequestLog(),
+	)
 	HttpServer = &http.Server{
 		Addr:           lib.GetDefaultConfProxy().Http.Addr,
 		Handler:        r,

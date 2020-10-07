@@ -9,7 +9,7 @@ type ConsistentHashLoadBalancer struct {
 }
 
 // Format:  192.168.1.1:9999
-func (r *ConsistentHashLoadBalancer) Add(host *HostUrl, hosts ...*HostUrl) error {
+func (r *ConsistentHashLoadBalancer) AddHost(host *HostUrl, hosts ...*HostUrl) error {
 
 	r.hostList = append(r.hostList, host)
 	for _, h := range hosts {
@@ -18,7 +18,7 @@ func (r *ConsistentHashLoadBalancer) Add(host *HostUrl, hosts ...*HostUrl) error
 	return nil
 }
 
-func (c *ConsistentHashLoadBalancer) Get(key string) (*HostUrl, error) {
+func (c *ConsistentHashLoadBalancer) GetHost(key string) (*HostUrl, error) {
 	length := len(c.hostList)
 	if length == 0 {
 		return nil, Error_NoAvailableHost

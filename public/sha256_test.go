@@ -12,7 +12,7 @@ func TestGenSha256BySecret(t *testing.T) {
 		args args
 		want string
 	}{
-		// TODO: Add test cases.
+		// TODO: AddHost test cases.
 		{
 			"生成测试-1",
 			args{
