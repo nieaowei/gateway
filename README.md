@@ -1,5 +1,7 @@
 # gateway
- go网关
+[![Code](https://nekilc.coding.net/badges/gateway/job/335633/build.svg)](https://nekilc.coding.net/p/gateway/ci/job)
+[![Build](https://nekilc.coding.net/badges/gateway/job/336986/build.svg)](https://nekilc.coding.net/p/gateway/ci/job) 
+go网关
 # todo
 - [x] Add a series of data statistics interface. -- 2020.8.16
 - [x] Add avatar acquisition interface. -- 2020.8.16
