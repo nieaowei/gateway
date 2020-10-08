@@ -1,2 +1,1 @@
-pkill gateway && chmod 777 * && nohup ./gateway-linux -conf=pro -swag=true &
-nohup ./gateway-linux -conf=pro -swag=true -endpoint=http &
+docker run --name gateway-server-$1 --net=host -d $2 -conf=pro -endpoint=$1
