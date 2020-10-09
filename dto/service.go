@@ -170,16 +170,21 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			if err != nil {
 				return nil, err
 			}
-			counter, _ := manager.Default().GetRedisService(manager.ServicePrefix + info.ServiceName)
-			impl := counter.(*manager.RedisFlowCountService)
-			qpd, _ := impl.GetDayData(time.Now())
+			counter, ok := manager.Default().GetRedisService(manager.ServicePrefix + info.ServiceName)
+			var qpd, qps int64
+			if ok {
+				impl := counter.(*manager.RedisFlowCountService)
+				qpd, _ = impl.GetDayData(time.Now())
+				qps = impl.QPS
+			}
+
 			item := ServiceListItem{
 				ID:          info.ID,
 				ServiceName: info.ServiceName,
 				ServiceDesc: info.ServiceDesc,
 				LoadType:    loadType,
 				Address:     serviceAddr,
-				Qps:         impl.QPS,
+				Qps:         qps,
 				Qpd:         qpd,
 				TotalNode:   uint(len(res.IpList.GetSlice())),
 			}
