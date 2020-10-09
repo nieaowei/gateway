@@ -71,6 +71,7 @@ func main() {
 		lib.InitMysqlConf("./conf/pro")
 		lib.InitRedisConf("./conf/pro")
 		lib.InitProxyConf("./conf/pro")
+		lib.InitRedis()
 		lib.InitDBPool()
 	} else {
 		lib.InitBaseConf("./conf/dev")
