@@ -5,6 +5,8 @@
 
 go网关
 
+使用coding进行持续集成，coding仓库：[这里](https://nekilc.coding.net/public/gateway/server/git/files)
+
 |服务|代码扫描|构建状态|连接|
 |:---:|:---:|:---:|:---:|
 |Dashboard|[![构建状态](https://nekilc.coding.net/badges/gateway/job/335633/build.svg)](https://nekilc.coding.net/p/gateway/ci/job)|[![构建状态](https://nekilc.coding.net/badges/gateway/job/336986/build.svg)](https://nekilc.coding.net/p/gateway/ci/job)|[链接](http://code.nekilc.com:8880)|
