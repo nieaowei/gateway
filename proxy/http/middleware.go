@@ -183,3 +183,16 @@ func HTTPStripUriMiddleware() gin.HandlerFunc {
 		return
 	}
 }
+
+func HTTPJwtAuthTokenMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, ok := c.Get(Key_Http_Service)
+		if !ok {
+			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			c.Abort()
+			return
+		}
+		_ = data.(manager.HTTPService)
+
+	}
+}
