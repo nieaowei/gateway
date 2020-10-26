@@ -23,5 +23,6 @@ func (o *OauthController) Middlewares() (middlewares []gin.HandlerFunc) {
 }
 
 func (o *OauthController) Tokens(c *gin.Context) {
-
+	exec := &TokenInput{}
+	exec.ErrorHandle(exec.OutputHandle(exec.ExecHandle(exec.BindValidParam)))(c)
 }

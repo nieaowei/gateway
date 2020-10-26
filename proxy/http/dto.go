@@ -2,10 +2,13 @@ package proxy_http
 
 import (
 	"gateway/dto"
+	"gateway/proxy/manager"
 	"gateway/public"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"strings"
+	"time"
 )
 
 type TokenInput struct {
@@ -37,7 +40,36 @@ func (t *TokenInput) ExecHandle(handle dto.FunctionalHandle) dto.FunctionalHandl
 		if len(secret) != 2 {
 			return nil, errors.New("Authorization error")
 		}
-		return
+		authInfo := strings.Split(secret[1], ":")
+		if len(authInfo) != 2 {
+			return nil, errors.New("Authorization error")
+		}
+		appId, appSecert := authInfo[0], authInfo[1]
+		inter, ok := manager.Default().APPMap.Get(appId)
+		if !ok {
+			return nil, errors.New("app is not found")
+		}
+		appInfo := inter.(manager.App)
+		if appId != appInfo.AppId || appSecert != appInfo.Secret {
+			return nil, errors.New("app info is not matched")
+		}
+		claims := jwt.StandardClaims{
+			Issuer:    appInfo.AppId,
+			ExpiresAt: time.Now().Add(time.Second * JwtExpireAt).In(manager.TimeLocation).Unix(),
+		}
+		token, err := JwtEncode(claims)
+		if err != nil {
+			return
+		}
+
+		o := TokensOutput{
+			AccessToken: token,
+			ExpiresIn:   JwtExpireAt,
+			TokenType:   "Bearer",
+			Scope:       "read_write",
+		}
+
+		return o, nil
 	}
 }
 

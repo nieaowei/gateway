@@ -13,11 +13,9 @@ import (
 	"time"
 )
 
-type TCPService struct {
-	dao.ServiceInfoExceptModel
-	dao.ServiceTCPRuleExceptModel
-	dao.ServiceLoadBalanceExceptModel
-	dao.ServiceAccessControlExceptModel
+type App struct {
+	AppId  string `json:"app_id"`
+	Secret string `json:"secret"`
 }
 
 type ServiceLoadBalance struct {
@@ -69,6 +67,13 @@ type GRPCService struct {
 	dao.ServiceAccessControlExceptModel
 }
 
+type TCPService struct {
+	dao.ServiceInfoExceptModel
+	dao.ServiceTCPRuleExceptModel
+	dao.ServiceLoadBalanceExceptModel
+	dao.ServiceAccessControlExceptModel
+}
+
 const (
 	ServicePrefix = "service_"
 	TotalPrefix   = "total_"
@@ -81,6 +86,7 @@ type ServiceMgr struct {
 	GRPCServiceMap  lib.SafeMap //GRPCService
 	TCPServiceMap   lib.SafeMap //TCPService
 	HTTPServiceMap  lib.SafeMap //HTTPService
+	APPMap          lib.SafeMap
 	loadbalanceMap  lib.SafeMap //loadbalance.LoadBalancer
 	redisServiceMap lib.SafeMap //lib.RedisService
 	transportMap    lib.SafeMap //TransportItem
@@ -125,6 +131,9 @@ func NewServiceMgr() *ServiceMgr {
 			return []byte(key.(string))
 		}),
 		transportMap: lib.NewConcurrentHashMap(1024, func(key interface{}) []byte {
+			return []byte(key.(string))
+		}),
+		APPMap: lib.NewConcurrentHashMap(1024, func(key interface{}) []byte {
 			return []byte(key.(string))
 		}),
 		init: sync.Once{},
@@ -331,6 +340,22 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 				name: serviceInfo.ServiceName,
 			}
 			m.transportMap.Set(serviceInfo.ServiceName, &trans)
+		}
+		appInfo := &dao.App{}
+		appInfoList, _, err := appInfo.PageListIdDesc(nil, db, &dao.PageSize{})
+		for _, app := range appInfoList {
+			info, err := (&dao.App{
+				AppID: app.AppID,
+			}).FindOne(nil, db)
+			if err != nil {
+				m.err = err
+				return
+			}
+			data := App{
+				AppId:  info.AppID,
+				Secret: info.Secret,
+			}
+			m.APPMap.Set(data.AppId, data)
 		}
 	})
 	return m.err

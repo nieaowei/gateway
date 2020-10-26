@@ -41,10 +41,11 @@ func InitHttpProxyRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	})
 
 	router.Register(route, &OauthController{})
-
+	//root := route.Group("/")
 	route.Use(
 		HTTPAccessModeMiddleware(),
 		HTTPFlowStatisticMiddleware(),
+		HTTPJwtAuthTokenMiddleware(),
 		HTTPBlackListMiddleware(),
 		HTTPWhiteListMiddleware(),
 		HTTPHeaderTransferMiddleware(),
