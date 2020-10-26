@@ -197,21 +197,21 @@ func HTTPJwtAuthTokenMiddleware() gin.HandlerFunc {
 			c.Next()
 			return
 		}
-		token := strings.ReplaceAll(c.GetHeader("Authorization"), "Bearer ", "")
+		token := strings.ReplaceAll(c.GetHeader(AuthHeaderKey), AuthHeaderKey+" ", "")
 		if token == "" {
-			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			dto.ResponseError(c, Error_NoToken.Code, Error_NoToken)
 			c.Abort()
 			return
 		}
 		claims, err := JwtDecode(token)
 		if err != nil {
-			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			dto.ResponseError(c, Error_TokenInvalid.Code, Error_TokenInvalid)
 			c.Abort()
 			return
 		}
 		inter, ok := manager.Default().APPMap.Get(claims.Issuer)
 		if !ok {
-			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			dto.ResponseError(c, Error_TokenInvalid.Code, Error_TokenInvalid)
 			c.Abort()
 			return
 		}

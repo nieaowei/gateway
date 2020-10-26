@@ -1,22 +1,23 @@
 package proxy_http
 
-type LoadBalanceError struct {
+type ProxyError struct {
 	msg  string
 	Code int
 }
 
-func (l *LoadBalanceError) Error() string {
+func (l *ProxyError) Error() string {
 	return l.msg
 }
 
-func (l *LoadBalanceError) Is(x error) bool {
+func (l *ProxyError) Is(x error) bool {
 	return l.msg == x.Error()
 }
 
-func NewError(code int, msg string) *LoadBalanceError {
-	return &LoadBalanceError{Code: code, msg: msg}
+func NewError(code int, msg string) *ProxyError {
+	return &ProxyError{Code: code, msg: msg}
 }
 
+// middleware error start
 const (
 	Error_ServiceNotFound_Code = 3000 + iota
 	Error_LBNotFound_Code
@@ -25,6 +26,8 @@ const (
 	Error_BlackListLimit_Code
 	Error_WhiteListLimit_Code
 	Error_NoAvailableTransport_Code
+	Error_NoToken_Code
+	Error_TokenInvalid_Code
 )
 
 var (
@@ -35,4 +38,25 @@ var (
 	Error_BlackListLimit          = NewError(Error_BlackListLimit_Code, "Black list limit")
 	Error_WhiteListLimit          = NewError(Error_WhiteListLimit_Code, "White list limit")
 	Error_NoAvailableTransport    = NewError(Error_NoAvailableTransport_Code, "No available transport")
+	Error_NoToken                 = NewError(Error_NoToken_Code, "No found Token")
+	Error_TokenInvalid            = NewError(Error_TokenInvalid_Code, "Token is invalid")
 )
+
+// middleware error end
+
+// oauth error start
+const (
+	Error_AuthFormat_Code = 4000 + iota
+	Error_AuthInfoFormat_Code
+	Error_AppNotFound_Code
+	Error_AppNotMatched_Code
+)
+
+var (
+	Error_AuthFormat     = NewError(Error_AuthFormat_Code, "auth format error")
+	Error_AuthInfoFormat = NewError(Error_AuthInfoFormat_Code, "auth info format error")
+	Error_AppNotFound    = NewError(Error_AppNotFound_Code, "app info not found")
+	Error_AppNotMatched  = NewError(Error_AppNotMatched_Code, "app info not matched")
+)
+
+// oauth error end

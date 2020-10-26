@@ -6,7 +6,6 @@ import (
 	"gateway/public"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 	"strings"
 	"time"
 )
@@ -16,11 +15,21 @@ type TokenInput struct {
 	Scope     string `json:"scope" form:"scope" comment:"权限范围" example:"read_write" validate:"required"`
 }
 
+type TokenType string
+
+const (
+	TokenType_Bearer TokenType = "Bearer"
+)
+
+const (
+	AuthHeaderKey = "Authorization"
+)
+
 type TokensOutput struct {
-	AccessToken string `json:"access_token" form:"access_token"` //access_token
-	ExpiresIn   int    `json:"expires_in" form:"expires_in"`     //expires_in
-	TokenType   string `json:"token_type" form:"token_type"`     //token_type
-	Scope       string `json:"scope" form:"scope"`               //scope
+	AccessToken string    `json:"access_token" form:"access_token"` //access_token
+	ExpiresIn   int       `json:"expires_in" form:"expires_in"`     //expires_in
+	TokenType   TokenType `json:"token_type" form:"token_type"`     //token_type
+	Scope       string    `json:"scope" form:"scope"`               //scope
 }
 
 func (t *TokenInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
@@ -35,23 +44,23 @@ func (t *TokenInput) ExecHandle(handle dto.FunctionalHandle) dto.FunctionalHandl
 		if err != nil {
 			return
 		}
-		_ = data.(TokenInput)
-		secret := strings.Split(c.GetHeader("Authorization"), " ")
+		params := data.(TokenInput)
+		secret := strings.Split(c.GetHeader(AuthHeaderKey), " ")
 		if len(secret) != 2 {
-			return nil, errors.New("Authorization error")
+			return nil, Error_AuthFormat
 		}
 		authInfo := strings.Split(secret[1], ":")
 		if len(authInfo) != 2 {
-			return nil, errors.New("Authorization error")
+			return nil, Error_AuthInfoFormat
 		}
 		appId, appSecert := authInfo[0], authInfo[1]
 		inter, ok := manager.Default().APPMap.Get(appId)
 		if !ok {
-			return nil, errors.New("app is not found")
+			return nil, Error_AppNotFound
 		}
 		appInfo := inter.(manager.App)
 		if appId != appInfo.AppId || appSecert != appInfo.Secret {
-			return nil, errors.New("app info is not matched")
+			return nil, Error_AppNotMatched
 		}
 		claims := jwt.StandardClaims{
 			Issuer:    appInfo.AppId,
@@ -65,8 +74,8 @@ func (t *TokenInput) ExecHandle(handle dto.FunctionalHandle) dto.FunctionalHandl
 		o := TokensOutput{
 			AccessToken: token,
 			ExpiresIn:   JwtExpireAt,
-			TokenType:   "Bearer",
-			Scope:       "read_write",
+			TokenType:   TokenType_Bearer,
+			Scope:       params.GrantType,
 		}
 
 		return o, nil
@@ -86,7 +95,8 @@ func (t *TokenInput) ErrorHandle(handle dto.FunctionalHandle) func(c *gin.Contex
 			dto.ResponseSuccess(c, data)
 			return
 		}
-		dto.ResponseError(c, 2002, err)
+		code := err.(*ProxyError)
+		dto.ResponseError(c, code.Code, err)
 		return
 	}
 }
