@@ -58,7 +58,7 @@ func (t *TokenInput) ExecHandle(handle dto.FunctionalHandle) dto.FunctionalHandl
 		if !ok {
 			return nil, Error_AppNotFound
 		}
-		appInfo := inter.(manager.App)
+		appInfo := inter.(*manager.App)
 		if appId != appInfo.AppId || appSecert != appInfo.Secret {
 			return nil, Error_AppNotMatched
 		}

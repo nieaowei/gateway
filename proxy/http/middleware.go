@@ -49,7 +49,7 @@ func HTTPBlackListMiddleware() gin.HandlerFunc {
 	}
 }
 
-func HTTPFlowStatisticMiddleware() gin.HandlerFunc {
+func HTTPServiceFlowStatisticMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		data, ok := c.Get(Key_Http_Service)
 		if !ok {
@@ -60,7 +60,7 @@ func HTTPFlowStatisticMiddleware() gin.HandlerFunc {
 		service := data.(manager.HTTPService)
 
 		// statistic single service
-		redisService, ok := manager.Default().GetRedisService(manager.ServicePrefix + service.ServiceName)
+		redisService, ok := manager.Default().GetRedisService(manager.RedisServicePrefix + service.ServiceName)
 		if !ok {
 			dto.ResponseError(c, Error_NoAvailableRedisService.Code, Error_NoAvailableRedisService)
 			c.Abort()
@@ -69,7 +69,7 @@ func HTTPFlowStatisticMiddleware() gin.HandlerFunc {
 
 		redisService.Exec()
 		// statistic total
-		redisTotal, ok := manager.Default().GetRedisService(manager.TotalPrefix)
+		redisTotal, ok := manager.Default().GetRedisService(manager.RedisTotalPrefix)
 		if !ok {
 			dto.ResponseError(c, Error_NoAvailableRedisService.Code, Error_NoAvailableRedisService)
 			c.Abort()
@@ -197,7 +197,7 @@ func HTTPJwtAuthTokenMiddleware() gin.HandlerFunc {
 			c.Next()
 			return
 		}
-		token := strings.ReplaceAll(c.GetHeader(AuthHeaderKey), AuthHeaderKey+" ", "")
+		token := strings.ReplaceAll(c.GetHeader(AuthHeaderKey), string(TokenType_Bearer)+" ", "")
 		if token == "" {
 			dto.ResponseError(c, Error_NoToken.Code, Error_NoToken)
 			c.Abort()
@@ -216,6 +216,38 @@ func HTTPJwtAuthTokenMiddleware() gin.HandlerFunc {
 			return
 		}
 		c.Set("app", inter)
+		c.Next()
+	}
+}
+
+func HTTPAppFlowStatisticMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, ok := c.Get(Key_Http_Service)
+		if !ok {
+			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			c.Abort()
+			return
+		}
+		service := data.(manager.HTTPService)
+		if service.OpenAuth == false {
+			c.Next()
+			return
+		}
+		appInter, ok := c.Get("app")
+		if !ok {
+			dto.ResponseError(c, Error_NoAvailableApp.Code, Error_NoAvailableApp)
+			c.Abort()
+			return
+		}
+		appInfo := appInter.(*manager.App)
+		redisService, ok := manager.Default().GetRedisService(manager.RedisAppPrefix + appInfo.AppId)
+		if !ok {
+			dto.ResponseError(c, Error_NoAvailableRedisService.Code, Error_NoAvailableRedisService)
+			c.Abort()
+			return
+		}
+
+		redisService.Exec()
 		c.Next()
 	}
 }

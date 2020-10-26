@@ -74,19 +74,11 @@ type TCPService struct {
 	dao.ServiceAccessControlExceptModel
 }
 
-const (
-	ServicePrefix = "service_"
-	TotalPrefix   = "total_"
-)
-
 type ServiceMgr struct {
-	//TCPServiceList  []TCPService
-	//HTTPServiceList []HTTPService
-	//GRPCServiceList []GRPCService
 	GRPCServiceMap  lib.SafeMap //GRPCService
 	TCPServiceMap   lib.SafeMap //TCPService
 	HTTPServiceMap  lib.SafeMap //HTTPService
-	APPMap          lib.SafeMap
+	APPMap          lib.SafeMap //App
 	loadbalanceMap  lib.SafeMap //loadbalance.LoadBalancer
 	redisServiceMap lib.SafeMap //lib.RedisService
 	transportMap    lib.SafeMap //TransportItem
@@ -144,7 +136,13 @@ func NewServiceMgr() *ServiceMgr {
 func (m *ServiceMgr) GetRedisService(name string) (lib.RedisService, bool) {
 	s, ok := m.redisServiceMap.Get(name)
 	if !ok {
-		if strings.HasPrefix(name, ServicePrefix) {
+		if strings.HasPrefix(name, RedisServicePrefix) {
+			newCount := NewRedisFlowCountService(name, 3*time.Second)
+			m.SetRedisService(name, newCount)
+			newCount.Start()
+			return newCount, true
+		}
+		if strings.HasPrefix(name, RedisAppPrefix) {
 			newCount := NewRedisFlowCountService(name, 3*time.Second)
 			m.SetRedisService(name, newCount)
 			newCount.Start()
@@ -209,9 +207,9 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 			return
 		}
 		// start total statistic redis service.
-		totalStatistics := NewRedisFlowCountService(TotalPrefix, 0)
+		totalStatistics := NewRedisFlowCountService(RedisTotalPrefix, 0)
 		totalStatistics.Start()
-		m.redisServiceMap.Set(TotalPrefix, totalStatistics)
+		m.redisServiceMap.Set(RedisTotalPrefix, totalStatistics)
 
 		for _, serviceInfo := range serviceInfoList {
 
@@ -224,9 +222,9 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 			}
 
 			// redis statistics service start
-			statistics := NewRedisFlowCountService(ServicePrefix+serviceInfo.ServiceName, 0)
+			statistics := NewRedisFlowCountService(RedisServicePrefix+serviceInfo.ServiceName, 0)
 			statistics.Start()
-			m.redisServiceMap.Set(ServicePrefix+serviceDetail.ServiceName, statistics)
+			m.redisServiceMap.Set(RedisServicePrefix+serviceDetail.ServiceName, statistics)
 
 			// add load balance instance for service.
 			// add it to map.
@@ -300,7 +298,6 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 							HeaderTransform: item.HeaderTransform.GetSlice(),
 						},
 					}
-					//m.HTTPServiceList = append(m.HTTPServiceList, service)
 					m.HTTPServiceMap.Set(service.ServiceName, service)
 				}
 			case *dao.ServiceTCPRuleExceptModel:
@@ -312,7 +309,6 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 						ServiceTCPRuleExceptModel:       *item,
 					}
 					m.TCPServiceMap.Set(service.ServiceName, service)
-					//m.TCPServiceList = append(m.TCPServiceList, service)
 				}
 			case *dao.ServiceGRPCRuleExceptModel:
 				{
@@ -323,7 +319,6 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 						ServiceGRPCRuleExceptModel:      *item,
 					}
 					m.GRPCServiceMap.Set(service.ServiceName, service)
-					//m.GRPCServiceList = append(m.GRPCServiceList, service)
 				}
 			}
 			// add transport
@@ -355,10 +350,13 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 				m.err = err
 				return
 			}
-			data := App{
+			data := &App{
 				AppId:  info.AppID,
 				Secret: info.Secret,
 			}
+			statistics := NewRedisFlowCountService(RedisAppPrefix+info.AppID, 0)
+			statistics.Start()
+			m.redisServiceMap.Set(RedisAppPrefix+info.AppID, statistics)
 			m.APPMap.Set(data.AppId, data)
 		}
 	})

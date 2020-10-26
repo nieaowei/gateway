@@ -3,9 +3,11 @@ package dto
 import (
 	"gateway/dao"
 	"gateway/lib"
+	"gateway/proxy/manager"
 	"gateway/public"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"time"
 )
 
 type GetAppListInput struct {
@@ -57,13 +59,20 @@ func (g *GetAppListInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 			Total: total,
 		}
 		for _, item := range list {
+			counter, ok := manager.Default().GetRedisService(manager.RedisAppPrefix + item.AppID)
+			var qpd, qps int64
+			if ok {
+				impl := counter.(*manager.RedisFlowCountService)
+				qpd, _ = impl.GetDayData(time.Now())
+				qps = impl.QPS
+			}
 			outData.List = append(outData.List, AppListItem{
 				ID:     item.ID,
 				AppID:  item.AppID,
 				Name:   item.Name,
 				Secret: item.Secret,
-				Qpd:    item.Qpd,
-				QPS:    item.QPS,
+				Qpd:    qpd,
+				QPS:    qps,
 			})
 		}
 		return outData, nil

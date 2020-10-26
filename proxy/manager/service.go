@@ -10,22 +10,30 @@ import (
 	"time"
 )
 
+type NotifyType int8
+
+const (
+	ExecSignal NotifyType = 1 + iota
+	StopSignal
+)
+
 type RedisFlowCountService struct {
+	// ticker priority higher than notify
 	ticker      *time.Ticker
-	AppID       string
+	Name        string
 	QPS         int64
 	Unix        int64
 	TickerCount int64
 	TotalCount  int64
-	notify      chan int64
+	notify      chan NotifyType
 }
 
 func (o *RedisFlowCountService) ServiceName() string {
-	return o.AppID
+	return o.Name
 }
 
 func (o *RedisFlowCountService) Stop() {
-	o.notify <- 2
+	o.notify <- StopSignal
 }
 
 func (o *RedisFlowCountService) Exec() {
@@ -37,7 +45,7 @@ func (o *RedisFlowCountService) Exec() {
 		}()
 		atomic.AddInt64(&o.TickerCount, 1)
 		if o.ticker == nil {
-			o.notify <- 1
+			o.notify <- ExecSignal
 		}
 		//fmt.Println(o)
 		//data, _ := lib.DefaultRedisCluster().GetHost(context.Background(), o.GetDayKey(time.Now())).Int64()
@@ -61,7 +69,7 @@ func (o *RedisFlowCountService) Start() {
 				<-o.ticker.C
 			} else {
 				data := <-o.notify
-				if data == 2 {
+				if data == StopSignal {
 					break
 				}
 			}
@@ -112,7 +120,6 @@ func (o *RedisFlowCountService) Start() {
 				o.QPS = tickerCount / (nowUnix - o.Unix)
 				o.Unix = time.Now().Unix()
 			}
-			//log.Printf(" [INFO] Service: %v , Count: %v ,QPS: %v \n", o.AppID, o.TotalCount, o.QPS)
 		}
 	}()
 }
@@ -155,13 +162,13 @@ func (o *RedisFlowCountService) GetDayData(t time.Time) (int64, error) {
 // NewRedisFlowCountService is used by statistic.
 // If interval == 0 , used by computing query number per second.
 // Else it used by recording query number every day.
-func NewRedisFlowCountService(appID string, interval time.Duration) *RedisFlowCountService {
+func NewRedisFlowCountService(name string, interval time.Duration) *RedisFlowCountService {
 	reqCounter := &RedisFlowCountService{
-		AppID: appID,
+		Name: name,
 		//ticker: time.NewTicker(interval),
 		QPS:    0,
 		Unix:   0,
-		notify: make(chan int64),
+		notify: make(chan NotifyType),
 	}
 	if interval != 0 {
 		reqCounter.ticker = time.NewTicker(interval)
