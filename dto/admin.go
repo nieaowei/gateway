@@ -29,7 +29,8 @@ func (p *AdminChangePwdInput) ErrorHandle(handle FunctionalHandle) func(c *gin.C
 	return func(c *gin.Context) {
 		out, err := handle(c)
 		if err != nil {
-			ResponseError(c, 1002, err)
+			code := err.(*DtoError)
+			ResponseError(c, code.Code, err)
 			return
 		}
 		ResponseSuccess(c, out)
@@ -47,6 +48,7 @@ func (p *AdminChangePwdInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 	return func(c *gin.Context) (out interface{}, err error) {
 		params, err := handle(c)
 		if err != nil {
+			err = ErrParamsValid
 			return
 		}
 		p = params.(*AdminChangePwdInput)

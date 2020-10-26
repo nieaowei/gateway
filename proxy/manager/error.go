@@ -18,4 +18,5 @@ func NewError(msg string) error {
 
 var (
 	Error_NoMatchedService = NewError("No matched service.")
+	Error_InvalidLBType    = NewError("invalid loadbalance type")
 )

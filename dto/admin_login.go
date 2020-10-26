@@ -6,7 +6,6 @@ import (
 	"gateway/public"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 	"time"
 )
 
@@ -31,7 +30,8 @@ func (p *AdminLoginInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Conte
 	return func(c *gin.Context) {
 		out, err := handle(c)
 		if err != nil {
-			ResponseError(c, 1002, err)
+			code := err.(*DtoError)
+			ResponseError(c, code.Code, err)
 			return
 		}
 		ResponseSuccess(c, out)
@@ -58,12 +58,12 @@ func (p *AdminLoginInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 		db := lib.GetDefaultDB()
 		adminInfo, err = adminInfo.FindOne(c, db)
 		if err != nil {
-			return out, errors.New("用户不存在")
+			return out, ErrUserNotExist
 		}
 		saltPd := public.GenSha256BySecret(p.Password, adminInfo.Salt)
 
 		if saltPd != adminInfo.Password {
-			return out, errors.New("密码错误")
+			return out, ErrPassword
 		}
 		//set sessions.
 		adminSession := &dao.AdminSessionInfo{

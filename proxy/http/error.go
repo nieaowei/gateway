@@ -28,6 +28,7 @@ const (
 	Error_NoAvailableTransport_Code
 	Error_NoToken_Code
 	Error_TokenInvalid_Code
+	Error_NoAvailableApp_Code
 )
 
 var (
@@ -40,6 +41,7 @@ var (
 	Error_NoAvailableTransport    = NewError(Error_NoAvailableTransport_Code, "No available transport")
 	Error_NoToken                 = NewError(Error_NoToken_Code, "No found Token")
 	Error_TokenInvalid            = NewError(Error_TokenInvalid_Code, "Token is invalid")
+	Error_NoAvailableApp          = NewError(Error_NoAvailableHost_Code, "no available app")
 )
 
 // middleware error end

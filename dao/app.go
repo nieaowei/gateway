@@ -62,10 +62,10 @@ func (p *App) InsertAfterCheck(c *gin.Context, db *gorm.DB, check bool) (err err
 		app := &App{
 			AppID: p.AppID,
 		}
-		// check unique AppID
+		// check unique Name
 		err = db.First(app, app).Error
 		if err != gorm.ErrRecordNotFound {
-			return errors.New("Violation of the uniqueness constraint #App.AppID")
+			return errors.New("Violation of the uniqueness constraint #App.Name")
 		}
 	}
 	// make sure insert

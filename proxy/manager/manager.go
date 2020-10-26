@@ -242,6 +242,10 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 			case dao.Round_WeightRound:
 				lb = loadbalance.NewInst(loadbalance.WeightRobinLoadBalance{})
 			}
+			if lb == nil {
+				m.err = Error_InvalidLBType
+				return
+			}
 			hosts = serviceDetail.GetHostsUrl()
 			weights := serviceDetail.WeightList.GetSlice()
 			for i, host := range hosts {

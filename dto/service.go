@@ -170,7 +170,7 @@ func (p *GetServiceListInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 			if err != nil {
 				return nil, err
 			}
-			counter, ok := manager.Default().GetRedisService(manager.ServicePrefix + info.ServiceName)
+			counter, ok := manager.Default().GetRedisService(manager.RedisServicePrefix + info.ServiceName)
 			var qpd, qps int64
 			if ok {
 				impl := counter.(*manager.RedisFlowCountService)
