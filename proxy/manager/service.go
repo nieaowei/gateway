@@ -88,7 +88,7 @@ func (o *RedisFlowCountService) Start() {
 				if err != nil {
 					return err
 				}
-				_, err = p.Expire(context.Background(), dayKey, 86400*2*time.Millisecond).Result()
+				_, err = p.Expire(context.Background(), dayKey, 86400*2*time.Second).Result()
 				if err != nil {
 					return err
 				}
@@ -96,7 +96,7 @@ func (o *RedisFlowCountService) Start() {
 				if err != nil {
 					return err
 				}
-				_, err = p.Expire(context.Background(), hourKey, 86400*2*time.Millisecond).Result()
+				_, err = p.Expire(context.Background(), hourKey, 86400*2*time.Second).Result()
 				return err
 			})
 			if err != nil {
