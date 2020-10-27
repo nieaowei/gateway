@@ -1,9 +1,12 @@
 package dto
 
 import (
+	"errors"
 	"gateway/dao"
 	"gateway/lib"
+	"gateway/proxy/manager"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 type GetTotalInput struct {
@@ -29,6 +32,15 @@ func (g *GetTotalInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 			return nil, err
 		}
 		err = db.Model(&dao.App{}).Count(&data.TenantAmount).Error
+		redisService, ok := manager.Default().GetRedisService(manager.RedisTotalPrefix)
+		if !ok {
+			err = errors.New("没有可利用的Redis服务")
+			return
+		}
+		totalService := redisService.(*manager.RedisFlowCountService)
+		currentTime := time.Now().In(manager.TimeLocation)
+		data.QPD, _ = totalService.GetDayData(currentTime)
+		data.QPS = totalService.QPS
 		return data, err
 	}
 }

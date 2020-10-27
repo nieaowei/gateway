@@ -511,8 +511,8 @@ type GetServiceStatInput struct {
 }
 
 type GetServiceStatOutput struct {
-	TodayList     []int `json:"today_list"`
-	YesterdayList []int `json:"yesterday_list"`
+	TodayList     []int64 `json:"today_list"`
+	YesterdayList []int64 `json:"yesterday_list"`
 }
 
 func (g *GetServiceStatInput) BindValidParam(c *gin.Context) (params interface{}, err error) {
@@ -524,8 +524,28 @@ func (g *GetServiceStatInput) BindValidParam(c *gin.Context) (params interface{}
 func (g *GetServiceStatInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 	return func(c *gin.Context) (out interface{}, err error) {
 		data := &GetServiceStatOutput{}
-		data.TodayList = append(data.TodayList, []int{1, 32, 54, 212, 432, 453, 123, 312}...)
-		data.YesterdayList = append(data.YesterdayList, []int{32, 3, 23, 43, 43, 123, 121, 44}...)
+		redisService, ok := manager.Default().GetRedisService(manager.RedisTotalPrefix)
+		if !ok {
+			err = errors.New("没有可利用的Redis服务")
+			return
+		}
+		totalService := redisService.(*manager.RedisFlowCountService)
+		currentTime := time.Now().In(manager.TimeLocation)
+		for i := 0; i <= currentTime.Hour(); i++ {
+			dateTime := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), i, 0, 0, 0, manager.TimeLocation)
+			hourData, _ := totalService.GetHourData(dateTime)
+			data.TodayList = append(data.TodayList, hourData)
+		}
+
+		yesterTime := currentTime.Add(-1 * time.Duration(time.Hour*24))
+		for i := 0; i <= 23; i++ {
+			dateTime := time.Date(yesterTime.Year(), yesterTime.Month(), yesterTime.Day(), i, 0, 0, 0, manager.TimeLocation)
+			hourData, _ := totalService.GetHourData(dateTime)
+			data.YesterdayList = append(data.YesterdayList, hourData)
+		}
+
+		//data.TodayList = append(data.TodayList, []int{1, 32, 54, 212, 432, 453, 123, 312}...)
+		//data.YesterdayList = append(data.YesterdayList, []int{32, 3, 23, 43, 43, 123, 121, 44}...)
 		out = data
 		return
 	}

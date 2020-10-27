@@ -148,6 +148,12 @@ func (m *ServiceMgr) GetRedisService(name string) (lib.RedisService, bool) {
 			newCount.Start()
 			return newCount, true
 		}
+		if strings.HasPrefix(name, RedisTotalPrefix) {
+			newCount := NewRedisFlowCountService(name, 3*time.Second)
+			m.SetRedisService(name, newCount)
+			newCount.Start()
+			return newCount, true
+		}
 		return nil, false
 	}
 	return s.(lib.RedisService), ok
