@@ -66,7 +66,7 @@ type ServiceHTTPRuleExceptModel struct {
 	NeedHTTPs       NeedHttpsType       `json:"need_https"`       // 支持https 1=支持
 	NeedStripURI    NeedStripUriType    `json:"need_strip_uri"`   // 启用strip_uri 1=启用
 	NeedWebsocket   NeedWebsocketType   `json:"need_websocket"`   // 是否支持websocket 1=支持
-	URLRewrite      string              `json:"url_rewrite"`      // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
+	URLRewrite      URLRewriteType      `json:"url_rewrite"`      // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
 	HeaderTransform HeaderTransformType `json:"header_transform"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
 }
 

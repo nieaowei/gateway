@@ -184,6 +184,23 @@ func HTTPStripUriMiddleware() gin.HandlerFunc {
 	}
 }
 
+func HTTPUrlRewriteMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, ok := c.Get(Key_Http_Service)
+		if !ok {
+			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			c.Abort()
+			return
+		}
+		service := data.(manager.HTTPService)
+		for _, item := range service.URLRewrite {
+			c.Request.URL.Path = string(item.Reg.ReplaceAll([]byte(c.Request.URL.Path), item.ReplaceStr))
+		}
+		c.Next()
+		return
+	}
+}
+
 func HTTPJwtAuthTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		data, ok := c.Get(Key_Http_Service)

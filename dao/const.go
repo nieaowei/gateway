@@ -2,6 +2,7 @@ package dao
 
 import (
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -43,6 +44,9 @@ func (t *HeaderTransformType) GetSlice() []HeaderTransformItem {
 	out := []HeaderTransformItem{}
 	for _, datum := range data {
 		ss := strings.Split(datum, " ")
+		if len(ss) < 2 {
+			continue
+		}
 		item := HeaderTransformItem{
 			Op:  HeaderTransformOperationType(ss[0]),
 			Key: ss[1],
@@ -100,7 +104,10 @@ func (i *WeightListType) GetSlice() []WeightListItem {
 	data := strings.Split(string(*i), "\n")
 	out := []WeightListItem{}
 	for _, datum := range data {
-		num, _ := strconv.Atoi(datum)
+		num, err := strconv.Atoi(datum)
+		if err != nil {
+			continue
+		}
 		out = append(out, WeightListItem(num))
 	}
 	return out
@@ -123,4 +130,31 @@ func (i *IpListType) GetSlice() []IpListItem {
 
 func (i *IpListItem) Url() url.URL {
 	return i.URL
+}
+
+type URLRewriteType string
+
+type URLRewriteItem struct {
+	Reg        *regexp.Regexp
+	ReplaceStr []byte
+}
+
+func (u *URLRewriteType) GetSlice() []URLRewriteItem {
+	data := strings.Split(string(*u), "\n")
+	out := []URLRewriteItem{}
+	for _, datum := range data {
+		itemStrs := strings.Split(datum, " ")
+		if len(itemStrs) != 2 {
+			continue
+		}
+		reg, err := regexp.Compile(itemStrs[0])
+		if err != nil {
+			continue
+		}
+		out = append(out, URLRewriteItem{
+			Reg:        reg,
+			ReplaceStr: []byte(itemStrs[1]),
+		})
+	}
+	return out
 }

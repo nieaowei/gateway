@@ -38,7 +38,7 @@ type HTTPServiceRule struct {
 	NeedHTTPs       bool                      `json:"need_https"`       // 支持https 1=支持
 	NeedStripURI    bool                      `json:"need_strip_uri"`   // 启用strip_uri 1=启用
 	NeedWebsocket   bool                      `json:"need_websocket"`   // 是否支持websocket 1=支持
-	URLRewrite      string                    `json:"url_rewrite"`      // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
+	URLRewrite      []dao.URLRewriteItem      `json:"url_rewrite"`      // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
 	HeaderTransform []dao.HeaderTransformItem `json:"header_transform"` // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
 }
 
@@ -300,7 +300,7 @@ func (m *ServiceMgr) LoadOnce() (err error) {
 							NeedHTTPs:       item.NeedHTTPs == dao.NeedHttps_Open,
 							NeedStripURI:    item.NeedStripURI == dao.NeedStripUri_Open,
 							NeedWebsocket:   item.NeedWebsocket == dao.NeedWebsocket_Open,
-							URLRewrite:      item.URLRewrite,
+							URLRewrite:      item.URLRewrite.GetSlice(),
 							HeaderTransform: item.HeaderTransform.GetSlice(),
 						},
 					}

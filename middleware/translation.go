@@ -80,15 +80,15 @@ func TranslationMiddleware() gin.HandlerFunc {
 				if fl.Field().String() == "" {
 					return true
 				}
-				data := strings.Split(fl.Field().String(), "\n")
-				for _, datum := range data {
-					if datum == "" {
-						continue
-					}
-					if len(strings.Split(datum, " ")) != 2 {
-						return false
-					}
+				native := strings.Trim(fl.Field().String(), "\n")
+				validdata := public.UrlRewriteRegexp.FindAllString(native, -1)
+
+				res := ""
+				for _, validdatum := range validdata {
+					res += validdatum + "\n"
 				}
+
+				fl.Field().SetString(strings.TrimSuffix(res, "\n"))
 				return true
 			})
 

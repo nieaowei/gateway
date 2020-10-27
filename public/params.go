@@ -10,15 +10,17 @@ import (
 )
 
 const (
-	Regexp_IP     = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d))):\\d+"
-	Regexp_weight = "\\d+"
-	Regexp_Header = "((add|edit)\\s\\S+\\s\\S+)|(del\\s\\S+)"
+	Regexp_IP         = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d))):\\d+"
+	Regexp_weight     = "\\d+"
+	Regexp_Header     = "((add|edit)\\s\\S+\\s\\S+)|(del\\s\\S+)"
+	Regexp_UrlRewrite = "\\S+\\s\\S+"
 )
 
 var (
-	IpRegexp, _     = regexp.Compile(Regexp_IP)
-	WeightRegexp, _ = regexp.Compile(Regexp_weight)
-	HeaderRegexp, _ = regexp.Compile(Regexp_Header)
+	IpRegexp, _         = regexp.Compile(Regexp_IP)
+	WeightRegexp, _     = regexp.Compile(Regexp_weight)
+	HeaderRegexp, _     = regexp.Compile(Regexp_Header)
+	UrlRewriteRegexp, _ = regexp.Compile(Regexp_UrlRewrite)
 )
 
 func DefaultGetValidParams(c *gin.Context, params interface{}) error {

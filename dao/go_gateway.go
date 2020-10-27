@@ -146,7 +146,7 @@ type ServiceHTTPRule struct {
 	NeedHTTPs       NeedHttpsType       `gorm:"column:need_https;type:tinyint(4);not null" json:"need_https" validate:"oneof=0 1"`         // 支持https 1=支持
 	NeedStripURI    NeedStripUriType    `gorm:"column:need_strip_uri;type:tinyint(4);not null" json:"need_strip_uri" validate:"oneof=0 1"` // 启用strip_uri 1=启用
 	NeedWebsocket   NeedWebsocketType   `gorm:"column:need_websocket;type:tinyint(4);not null" json:"need_websocket" validate:"oneof=0 1"` // 是否支持websocket 1=支持
-	URLRewrite      string              `gorm:"column:url_rewrite;type:varchar(5000);not null" json:"url_rewrite"`                         // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
+	URLRewrite      URLRewriteType      `gorm:"column:url_rewrite;type:varchar(5000);not null" json:"url_rewrite"`                         // url重写功能 格式：^/gatekeeper/test_service(.*) $1 多个逗号间隔
 	HeaderTransform HeaderTransformType `gorm:"column:header_transform;type:varchar(5000);not null" json:"header_transform"`               // header转换支持增加(add)、删除(del)、修改(edit) 格式: add headname headvalue 多个逗号间隔
 }
 

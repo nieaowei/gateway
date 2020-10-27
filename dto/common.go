@@ -55,7 +55,7 @@ type EditServiceHTTPRule struct {
 	NeedHttps       dao.NeedHttpsType       `json:"need_https"  example:"1" validate:"oneof=0 1"`
 	NeedStripUri    dao.NeedStripUriType    `json:"need_strip_uri" example:"1" validate:"oneof=0 1"`
 	NeedWebsocket   dao.NeedWebsocketType   `json:"need_websocket" example:"1" validate:"oneof=0 1"`
-	UrlRewrite      string                  `json:"url_rewrite" example:"add w\ndel 1" validate:"valid_url_rewrite,min=0,max=5000"`
+	UrlRewrite      dao.URLRewriteType      `json:"url_rewrite" example:"add w\ndel 1" validate:"valid_url_rewrite,min=0,max=5000"`
 	HeaderTransform dao.HeaderTransformType `json:"header_transform" example:"add a 12\nadd b 13" validate:"min=0,max=5000,valid_header_transform" `
 }
 
