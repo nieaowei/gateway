@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"errors"
 	"gateway/dao"
 	"gateway/lib"
 	"gateway/proxy/manager"
@@ -314,7 +315,7 @@ func (d *DeleteAppInput) ErrorHandle(handle FunctionalHandle) func(c *gin.Contex
 }
 
 type GetAppStatInput struct {
-	ID int `json:"id" form:"id" example:"3" validate:"required"`
+	ID uint `json:"id" form:"id" example:"3" validate:"required"`
 }
 
 type GetAppStatOutput struct {
@@ -330,11 +331,49 @@ func (g *GetAppStatInput) BindValidParam(c *gin.Context) (params interface{}, er
 
 func (g *GetAppStatInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 	return func(c *gin.Context) (out interface{}, err error) {
-		data := &GetAppStatOutput{}
-		data.TodayList = append(data.TodayList, []int{1, 32, 54, 212, 432, 453, 123, 312}...)
-		data.YesterdayList = append(data.YesterdayList, []int{32, 3, 23, 43, 43, 123, 121, 44}...)
-		out = data
-		return
+		inter, err := handle(c)
+		if err != nil {
+			return
+		}
+		params := inter.(*GetAppStatInput)
+		db := lib.GetDefaultDB()
+		type Select struct {
+			AppID string
+		}
+		s := &Select{}
+		err = (&dao.App{
+			Model: gorm.Model{ID: params.ID},
+		}).FindOneScan(c, db, s)
+
+		if err != nil {
+			err = errors.New("不存在该租户")
+			return
+		}
+
+		data := &GetServiceStatOutput{}
+		redisService, ok := manager.Default().GetRedisService(manager.RedisAppPrefix + s.AppID)
+		if !ok {
+			err = errors.New("没有可利用的Redis服务")
+			return
+		}
+		totalService := redisService.(*manager.RedisFlowCountService)
+		currentTime := time.Now().In(manager.TimeLocation)
+		for i := 0; i <= currentTime.Hour(); i++ {
+			dateTime := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), i, 0, 0, 0, manager.TimeLocation)
+			hourData, _ := totalService.GetHourData(dateTime)
+			data.TodayList = append(data.TodayList, hourData)
+		}
+
+		yesterTime := currentTime.Add(-1 * time.Duration(time.Hour*24))
+		for i := 0; i <= 23; i++ {
+			dateTime := time.Date(yesterTime.Year(), yesterTime.Month(), yesterTime.Day(), i, 0, 0, 0, manager.TimeLocation)
+			hourData, _ := totalService.GetHourData(dateTime)
+			data.YesterdayList = append(data.YesterdayList, hourData)
+		}
+
+		//data.TodayList = append(data.TodayList, []int{1, 32, 54, 212, 432, 453, 123, 312}...)
+		//data.YesterdayList = append(data.YesterdayList, []int{32, 3, 23, 43, 43, 123, 121, 44}...)
+		return data, nil
 	}
 }
 
