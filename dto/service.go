@@ -507,7 +507,7 @@ func (p *GetServiceDetailInput) ExecHandle(handle FunctionalHandle) FunctionalHa
 }
 
 type GetServiceStatInput struct {
-	ServiceID int `json:"service_id" form:"service_id" example:"156"`
+	ServiceID uint `json:"service_id" form:"service_id" example:"156"`
 }
 
 type GetServiceStatOutput struct {
@@ -523,8 +523,24 @@ func (g *GetServiceStatInput) BindValidParam(c *gin.Context) (params interface{}
 
 func (g *GetServiceStatInput) ExecHandle(handle FunctionalHandle) FunctionalHandle {
 	return func(c *gin.Context) (out interface{}, err error) {
+		inter, err := handle(c)
+		serviceName := manager.RedisTotalPrefix
+		if err != nil {
+			serviceName = manager.RedisTotalPrefix
+		}
+		params := inter.(*GetServiceStatInput)
+		db := lib.GetDefaultDB()
+		type Select struct {
+			ServiceName string
+		}
+		s := &Select{}
+		err = (&dao.ServiceInfo{ID: params.ServiceID}).FindOneScan(c, db, s)
+		if err == nil {
+			serviceName = manager.RedisServicePrefix + s.ServiceName
+		}
+
 		data := &GetServiceStatOutput{}
-		redisService, ok := manager.Default().GetRedisService(manager.RedisTotalPrefix)
+		redisService, ok := manager.Default().GetRedisService(serviceName)
 		if !ok {
 			err = errors.New("没有可利用的Redis服务")
 			return
@@ -546,8 +562,7 @@ func (g *GetServiceStatInput) ExecHandle(handle FunctionalHandle) FunctionalHand
 
 		//data.TodayList = append(data.TodayList, []int{1, 32, 54, 212, 432, 453, 123, 312}...)
 		//data.YesterdayList = append(data.YesterdayList, []int{32, 3, 23, 43, 43, 123, 121, 44}...)
-		out = data
-		return
+		return data, nil
 	}
 }
 
