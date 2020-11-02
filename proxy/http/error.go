@@ -29,6 +29,8 @@ const (
 	Error_NoToken_Code
 	Error_TokenInvalid_Code
 	Error_NoAvailableApp_Code
+	Error_NoAvailableLimiter_Code
+	Error_FlowLimit_Code
 )
 
 var (
@@ -42,6 +44,8 @@ var (
 	Error_NoToken                 = NewError(Error_NoToken_Code, "No found Token")
 	Error_TokenInvalid            = NewError(Error_TokenInvalid_Code, "Token is invalid")
 	Error_NoAvailableApp          = NewError(Error_NoAvailableHost_Code, "no available app")
+	Error_NoAvailableLimiter      = NewError(Error_NoAvailableLimiter_Code, "no available limiter")
+	Error_FlowLimit               = NewError(Error_FlowLimit_Code, "flow limit")
 )
 
 // middleware error end

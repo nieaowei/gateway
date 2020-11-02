@@ -5,6 +5,7 @@ import (
 	"gateway/lib"
 	"gateway/proxy/loadbalance"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/time/rate"
 	"log"
 	"net"
 	"net/http"
@@ -82,6 +83,7 @@ type ServiceMgr struct {
 	loadbalanceMap  lib.SafeMap //loadbalance.LoadBalancer
 	redisServiceMap lib.SafeMap //lib.RedisService
 	transportMap    lib.SafeMap //TransportItem
+	flowLimitMap    lib.SafeMap // rate.Limiter
 	init            sync.Once
 	err             error
 }
@@ -128,6 +130,9 @@ func NewServiceMgr() *ServiceMgr {
 		APPMap: lib.NewConcurrentHashMap(1024, func(key interface{}) []byte {
 			return []byte(key.(string))
 		}),
+		flowLimitMap: lib.NewConcurrentHashMap(1024, func(key interface{}) []byte {
+			return []byte(key.(string))
+		}),
 		init: sync.Once{},
 		err:  nil,
 	}
@@ -157,6 +162,20 @@ func (m *ServiceMgr) GetRedisService(name string) (lib.RedisService, bool) {
 		return nil, false
 	}
 	return s.(lib.RedisService), ok
+}
+
+func (m *ServiceMgr) SetLimiter(name string, limit *rate.Limiter) {
+	m.flowLimitMap.Set(name, limit)
+}
+
+func (m *ServiceMgr) GetLimiter(name string, qps float64) (*rate.Limiter, bool) {
+	s, ok := m.flowLimitMap.Get(name)
+	if !ok {
+		limiter := rate.NewLimiter(rate.Limit(qps), int(qps*3))
+		m.SetLimiter(name, limiter)
+		return limiter, false
+	}
+	return s.(*rate.Limiter), ok
 }
 
 func (m *ServiceMgr) SetRedisService(name string, val lib.RedisService) {

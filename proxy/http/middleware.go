@@ -268,3 +268,45 @@ func HTTPAppFlowStatisticMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func HTTPFlowLimitMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, ok := c.Get(Key_Http_Service)
+		if !ok {
+			dto.ResponseError(c, Error_ServiceNotFound.Code, Error_ServiceNotFound)
+			c.Abort()
+			return
+		}
+		service := data.(manager.HTTPService)
+
+		if service.ServiceFlowLimit != 0 {
+			limiter, ok := manager.Default().GetLimiter(service.ServiceName, float64(service.ServiceFlowLimit))
+			if !ok {
+				dto.ResponseError(c, Error_NoAvailableLimiter.Code, Error_NoAvailableLimiter)
+				c.Abort()
+				return
+			}
+			if !limiter.Allow() {
+				dto.ResponseError(c, Error_FlowLimit.Code, Error_FlowLimit)
+				c.Abort()
+				return
+			}
+		}
+
+		if service.ClientipFlowLimit != 0 {
+			limiter, ok := manager.Default().GetLimiter(service.ServiceName+c.ClientIP(), float64(service.ServiceFlowLimit))
+			if !ok {
+				dto.ResponseError(c, Error_NoAvailableLimiter.Code, Error_NoAvailableLimiter)
+				c.Abort()
+				return
+			}
+			if !limiter.Allow() {
+				dto.ResponseError(c, Error_FlowLimit.Code, Error_FlowLimit)
+				c.Abort()
+				return
+			}
+		}
+
+		c.Next()
+	}
+}
